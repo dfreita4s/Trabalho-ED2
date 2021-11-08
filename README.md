@@ -2,6 +2,6 @@
 DCC012 - Trabalho Pratico
 # Grupo:
 - Daniel Freitas Pereira
-- Nome
+- Larissa Rezende Fazza
 - Nome
 - Nome
