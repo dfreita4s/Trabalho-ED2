@@ -3,5 +3,5 @@ DCC012 - Trabalho Pratico
 # Grupo:
 - Daniel Freitas Pereira
 - Larissa Rezende Fazza
-- Nome
+- Aloizio Pita de Castro Júnior
 - Nome
