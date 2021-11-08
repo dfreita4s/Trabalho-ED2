@@ -1,6 +1,6 @@
 # Trabalho-ED2
 DCC012 - Trabalho Pratico
-**Grupo:**
+# Grupo:
 - Daniel Freitas Pereira
 - Nome
 - Nome
