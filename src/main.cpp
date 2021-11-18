@@ -9,7 +9,7 @@ int obterReview();
 int main(int argc, char const *argv[])
 {
     // Diretório completo para funcionar o Debug
-    string caminhoArquivo = "";
+    string caminhoArquivo = ""; // resolver probelma do caminho do arqv
     if (argc == 1)
         caminhoArquivo = "";
     else

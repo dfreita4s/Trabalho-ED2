@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/danielf/Desktop/ou/Trabalho-ED2'
+g++ -std=c++17 -ggdb -Iinc src/lista.cpp src/main.cpp src/review.cpp -o bin/Reviews 
+make: Leaving directory '/home/danielf/Desktop/ou/Trabalho-ED2'
+ 
