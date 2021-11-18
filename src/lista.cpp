@@ -3,6 +3,7 @@
 
 Lista::Lista(const std::string &caminhoArquivo)
 {
+    this->raiz = nullptr;
     this->abrirArquivo(caminhoArquivo);
 }
 
@@ -44,9 +45,23 @@ bool Lista::obterReviews()
         
         getline(this->arquivo, linha);
 
+        int k=0; // contar registros
 
         while(!arquivo.eof() && linha != "")
         {
+            /* Trata os registros que estão com '\n'
+               Verifica se a última informação é do tipo ':SS' */
+            
+            while(!(isdigit(linha[linha.length()-1]) && (isdigit(linha[linha.length()-2])) && (linha[linha.length()-3]==':')))
+            {
+                std::string aux = linha;
+                getline(this->arquivo, linha);
+                aux.append(linha);
+                linha = aux;
+            }
+            
+            k++;
+
             int pos;
             pos = linha.find(",");
             std::string id = linha.substr(3, pos-3); // Inicio em 3 para retirar 'gp:'
@@ -58,6 +73,8 @@ bool Lista::obterReviews()
 
             pos = linha.find_last_of(",");
             std::string versao = linha.substr(pos+1); // Obter a versão
+            if(versao.length() == 0)
+                versao = "NaN";
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
@@ -66,29 +83,18 @@ bool Lista::obterReviews()
 
             std::string texto = linha; // Obter o comentário
             if(texto.find("\"") != -1)
-                texto = texto.substr(1, texto.length()-1); // Caso comece com esteja entre "", retirá-los
+                texto = texto.substr(1, texto.length()-2); // Caso comece com esteja entre "", retirá-los
 
-            Review *review = new Review(id, texto, upvotes, versao, data); //Cria o Review
+            Review *review = new Review(id, texto, upvotes, versao, data); // Cria o Review
             this->inserirReview(review, ultimo); // Insere na lista
             ultimo = review; // Atualiza ponteiro do último Review para o atual.
-
-
-            getline(this->arquivo, linha);
             
-            /* Trata os registros que estão com '\n'
-               Verifica se a última informação é do tipo ':SS' */
-            if(!(isdigit(linha[linha.length()-2]) && (isdigit(linha[linha.length()-3])) && (linha[linha.length()-4]==':')))
-            {
-                do {
-                std::string aux = linha;
-                getline(this->arquivo, linha);
-                aux.append(linha);
-                linha = aux;
-                } while(!isdigit(linha[linha.length()-2]));
-            }
+            getline(this->arquivo, linha);
         }
+        std::cout << k-1 << " de registros foram importados com sucesso." << std::endl;
         return true;
     }
+    std::cout << "Ocorreu um erro ao ler os dados." << std::endl;
     return false;
 }
 
@@ -105,34 +111,56 @@ Review *Lista::obterRaiz()
     if(!(this->raiz == nullptr))
         return this->raiz;
     else
+    {
+        return nullptr;
         std::cout << "Lista vazia." << std::endl;
+    }
 }
 
 // Listar todos Reviews presentes na Lista.
 void Lista::listarTodas()
 {
-    Review *No = this->raiz;
-    while(No->obterProximo() != nullptr)
+    if(this->arquivo.is_open())
     {
-        std::cout << std::endl;
-        No->exibeRegistro();
-        No = No->obterProximo();
+        if(this->obterRaiz() != nullptr)
+        {
+            Review *No = this->raiz;
+            while(No->obterProximo() != nullptr)
+            {
+                std::cout << std::endl;
+                No->exibeRegistro();
+                No = No->obterProximo();
+            }
+        }
+        else
+            std::cout << "Lista vazia." << std::endl;
     }
-    std::cout << "Lista vazia." << std::endl;
+    else
+        std::cout << "Impossível listar. O arquivo não existe." << std::endl;
 }
 
 // Esboço da função para acessar o k-ésimo registro
 bool Lista::acessaRegistro(int k)
 {
-    Review *No = this->raiz;
-    for(int i=0; ((No->obterProximo() != nullptr) && (i<=k)); i++)
+    if(this->obterRaiz() != nullptr)
     {
-        if(i==k)
-            No->exibeRegistro();
-        else
-            No = No->obterProximo();
-        return true;
+        Review *No = this->raiz;
+        for(int i=0; ((No != nullptr) && (i<=k)); i++)
+        {
+            if(i==k)
+            {
+                No->exibeRegistro();
+                return true;
+            }
+            else
+                No = No->obterProximo();
+        }
+        std::cout << std::endl << "Registro não encontrado." << std::endl;
+        return false;
     }
-    std::cout << std::endl << "Registro não encontrado." << std::endl;
-    return false;
+    else
+    {
+        std::cout << "Nenhum registro encontrado." << std::endl;
+        return false;
+    }
 }
