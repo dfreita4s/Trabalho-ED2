@@ -8,15 +8,15 @@ int main(int argc, char const *argv[])
 {
     // Diretório completo para funcionar o Debug
     string caminhoArquivo;
-    caminhoArquivo = "/data/tiktok_app_reviews.csv";
+    caminhoArquivo = "../data/tiktok_app_reviews.csv";
     
     Lista *listaReview = new Lista(caminhoArquivo);
 
     listaReview->obterReviews();
 
-    // listaReview->listarTodas();
+    listaReview->listarTodas();
 
-    listaReview->acessaRegistro(2);
+   // listaReview->acessaRegistro(2);
 
     delete listaReview;
 
