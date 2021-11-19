@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Nov 18 18:15:54 2021
+# Make data base, printed on Thu Nov 18 23:15:19 2021
 
 # Variables
 
@@ -14,7 +14,6 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 GDK_BACKEND = x11
 # environment
 LC_ALL = C
- 
 # environment
 NO_AT_BRIDGE = 1
 # makefile (from 'Makefile', line 5)
@@ -22,7 +21,7 @@ SRC := src
 # environment
 SNAP_INSTANCE_KEY = 
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-0c993ae6-7eff-424c-b7ac-5bdaeb8201a0.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5d34143d-ff59-41aa-b551-0d81e5f8a869.sock
 # environment
 LC_NAME = pt_BR.UTF-8
 # environment
@@ -30,7 +29,7 @@ LC_NUMERIC = pt_BR.UTF-8
 # environment
 VSCODE_CWD = /home/danielf/Desktop/ou/Trabalho-ED2
 # environment
-WINDOWID = 62914563
+WINDOWID = 104857612
 # environment
 LC_ADDRESS = pt_BR.UTF-8
 # environment
@@ -58,7 +57,7 @@ MAIL = /var/spool/mail/danielf
 # environment
 XDG_DATA_DIRS = /home/danielf/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop:/usr/share
 # environment
-OLDPWD = /home/danielf/Desktop/ou
+OLDPWD = /home/danielf
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -90,7 +89,7 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 MFLAGS = -pqrR
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-XXXXXXYC2eXb/agent.1252
+SSH_AUTH_SOCK = /tmp/ssh-XXXXXXMVHRQx/agent.1252
 # default
 .SHELLFLAGS := -c
 # environment
@@ -110,7 +109,7 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 11431
+VSCODE_PID = 5929
 # environment
 XDG_SESSION_TYPE = x11
 # automatic
@@ -213,7 +212,6 @@ DISABLE_WAYLAND = 1
 SNAP_DATA = /var/snap/code/81
 # environment
 SNAP_CONTEXT = eMxZonevuY4qa8WgrMS2gB-bd1DyA-DyjIBEFm0gLO1BKgrTIvTd
- 
 # makefile (from 'Makefile', line 9)
 EXECUTABLE := Reviews
 # environment
@@ -277,6 +275,7 @@ SNAP_COMMON = /var/snap/code/common
 # environment
 XDG_GREETER_DATA_DIR = /var/lib/lightdm-data/danielf
 # default
+ 
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
 # makefile (from 'Makefile', line 1)
 CXX := g++
@@ -300,9 +299,9 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 # Directories
 
 # src (device 2053, inode 8652854): 5 files, no impossibilities.
-# . (device 2053, inode 8652736): 9 files, no impossibilities.
+# . (device 2053, inode 8652736): 10 files, no impossibilities.
 
-# 14 files, no impossibilities in 2 directories.
+# 15 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
@@ -313,7 +312,7 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 bin/Reviews: src/lista.cpp src/main.cpp src/review.cpp
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
-#  File does not exist.
+#  Last modified 2021-11-18 18:16:45.487001441
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
@@ -329,7 +328,7 @@ bin/Reviews: src/lista.cpp src/main.cpp src/review.cpp
 # automatic
 # ^ := src/lista.cpp src/main.cpp src/review.cpp
 # automatic
-# ? := src/lista.cpp src/main.cpp src/review.cpp
+# ? := src/main.cpp
 # automatic
 # | := 
 # variable set hash-table stats:
@@ -347,8 +346,7 @@ Makefile:
 # Not a target:
 src/main.cpp:
 #  Implicit rule search has been done.
- 
-#  Last modified 2021-11-18 18:14:16.562926425
+#  Last modified 2021-11-18 18:17:37.810592803
 #  File has been updated.
 #  Successfully updated.
 
@@ -410,12 +408,12 @@ src/lista.cpp:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 23 / storage = 199 B / avg = 8 B
-# current buf: size = 8162 B / used = 199 B / count = 23 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 24 / storage = 203 B / avg = 8 B
+# current buf: size = 8162 B / used = 203 B / count = 24 / avg = 8 B
 
-# strcache performance: lookups = 39 / hit rate = 41%
+# strcache performance: lookups = 40 / hit rate = 40%
 # hash-table stats:
-# Load=23/8192=0%, Rehash=0, Collisions=0/39=0%
-# Finished Make data base on Thu Nov 18 18:15:54 2021
+# Load=24/8192=0%, Rehash=0, Collisions=0/40=0%
+# Finished Make data base on Thu Nov 18 23:15:20 2021
 
  

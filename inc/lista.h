@@ -17,6 +17,7 @@ class Lista
         bool acessaRegistro(int);
         void inserirReview(Review *);
         void inserirReview(Review *, Review *);
+        void testeImportacao();
     
     protected:
         bool abrirArquivo(const std::string&);

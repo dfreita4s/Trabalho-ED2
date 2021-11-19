@@ -164,3 +164,23 @@ bool Lista::acessaRegistro(int k)
         return false;
     }
 }
+
+void Lista::testeImportacao(){
+    int resp, N = 0;
+    std::cout<<"Deseja exibir a saída no console ou salvá-la em um arquivo texto? 1 para no console 2 para salvar. "<<std::endl;
+    std::cin>>resp;
+    if(resp == 1){
+        //escolha saida em console N = 10
+        N = 10;
+        for(int i = N; i>=0; i--){
+         acessaRegistro(rand() % 3646475 + 0);
+        }
+    }else if(resp == 2){
+        //escolha salvar em um arquivo texto
+        N = 100;
+        //fazer
+    }else {
+        std::cout<<"Por favor digite uma resposta válida!"<<std::endl;
+        testeImportacao();
+    }
+}
