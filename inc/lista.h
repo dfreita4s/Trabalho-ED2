@@ -15,7 +15,6 @@ class Lista
         Review *obterRaiz();
         void listarTodas();
         bool acessaRegistro(int);
-        void inserirReview(Review *);
         void inserirReview(Review *, Review *);
         void testeImportacao();
     

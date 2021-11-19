@@ -48,7 +48,6 @@ int main(int argc, char const *argv[])
     menu(listaReview); //menu para o usuario
     
 
- 
 
     delete listaReview;
     return 0;
