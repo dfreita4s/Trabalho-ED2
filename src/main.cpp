@@ -31,11 +31,15 @@ void menu(Lista* listaReview){
 int main(int argc, char const *argv[])
 {
     // Diretório completo para funcionar o Debug
-    string caminhoArquivo = "/home/danielf/Desktop/ou/Trabalho-ED2/data/tiktok_app_reviews.csv"; // resolver probelma do caminho do arqv
+    string caminhoArquivo = "./data/tiktok_app_reviews.csv"; // resolver probelma do caminho do arqv
     if (argc == 1)
-        caminhoArquivo = "/home/danielf/Desktop/ou/Trabalho-ED2/data/tiktok_app_reviews.csv";
-    else
+        
+        caminhoArquivo = "./data/tiktok_app_reviews.csv";
+        
+    else{
         caminhoArquivo = argv[1]; // Corrigir
+    }
+        
 
     Lista *listaReview = new Lista(caminhoArquivo);
 
@@ -44,21 +48,9 @@ int main(int argc, char const *argv[])
     menu(listaReview); //menu para o usuario
     
 
-    // int n = 0;
-    // while(n != -1)
-    // {
-    //     n = obterReview();
-    //     listaReview->acessaRegistro(n);
-    // };
+ 
 
     delete listaReview;
     return 0;
 }
 
-int obterReview()
-{
-    std::cout << "Informe o registro que deseja exibir: ";
-    int n;
-    std::cin >> n;
-    return n;
-}
