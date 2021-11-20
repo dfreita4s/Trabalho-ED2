@@ -11,6 +11,7 @@ class Lista
         Lista(const std::string&);
         ~Lista();
 
+        int obterTam();
         bool obterReviews();
         Review *obterRaiz();
         void listarTodas();
@@ -18,7 +19,8 @@ class Lista
         void inserirReview(Review *);
         void inserirReview(Review *, Review *);
         void testeImportacao();
-    
+        bool criarArquivoBinario();
+
     protected:
         bool abrirArquivo(const std::string&);
         
