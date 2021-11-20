@@ -1,5 +1,7 @@
 #include "../inc/lista.h"
 #include <string>
+#include <iostream>
+#include <fstream>
 
 Lista::Lista(const std::string &caminhoArquivo)
 {
@@ -31,6 +33,27 @@ bool Lista::abrirArquivo(const std::string &caminhoArquivo)
         std::cerr << "Houve um erro ao abrir o arquivo!" << std::endl << e.what() << '\n';
     }
     return false;
+}
+
+int Lista::obterTam(){
+    int size=0;
+    if(this->arquivo.is_open())
+    {
+        if(this->obterRaiz() != nullptr)
+        {
+            Review *No = this->raiz;
+            while(No->obterProximo() != nullptr)
+            {
+                size++;
+                No = No->obterProximo();
+            }
+            return size;
+        }
+        else{
+            return 0;
+        }
+    }
+    return -1;
 }
 
 bool Lista::obterReviews()
@@ -91,11 +114,22 @@ bool Lista::obterReviews()
             
             getline(this->arquivo, linha);
         }
+        criarArquivoBinario();
         std::cout << k-1 << " de registros foram importados com sucesso." << std::endl;
         return true;
     }
     std::cout << "Ocorreu um erro ao ler os dados." << std::endl;
     return false;
+}
+
+bool Lista::criarArquivoBinario(){
+    std::ofstream tiktok_app_reviews;
+    Review * raiz = obterRaiz();
+    int k = obterTam();
+    if(this->arquivo.is_open())
+    {   
+        tiktok_app_reviews.write((char *)raiz, (k *sizeof(Review)));
+    } 
 }
 
 void Lista::inserirReview(Review *rev, Review *ultimo)
@@ -178,7 +212,7 @@ void Lista::testeImportacao(){
     }else if(resp == 2){
         //escolha salvar em um arquivo texto
         N = 100;
-        //fazer
+        //
     }else {
         std::cout<<"Por favor digite uma resposta válida!"<<std::endl;
         testeImportacao();

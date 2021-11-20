@@ -4,13 +4,11 @@
 
 using namespace std;
 
-//Aloizio
-
 int obterReview();
 
 void menu(Lista* listaReview){
 
-    cout<<"Menu:\nDigite o valore da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
+    cout<<"Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
     int resp = 0;
     cin>>resp;
     if(resp == 1){
@@ -33,9 +31,9 @@ void menu(Lista* listaReview){
 int main(int argc, char const *argv[])
 {
     // Diretório completo para funcionar o Debug
-    string caminhoArquivo = "/home/danielf/Desktop/ou/Trabalho-ED2/data/tiktok_app_reviews.csv"; // resolver probelma do caminho do arqv
+    string caminhoArquivo = "./data/tiktok_app_reviews.csv"; // resolver probelma do caminho do arqv
     if (argc == 1)
-        caminhoArquivo = "/home/danielf/Desktop/ou/Trabalho-ED2/data/tiktok_app_reviews.csv";
+        caminhoArquivo = "./data/tiktok_app_reviews.csv";
     else
         caminhoArquivo = argv[1]; // Corrigir
 
@@ -63,4 +61,25 @@ int obterReview()
     int n;
     std::cin >> n;
     return n;
+}
+
+void testeImportacao(int resp){
+    
+    string caminhoArquivo = "./data/tiktok_app_reviews.bin";
+    if(resp == 1){
+        ifstream dadosBin;
+        dadosBin.open(caminhoArquivo, ios_base::in | ios_base::binary);
+        while(dadosBin.end){
+            
+        }
+        dadosBin.close();
+    }
+    else if(resp == 2){
+    ofstream dadosSaida;
+    dadosSaida.open("dados.txt", ios_base::out | ios_base::app);
+    // executa a saida de 100 valores do .bin para o .txt
+    dadosSaida.close();
+    }
+    else
+    cout << "Opção Inválida";
 }

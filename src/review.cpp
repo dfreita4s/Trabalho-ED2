@@ -59,3 +59,16 @@ void Review::setarProximo(Review *No)
 {
     this->proxReview = No;
 }
+
+void testeImportacao(int resp){
+    
+    string caminhoArqBin = ""
+    if(resp == 1){
+        
+    }
+    else if (resp == 2){
+        // fazer
+    }
+    else
+    std::cout << "Entrada Inválida";
+}

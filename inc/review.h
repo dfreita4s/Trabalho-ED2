@@ -24,4 +24,5 @@ class Review
         std::string obterVersao();
         std::string obterData();
         Review *obterProximo();
+        void testeImportacao(int resp);
 };
