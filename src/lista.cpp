@@ -225,7 +225,7 @@ void Lista::testeImportacao(int resp){
         //std::cout << linhaInteira[10];
     }
     else if(resp == 2){
-    std::ofstream dadosSaida;
+    std::fstream dadosSaida;
     dadosSaida.open("dadosSaida.txt", std::ios_base::out | std::ios_base::app);
     // executa a saida de 100 valores do .bin para o .txt
     dadosSaida.close();
@@ -245,10 +245,11 @@ void Lista::usaListaImportacao(){
          acessaRegistro(rand() % 3646475 + 0);
         }
     }else if(resp == 2){
-        //escolha salvar em um arquivo texto
+        std::ofstream dadosSaida;
+        dadosSaida.open("dados.txt", std::ios_base::out | std::ios_base::app);
         N = 100;
-        //fazer
-    }else {
+
+    }else{
         std::cout<<"Por favor digite uma resposta válida!"<<std::endl;
         usaListaImportacao();
     }
