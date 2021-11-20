@@ -1,5 +1,6 @@
 #include "../inc/lista.h"
 #include <string>
+#include <fstream>
 
 Lista::Lista(const std::string &caminhoArquivo)
 {
@@ -112,8 +113,8 @@ bool Lista::obterReviews()
             
             getline(this->arquivo, linha);
         }
-        criarArquivoBinario();
         std::cout << k-1 << " de registros foram importados com sucesso." << std::endl;
+        criarArquivoBinario();
         return true;
     }
     std::cout << "Ocorreu um erro ao ler os dados." << std::endl;
@@ -121,13 +122,21 @@ bool Lista::obterReviews()
 }
 
 bool Lista::criarArquivoBinario(){
-    std::ofstream tiktok_app_reviews;
+
+    std::fstream arq("tiktok.bin", std::ios::out | std::ios::binary);
     Review * raiz = obterRaiz();
     int k = obterTam();
-    if(this->arquivo.is_open())
+    if(arq.is_open())
     {   
-        tiktok_app_reviews.write((char *)raiz, (k *sizeof(Review)));
+        for(int i=0; i<=k; i++){
+            std::string id = raiz->obterID();
+            arq << id;
+            raiz=raiz->obterProximo();
+        }
+        std::cout << "criou arquivo!" << std::endl;
     } 
+    else
+        std::cout << "Deu errado";
 }
 
 void Lista::inserirReview(Review *rev, Review *ultimo)

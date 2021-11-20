@@ -31,10 +31,10 @@ void menu(Lista* listaReview){
 int main(int argc, char const *argv[])
 {
     // Diretório completo para funcionar o Debug
-    string caminhoArquivo = "./data/tiktok_app_reviews.csv"; // resolver probelma do caminho do arqv
+    string caminhoArquivo = "./data/quebradelinha.csv"; // resolver probelma do caminho do arqv
     if (argc == 1)
         
-        caminhoArquivo = "./data/tiktok_app_reviews.csv";
+        caminhoArquivo = "./data/quebradelinha.csv";
         
     else{
         caminhoArquivo = argv[1]; // Corrigir
