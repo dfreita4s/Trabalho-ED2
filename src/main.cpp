@@ -18,7 +18,11 @@ void menu(Lista* listaReview){
         listaReview->acessaRegistro(n);
         menu(listaReview);
     }else if(resp ==2){
-        listaReview->testeImportacao();
+        int n2 = 0;
+        //cout << "Agora informe se deseja a saida no console, digitando 1, ou em arquivo txt, digitando 2: \n";
+        //cin >> n2;
+        //listaReview->testeImportacao(n2);
+        listaReview->usaListaImportacao();
         menu(listaReview);
     }else if(resp == 3){
         return;

@@ -1,4 +1,6 @@
 #include "../inc/review.h"
+#include <fstream>
+#include <iostream>
 
 Review::Review(std::string id, std::string texto, int upvotes, std::string versao, std::string data)
 {
@@ -59,3 +61,4 @@ void Review::setarProximo(Review *No)
 {
     this->proxReview = No;
 }
+

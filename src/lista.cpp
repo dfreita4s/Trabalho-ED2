@@ -123,7 +123,7 @@ bool Lista::obterReviews()
 
 bool Lista::criarArquivoBinario(){
 
-    std::fstream arq("tiktok.bin", std::ios::out | std::ios::binary);
+    std::fstream arq("./data/tiktok.bin", std::ios::out | std::ios::binary);
     Review * raiz = obterRaiz();
     int k = obterTam();
     if(arq.is_open())
@@ -206,9 +206,37 @@ bool Lista::acessaRegistro(int k)
     }
 }
 
-void Lista::testeImportacao(){
+void Lista::testeImportacao(int resp){
+    
+    std::string caminhoArquivo = "./data/tiktok.bin";
+    std::ifstream dadosBin;
+    std::string* linhaInteira = new std::string [3646475];
+    dadosBin.open(caminhoArquivo, std::ios_base::in | std::ios_base::binary);
+    if(resp == 1){
+        if(!dadosBin.is_open()){
+            std::cout << "Arquivo não foi aberto"; 
+        }else{
+            int N = 10;
+            for(int i = 0; i<=N; i++){
+            dadosBin >> linhaInteira[2]; 
+            std::cout << linhaInteira[2] << "/n" << "\n";
+            }
+        }
+        //std::cout << linhaInteira[10];
+    }
+    else if(resp == 2){
+    std::ofstream dadosSaida;
+    dadosSaida.open("dadosSaida.txt", std::ios_base::out | std::ios_base::app);
+    // executa a saida de 100 valores do .bin para o .txt
+    dadosSaida.close();
+    }
+    else
+    std::cout << "Opção Inválida";
+}
+
+void Lista::usaListaImportacao(){
     int resp, N = 0;
-    std::cout<<"Deseja exibir a saída no console ou salvá-la em um arquivo texto? 1 para no console 2 para salvar. "<<std::endl;
+    std::cout<<" Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar. " << std::endl;
     std::cin>>resp;
     if(resp == 1){
         //escolha saida em console N = 10
@@ -222,6 +250,6 @@ void Lista::testeImportacao(){
         //fazer
     }else {
         std::cout<<"Por favor digite uma resposta válida!"<<std::endl;
-        testeImportacao();
+        usaListaImportacao();
     }
 }

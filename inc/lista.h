@@ -17,8 +17,9 @@ class Lista
         void listarTodas();
         bool acessaRegistro(int);
         void inserirReview(Review *, Review *);
-        void testeImportacao();
+        void testeImportacao(int);
         bool criarArquivoBinario();
+        void usaListaImportacao();
 
     protected:
         bool abrirArquivo(const std::string&);
