@@ -130,7 +130,7 @@ bool Lista::criarArquivoBinario(){
     {   
         for(int i=0; i<=k; i++){
             // std::string id = raiz->obterID();
-            arq.write((char *)raiz, (sizeof(Review)));
+            arq.write(reinterpret_cast<const char*>(raiz), (sizeof(Review)));
             raiz=raiz->obterProximo();
         }
         std::cout << "criou arquivo!" << std::endl;
