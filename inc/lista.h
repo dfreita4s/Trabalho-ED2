@@ -17,7 +17,7 @@ class Lista
         void listarTodas();
         bool acessaRegistro(int);
         void inserirReview(Review *, Review *);
-        void testeImportacao(int);
+        void testeImportacao();
         bool criarArquivoBinario();
         void usaListaImportacao();
 
