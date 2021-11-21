@@ -1,5 +1,6 @@
 #include "review.h"
 #include <fstream>
+#include <vector>
 
 class Lista
 {
@@ -15,11 +16,12 @@ class Lista
         bool obterReviews();
         Review *obterRaiz();
         void listarTodas();
-        bool acessaRegistro(int);
+        void acessaRegistro(int);
         void inserirReview(Review *, Review *);
         void testeImportacao();
-        bool criarArquivoBinario();
+        void criarArquivoBinario(std::vector<Review>);
         void usaListaImportacao();
+        void printTerminal();
 
     protected:
         bool abrirArquivo(const std::string&);

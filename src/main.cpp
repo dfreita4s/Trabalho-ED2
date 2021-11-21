@@ -8,7 +8,7 @@ int obterReview();
 
 void menu(Lista* listaReview){
 
-    cout<<"Menu:\nDigite o valore da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
+    cout<<"Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
     int resp = 0;
     cin>>resp;
     if(resp == 1){

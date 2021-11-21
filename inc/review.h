@@ -8,11 +8,10 @@ class Review
         int upvotes;
         std::string versaoApp;
         std::string data;
-        //std::string hora;
         Review *proxReview;
 
     public:
-        Review();
+        Review(){};
         Review(std::string , std::string , int , std::string , std::string );
         ~Review();
 
