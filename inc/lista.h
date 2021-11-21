@@ -19,13 +19,8 @@ class Lista
         void acessaRegistro(int);
         void inserirReview(Review *, Review *);
         void testeImportacao();
-        void criarArquivoBinario(std::vector<Review>);
-        void usaListaImportacao();
-<<<<<<< HEAD
-        void printTerminal();
-=======
         bool criarArquivoBinario();
->>>>>>> branch_matheus
+        void usaListaImportacao();
 
     protected:
         bool abrirArquivo(const std::string&);

@@ -1,6 +1,8 @@
+#include<iostream>
 #include "../inc/lista.h"
 #include <string>
 #include <fstream>
+#include<sstream>
 #include <vector>
 
 Lista::Lista(const std::string &caminhoArquivo)
@@ -116,17 +118,14 @@ bool Lista::obterReviews()
             getline(this->arquivo, linha);
         }
         std::cout << k - 1 << " de registros foram importados com sucesso." << std::endl;
-        arquivo.close();
-        std::vector<Review> dataTiktok;
-        Review aux;
-        dataTiktok.push_back(aux);//cria um vetor e aloca os dados do review nele
-        criarArquivoBinario(dataTiktok);
+        criarArquivoBinario();
         return true;
     }
     std::cout << "Ocorreu um erro ao ler os dados." << std::endl;
     return false;
 }
 
+/*
 void Lista::criarArquivoBinario(std::vector<Review> dataTiktok)
 {
     
@@ -156,7 +155,7 @@ void Lista::criarArquivoBinario(std::vector<Review> dataTiktok)
     else
         std::cout << "Deu errado";
 }
-
+*/
 void Lista::inserirReview(Review *rev, Review *ultimo)
 {
     if (!(this->raiz == nullptr))
@@ -208,14 +207,14 @@ void Lista::acessaRegistro(int k)
         
         std::fstream arqvBin;
         arqvBin.open("./data/tiktok_app_reviews.bin", std::ios::in | std::ios::binary); //abre o arquivo binario
+        
         if (arqvBin.is_open())
         {
             
             char *aux = new char[sizeof(Review)];
             arqvBin.seekg(k * sizeof(Review));
             arqvBin.read(aux, sizeof(Review));
-            std::cout.write(aux, sizeof(Review));
-            // std::cout<<aux<<std::endl;
+            std::cout<<aux;
             arqvBin.close();
             delete [] aux;
         }
@@ -314,7 +313,7 @@ bool Lista::criarArquivoBinario()
         // Escreve cabeçalho
         std::string linha = "review_id,review_text,upvotes,app_version,posted_date";
         arqBin.write(linha.c_str() , sizeof(char)*linha.size());
-
+        int contador = 0;
         while(No != nullptr)
         {
             linha = "";
