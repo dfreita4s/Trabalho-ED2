@@ -20,6 +20,7 @@ class Lista
         void testeImportacao();
         bool criarArquivoBinario();
         void usaListaImportacao();
+        bool criarArquivoBinario();
 
     protected:
         bool abrirArquivo(const std::string&);
