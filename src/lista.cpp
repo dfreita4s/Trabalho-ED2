@@ -119,7 +119,7 @@ bool Lista::obterReviews()
         arquivo.close();
         std::vector<Review> dataTiktok;
         Review aux;
-        dataTiktok.push_back(aux); //cria um vetor e aloca os dados do review nele
+        dataTiktok.push_back(aux);//cria um vetor e aloca os dados do review nele
         criarArquivoBinario(dataTiktok);
         return true;
     }
@@ -129,7 +129,7 @@ bool Lista::obterReviews()
 
 void Lista::criarArquivoBinario(std::vector<Review> dataTiktok)
 {
-
+    
     std::fstream arq; //cria arqv .bin
     arq.open("./data/tiktok_app_reviews.bin", std::ios::out | std::ios::binary);
 
@@ -137,20 +137,18 @@ void Lista::criarArquivoBinario(std::vector<Review> dataTiktok)
     int k = obterTam();
     if (arq.is_open())
     {
-        for (int i = 0; i < dataTiktok.size(); i++)
-        {
-            // //escreve no arquivo binario os dados
-            // std::string id = dataTiktok[i].obterID();
-            // std::string text = dataTiktok[i].obterTexto();
-            // int votes = dataTiktok[i].obterVotos();
-            // std::string versao = dataTiktok[i].obterVersao();
-            // std::string data = dataTiktok[i].obterData();
+        for(int i = 0; i<dataTiktok.size(); i++){
+            //escreve no arquivo binario os dados
+            
 
             arq.write(reinterpret_cast<const char *>(dataTiktok[i].obterID().c_str()), dataTiktok[i].obterID().length());
             arq.write(reinterpret_cast<const char *>(dataTiktok[i].obterTexto().c_str()), dataTiktok[i].obterTexto().length());
             arq.write(reinterpret_cast<const char *>(dataTiktok[i].obterVotos()), sizeof(int));
             arq.write(reinterpret_cast<const char *>(dataTiktok[i].obterVersao().c_str()), dataTiktok[i].obterVersao().length());
             arq.write(reinterpret_cast<const char *>(dataTiktok[i].obterData().c_str()), dataTiktok[i].obterData().length());
+
+         
+
         }
         arq.close();
         std::cout << "Arquivo binário criado!" << std::endl;
@@ -200,8 +198,8 @@ void Lista::listarTodas()
         std::cout << "Impossível listar. O arquivo não existe." << std::endl;
 }
 
-void Lista::printTerminal()
-{
+void Lista::printTerminal(){
+
 }
 
 // Função para acessar o k-ésimo registro
@@ -209,28 +207,26 @@ void Lista::acessaRegistro(int k)
 {
     if (k >= 0 && k <= obterTam()) //verifica se k é válido
     {
-
+        
         std::fstream arqvBin;
         arqvBin.open("./data/tiktok_app_reviews.bin", std::ios::in | std::ios::binary); //abre o arquivo binario
         if (arqvBin.is_open())
         {
-
+            
             char *aux = new char[sizeof(Review)];
             arqvBin.seekg(k * sizeof(Review));
             arqvBin.read(aux, sizeof(Review));
-            arqvBin.write(aux, sizeof(Review));
+            std::cout.write(aux, sizeof(Review));
             // std::cout<<aux<<std::endl;
             arqvBin.close();
-            delete[] aux;
+            delete [] aux;
         }
         else
         {
             std::cout << "Erro ao abrir arquivo." << std::endl;
         }
-    }
-    else
-    {
-        std::cout << "Por favor digite um valor válido!" << std::endl;
+    }else {
+        std::cout<<"Por favor digite um valor válido!"<<std::endl;
     }
 }
 
