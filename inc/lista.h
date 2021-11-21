@@ -21,7 +21,11 @@ class Lista
         void testeImportacao();
         void criarArquivoBinario(std::vector<Review>);
         void usaListaImportacao();
+<<<<<<< HEAD
         void printTerminal();
+=======
+        bool criarArquivoBinario();
+>>>>>>> branch_matheus
 
     protected:
         bool abrirArquivo(const std::string&);
