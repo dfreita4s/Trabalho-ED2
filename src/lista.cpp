@@ -187,6 +187,8 @@ void Lista::listarTodas()
 // Esboço da função para acessar o k-ésimo registro
 bool Lista::acessaRegistro(int k)
 {
+    std::fstream arqvBin;
+    arqvBin.open("tiktok_app_reviews.bin", std::ios::in | std::ios::binary);
     if (this->obterRaiz() != nullptr)
     {
         Review *No = this->raiz;
