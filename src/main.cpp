@@ -8,9 +8,9 @@ int obterReview();
 void testeImportacao();
 void acessaRegistro(int);
 bool checaArqBin();
-char* leBinario(int);
+string leBinario(int);
 
-string leBinary(int k){
+string leBinario(int k){
     
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
@@ -22,8 +22,8 @@ string leBinary(int k){
         std::string str = "";
         int cont = 0;
         while(getline(arqBin, str)){
-            if(cont == k){
-                return str +"\n";
+            if(cont == k){ //se o cont == k chegou na linha certa
+                return str +"\n";//retorna a linha
             }
             else cont++;
         }
@@ -101,68 +101,12 @@ bool checaArqBin()
     }
     return false;
 }
-char* leBinario(int k) //le e retorna a k-ésima linha
-{   
-    std::string registro = "";
-    std::ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        arqBin.seekg(0, arqBin.end);
-        int tamTotal = arqBin.tellg();
-        arqBin.seekg(0, arqBin.beg);
-
-        char *aux = new char;                                  // ponteiro auxiliar
-        int posInicial = 0, posFinal = 0, tamanhoRegistro = 0; // Ponteiro no arquivo
-        int i = 0;                                             // Contador de linhas
-
-        do
-        {
-            /* Como a estrutura não possui tamanho fixo, 
-                lê um a um até '\n' para calcular o tamanho de cada registro.
-            */
-            posInicial = arqBin.tellg();
-
-            while (*aux != '\n')
-                arqBin.read(aux, 1);
-
-            posFinal = arqBin.tellg();
-            arqBin.read(aux, 1);
-            i++;
-
-        } while (i < k && posFinal <= tamTotal);
-
-        if (posFinal > tamTotal)
-            std::cout << "O valor informado não é válido.";
-        else
-        {
-            tamanhoRegistro = posFinal - posInicial; // Calcula o tamanho do registro
-            arqBin.seekg(posInicial);
-
-            char *buffer = new char[tamanhoRegistro];
-            arqBin.read(buffer, tamanhoRegistro);
-
-            // string str(buffer);
-            // return buffer;
-            
-            return buffer;    
-            delete[] buffer;
-        }
-
-        delete aux;
-        arqBin.close();
-        
-    }
-    else
-        std::cout << "Erro ao obter registro." << std::endl;
-}
-
 
 
 void acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
-    std::cout << leBinary(k);
+    std::cout << leBinario(k);
 }
 
 void testeImportacao()
@@ -175,7 +119,7 @@ void testeImportacao()
         // Printar no terminal N = 10 registros aleatorios
         N = 10;
         for (int i = 0; i < 10; i++)
-            std::cout << leBinary(rand() % 3646475 + 0) << std::endl;
+            std::cout << leBinario(rand() % 3646475 + 0) << std::endl;
     }
     else if (resp == 2)
     {
@@ -188,7 +132,7 @@ void testeImportacao()
             std::string linha = "";
             for (int i = 0; i < N; i++)
             {
-                linha = leBinary(rand() % 3646475 + 0);
+                linha = leBinario(rand() % 3646475 + 0);
                 saidaTxt.write(linha.c_str(), sizeof(char)*linha.size());
             }
             
