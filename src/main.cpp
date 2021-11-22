@@ -20,7 +20,7 @@ void menu(Lista* listaReview){
         menu(listaReview);
     }else if(resp ==2){
         
-        listaReview->testeImportacao();
+        // listaReview->testeImportacao();
         //listaReview->usaListaImportacao();
         menu(listaReview);
     }else if(resp == 3){
@@ -34,7 +34,7 @@ void menu(Lista* listaReview){
 int main(int argc, char const *argv[])
 {
     // Diretório completo para funcionar o Debug
-    string caminhoArquivo = "./data/tiktok_app_reviews.csv"; // resolver probelma do caminho do arqv
+    string caminhoArquivo = "./data/tiktok_app_reviews.csv"; 
     if (argc == 1)
     {
         std::cout << "Nenhum aquivo foi passado como argumento." << std::endl;

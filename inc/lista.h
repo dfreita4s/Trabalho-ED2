@@ -16,9 +16,9 @@ class Lista
         bool obterReviews();
         Review *obterRaiz();
         void listarTodas();
-        void acessaRegistro(int);
+        // void acessaRegistro(int);
         void inserirReview(Review *, Review *);
-        void testeImportacao();
+        // void testeImportacao();
         bool criarArquivoBinario();
         void usaListaImportacao();
 

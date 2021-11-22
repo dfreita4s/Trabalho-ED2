@@ -199,76 +199,76 @@ void Lista::listarTodas()
 
 
 
-// Função para acessar o k-ésimo registro
-void Lista::acessaRegistro(int k)
-{
-    if (k >= 0 && k <= obterTam()) //verifica se k é válido
-    {
+// // Função para acessar o k-ésimo registro
+// void Lista::acessaRegistro(int k)
+// {
+//     if (k >= 0 && k <= obterTam()) //verifica se k é válido
+//     {
         
-        std::fstream arqvBin;
-        arqvBin.open("./data/tiktok_app_reviews.bin", std::ios::in | std::ios::binary); //abre o arquivo binario
+//         std::fstream arqvBin;
+//         arqvBin.open("./data/tiktok_app_reviews.bin", std::ios::in | std::ios::binary); //abre o arquivo binario
         
-        if (arqvBin.is_open())
-        {
+//         if (arqvBin.is_open())
+//         {
             
-            char *aux = new char[sizeof(Review)];
-            arqvBin.seekg(k * sizeof(Review));
-            arqvBin.read(aux, sizeof(Review));
-            std::cout<<aux;
-            arqvBin.close();
-            delete [] aux;
-        }
-        else
-        {
-            std::cout << "Erro ao abrir arquivo." << std::endl;
-        }
-    }else {
-        std::cout<<"Por favor digite um valor válido!"<<std::endl;
-    }
-}
+//             char *aux = new char[sizeof(Review)];
+//             arqvBin.seekg(k * sizeof(Review));
+//             arqvBin.read(aux, sizeof(Review));
+//             std::cout<<aux;
+//             arqvBin.close();
+//             delete [] aux;
+//         }
+//         else
+//         {
+//             std::cout << "Erro ao abrir arquivo." << std::endl;
+//         }
+//     }else {
+//         std::cout<<"Por favor digite um valor válido!"<<std::endl;
+//     }
+// }
 
-void Lista::testeImportacao()
-{
+// void Lista::testeImportacao()
+// {
 
-    // std::string caminhoArquivo = "./data/tiktok.bin";
-    // std::ifstream dadosBin;
-    // std::string *linhaInteira = new std::string[3646475];
-    // dadosBin.open(caminhoArquivo, std::ios_base::in | std::ios_base::binary);
-    int resp, N = 0;
-    int k = obterTam();
-    std::cout << " Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar. " << std::endl;
-    std::cin >> resp;
-    if (resp == 1)
-    {
-        //escolha saida em console N = 10
-        N = 10;
-        for (int i = N; i >= 0; i--)
-        {
-            acessaRegistro(rand() % k + 0);
-        }
-    }
-    else if (resp == 2)
-    {
-        // executa a saida de 100 valores do .bin para o .txt
-        N = 100;
-        std::fstream dadosSaida;
-        dadosSaida.open("dadosSaida.txt", std::ios_base::out | std::ios_base::app);
-        if (dadosSaida.is_open())
-        {
+//     // std::string caminhoArquivo = "./data/tiktok.bin";
+//     // std::ifstream dadosBin;
+//     // std::string *linhaInteira = new std::string[3646475];
+//     // dadosBin.open(caminhoArquivo, std::ios_base::in | std::ios_base::binary);
+//     int resp, N = 0;
+//     int k = obterTam();
+//     std::cout << " Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar. " << std::endl;
+//     std::cin >> resp;
+//     if (resp == 1)
+//     {
+//         //escolha saida em console N = 10
+//         N = 10;
+//         for (int i = N; i >= 0; i--)
+//         {
+//             acessaRegistro(rand() % k + 0);
+//         }
+//     }
+//     else if (resp == 2)
+//     {
+//         // executa a saida de 100 valores do .bin para o .txt
+//         N = 100;
+//         std::fstream dadosSaida;
+//         dadosSaida.open("dadosSaida.txt", std::ios_base::out | std::ios_base::app);
+//         if (dadosSaida.is_open())
+//         {
 
-            for (int i = N; i >= 0; i--)
-            {
-            }
-        }
-        else
-        {
-            std::cout << "Erro ao abrir arquivo!" << std::endl;
-        }
-        dadosSaida.close();
-    }
-    else
-        std::cout << "Opção Inválida";
-}
+//             for (int i = N; i >= 0; i--)
+//             {
+//             }
+//         }
+//         else
+//         {
+//             std::cout << "Erro ao abrir arquivo!" << std::endl;
+//         }
+//         dadosSaida.close();
+//     }
+//     else
+//         std::cout << "Opção Inválida";
+// }
 
 // void Lista::usaListaImportacao()
 // {
@@ -311,7 +311,7 @@ bool Lista::criarArquivoBinario()
         Review *No = this->obterRaiz();
 
         // Escreve cabeçalho
-        std::string linha = "review_id,review_text,upvotes,app_version,posted_date";
+        std::string linha = "review_id,review_text,upvotes,app_version,posted_date\n";
         arqBin.write(linha.c_str() , sizeof(char)*linha.size());
         int contador = 0;
         while(No != nullptr)
