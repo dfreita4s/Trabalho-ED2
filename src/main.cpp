@@ -7,8 +7,10 @@ using namespace std;
 int obterReview();
 void testeImportacao();
 void acessaRegistro(int);
+bool checaArqBin();
+char* leBinario(int);
 
-void menu(Lista *listaReview)
+void menu()
 {
 
     cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
@@ -20,7 +22,7 @@ void menu(Lista *listaReview)
         cout << "Digite o registro que deseja: ";
         cin >> n;
         acessaRegistro(n);
-        menu(listaReview);
+        menu();
     }
     else if (resp == 2)
     {
@@ -28,7 +30,7 @@ void menu(Lista *listaReview)
         // listaReview->testeImportacao();
         //listaReview->usaListaImportacao();
         testeImportacao();
-        menu(listaReview);
+        menu();
     }
     else if (resp == 3)
     {
@@ -37,33 +39,49 @@ void menu(Lista *listaReview)
     else
     {
         cout << "Por favor digite uma resposta válida!" << endl;
-        menu(listaReview);
+        menu();
     }
 }
 
 int main(int argc, char const *argv[])
 {
-    // Diretório completo para funcionar o Debug
-    string caminhoArquivo = "./data/tiktok_app_reviews.csv";
-    if (argc == 1)
+    if(!checaArqBin())
     {
-        std::cout << "Nenhum aquivo foi passado como argumento." << std::endl;
-        return -1;
+        // Diretório completo para funcionar o Debug
+        string caminhoArquivo = "";
+        if (argc == 1)
+        {
+            std::cout << "Nenhum aquivo foi passado como argumento." << std::endl;
+            return -1;
+        }
+        else
+            caminhoArquivo = argv[1];
+
+        Lista *listaReview = new Lista(caminhoArquivo);
+        listaReview->obterReviews(); // Leitura e armazenamento dos dados.
+        listaReview->criarArquivoBinario(); // Criação do aquivo binário.
+        delete listaReview;
     }
-    else
-        caminhoArquivo = argv[1];
 
-    Lista *listaReview = new Lista(caminhoArquivo);
+    menu();
 
-    listaReview->obterReviews();
-
-    menu(listaReview); //menu para o usuario
-
-    delete listaReview;
     return 0;
 }
-string leBinario(int k) //le e retorna a string da k-ésima linha
+
+bool checaArqBin()
 {
+    ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if(arqBin.is_open())
+    {
+        std::cout << "O arquivo binário existe." << std::endl;
+        return true;
+    }
+    return false;
+}
+char* leBinario(int k) //le e retorna a k-ésima linha
+{   
+    std::string registro = "";
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
@@ -102,13 +120,16 @@ string leBinario(int k) //le e retorna a string da k-ésima linha
             char *buffer = new char[tamanhoRegistro];
             arqBin.read(buffer, tamanhoRegistro);
 
-            string str(buffer);
-            return buffer;
+            // string str(buffer);
+            // return buffer;
+            
+            return buffer;    
             delete[] buffer;
         }
 
         delete aux;
         arqBin.close();
+        
     }
     else
         std::cout << "Erro ao obter registro." << std::endl;
