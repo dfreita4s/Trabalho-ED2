@@ -10,29 +10,38 @@ void acessaRegistro(int);
 bool checaArqBin();
 string leBinario(int);
 
-string leBinario(int k){
-    
+string leBinario(int k)
+{
+
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if(arqBin.is_open()){
+    if (arqBin.is_open())
+    {
         arqBin.seekg(0, arqBin.end);
         int tamTotal = arqBin.tellg();
         arqBin.seekg(0, arqBin.beg);
         char *buffer = new char[tamTotal];
         std::string str = "";
         int cont = 0;
-        while(getline(arqBin, str)){
-            if(cont == k){ //se o cont == k chegou na linha certa
-                return str +"\n";//retorna a linha
+        while (getline(arqBin, str))
+        {
+            if (cont == k)
+            {                      //se o cont == k chegou na linha certa
+                return str + "\n"; //retorna a linha
             }
-            else cont++;
+            else
+                cont++;
         }
+        cout << "Diretório " << k << " não existe!" << endl;
+        return "";
         arqBin.close();
-
-        
+    }
+    else
+    {
+        cout << "Não foi possível abrir o arquivo!" << endl;
+        return "";
     }
 }
-
 
 void menu()
 {
@@ -67,7 +76,7 @@ void menu()
 
 int main(int argc, char const *argv[])
 {
-    if(!checaArqBin())
+    if (!checaArqBin())
     {
         // Diretório completo para funcionar o Debug
         string caminhoArquivo = "";
@@ -80,7 +89,7 @@ int main(int argc, char const *argv[])
             caminhoArquivo = argv[1];
 
         Lista *listaReview = new Lista(caminhoArquivo);
-        listaReview->obterReviews(); // Leitura e armazenamento dos dados.
+        listaReview->obterReviews();        // Leitura e armazenamento dos dados.
         listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         delete listaReview;
     }
@@ -94,7 +103,7 @@ bool checaArqBin()
 {
     ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if(arqBin.is_open())
+    if (arqBin.is_open())
     {
         std::cout << "O arquivo binário existe." << std::endl;
         return true;
@@ -102,18 +111,19 @@ bool checaArqBin()
     return false;
 }
 
-
 void acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
-    std::cout << leBinario(k);
+    std::string registro = leBinario(k);
+    if (registro != "")
+        std::cout << registro;
 }
 
 void testeImportacao()
 {
     int resp, N = 0;
     std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
-    std::cin>>resp;
+    std::cin >> resp;
     if (resp == 1)
     {
         // Printar no terminal N = 10 registros aleatorios
@@ -133,9 +143,9 @@ void testeImportacao()
             for (int i = 0; i < N; i++)
             {
                 linha = leBinario(rand() % 3646475 + 0);
-                saidaTxt.write(linha.c_str(), sizeof(char)*linha.size());
+                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
             }
-            
+            cout<<"O arquivo de texto foi criado!"<<endl;
         }
         saidaTxt.close();
     }
