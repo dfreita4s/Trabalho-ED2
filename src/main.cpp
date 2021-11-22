@@ -10,6 +10,30 @@ void acessaRegistro(int);
 bool checaArqBin();
 char* leBinario(int);
 
+string leBinary(int k){
+    
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if(arqBin.is_open()){
+        arqBin.seekg(0, arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0, arqBin.beg);
+        char *buffer = new char[tamTotal];
+        std::string str = "";
+        int cont = 0;
+        while(getline(arqBin, str)){
+            if(cont == k){
+                return str +"\n";
+            }
+            else cont++;
+        }
+        arqBin.close();
+
+        
+    }
+}
+
+
 void menu()
 {
 
@@ -27,8 +51,6 @@ void menu()
     else if (resp == 2)
     {
 
-        // listaReview->testeImportacao();
-        //listaReview->usaListaImportacao();
         testeImportacao();
         menu();
     }
@@ -135,23 +157,25 @@ char* leBinario(int k) //le e retorna a k-ésima linha
         std::cout << "Erro ao obter registro." << std::endl;
 }
 
+
+
 void acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
-    std::cout << leBinario(k);
+    std::cout << leBinary(k);
 }
 
 void testeImportacao()
 {
     int resp, N = 0;
-    std::cout << " Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar. " << std::endl;
+    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
     std::cin>>resp;
     if (resp == 1)
     {
         // Printar no terminal N = 10 registros aleatorios
         N = 10;
         for (int i = 0; i < 10; i++)
-            std::cout << leBinario(rand() % 3646475 + 0) << std::endl;
+            std::cout << leBinary(rand() % 3646475 + 0) << std::endl;
     }
     else if (resp == 2)
     {
@@ -164,8 +188,7 @@ void testeImportacao()
             std::string linha = "";
             for (int i = 0; i < N; i++)
             {
-                linha += leBinario(rand() % 3646475 + 0);
-                linha += "\n";
+                linha = leBinary(rand() % 3646475 + 0);
                 saidaTxt.write(linha.c_str(), sizeof(char)*linha.size());
             }
             
