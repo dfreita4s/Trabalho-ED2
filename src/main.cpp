@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "../inc/lista.h"
+#include "../inc/registro.h"
 
 using namespace std;
 
@@ -17,10 +18,7 @@ string leBinario(int k)
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        arqBin.seekg(0, arqBin.end);
-        int tamTotal = arqBin.tellg();
-        arqBin.seekg(0, arqBin.beg);
-        char *buffer = new char[tamTotal];
+       
         std::string str = "";
         int cont = 0;
         while (getline(arqBin, str))
@@ -59,8 +57,10 @@ void menu()
     }
     else if (resp == 2)
     {
-
-        testeImportacao();
+        cout<<"Digite o numero de importacoes que deseja: ";
+        cin>>resp;
+        Registro *registro = new Registro("./data/tiktok_app_reviews.bin", resp);
+        registro->testeImportacao();
         menu();
     }
     else if (resp == 3)
@@ -72,6 +72,26 @@ void menu()
         cout << "Por favor digite uma resposta válida!" << endl;
         menu();
     }
+}
+
+bool checaArqBin()
+{
+    ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        std::cout << "O arquivo binário existe." << std::endl;
+        return true;
+    }
+    return false;
+}
+
+void acessaRegistro(int k)
+{
+    std::cout << "Acessando registro " << k << std::endl;
+    std::string registro = leBinario(k);
+    if (registro != "")
+        std::cout << registro;
 }
 
 int main(int argc, char const *argv[])
@@ -99,26 +119,9 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-bool checaArqBin()
-{
-    ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        std::cout << "O arquivo binário existe." << std::endl;
-        return true;
-    }
-    return false;
-}
 
-void acessaRegistro(int k)
-{
-    std::cout << "Acessando registro " << k << std::endl;
-    std::string registro = leBinario(k);
-    if (registro != "")
-        std::cout << registro;
-}
 
+/*
 void testeImportacao() //passar esse para o registro.cpp
 {
     int resp, N = 0;
@@ -154,3 +157,4 @@ void testeImportacao() //passar esse para o registro.cpp
         std::cout << "Por favor, digite um valor válido!" << std::endl;
     }
 }
+*/

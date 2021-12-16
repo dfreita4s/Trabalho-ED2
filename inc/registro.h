@@ -5,7 +5,8 @@ class Registro {
     public:
         std::string leBinario(int); 
         void testeImportacao();
-        
+        void acessaRegistro(int);
+
         Registro(const std::string &, int);
         ~Registro();
         

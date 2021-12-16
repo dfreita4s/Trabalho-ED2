@@ -7,13 +7,22 @@ Registro::Registro(const std::string &caminhoArquivo, int N)
 {
     this->registros = new string[N]; //chama o array para salvar na memoria principal os N registros
     setRegistro(importaRegistros(N));
-    testeImportacao();
 }
 
 Registro::~Registro()
 {
     //Destructor
     delete registros;
+}
+
+void Registro::acessaRegistro(int k)
+{
+    std::cout << "Acessando registro " << k << std::endl;
+    std::string registro = leBinario(k);
+    if (registro != "")
+        std::cout << registro;
+    else
+        std::cout << "Numero de registro não encontrado!" << endl;
 }
 
 string Registro::leBinario(int k)
@@ -23,10 +32,6 @@ string Registro::leBinario(int k)
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        arqBin.seekg(0, arqBin.end);
-        int tamTotal = arqBin.tellg();
-        arqBin.seekg(0, arqBin.beg);
-        char *buffer = new char[tamTotal];
         std::string str = "";
         int cont = 0;
         while (getline(arqBin, str))
@@ -49,7 +54,8 @@ string Registro::leBinario(int k)
     }
 }
 
-string *Registro::getRegistro(){
+string *Registro::getRegistro()
+{
     return this->registros;
 }
 
@@ -58,28 +64,27 @@ void Registro::setRegistro(string *regist)
     this->registros = regist;
 }
 
-string *Registro::importaRegistros(int N)
+string *Registro::importaRegistros(int N) //retorna N registros aleatorios do arquivo binario
 {
     string *aux = new string[N];
     for (int i = 0; i < N; i++)
-    {
         aux[i] = leBinario(rand() % 3646475 + 0);
-    }
+
     return aux;
 }
 
 void Registro::testeImportacao()
 {
     int resp = 0;
-
-    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
+    std::string *registro = getRegistro();
+    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar: ";
     std::cin >> resp;
     if (resp == 1)
     {
         // Printar no terminal N = 10 registros aleatorios
-        
+
         for (int i = 0; i < 10; i++)
-            std::cout << getRegistro()->find(i) << std::endl;
+            std::cout << "[" << i + 1 << "]" << registro[i] << std::endl;
     }
     else if (resp == 2)
     {
@@ -88,12 +93,12 @@ void Registro::testeImportacao()
         saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
         if (saidaTxt.is_open())
         {
-            
+
             std::string linha = "";
             for (int i = 0; i < 100; i++)
             {
-                linha = getRegistro()->find(i);
-                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
+                linha = registro[i];
+                saidaTxt.write(registro[i].c_str(), sizeof(char) * linha.size());
             }
             cout << "O arquivo de texto foi criado!" << endl;
         }
