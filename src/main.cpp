@@ -119,7 +119,7 @@ void acessaRegistro(int k)
         std::cout << registro;
 }
 
-void testeImportacao()
+void testeImportacao() //passar esse para o registro.cpp
 {
     int resp, N = 0;
     std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";

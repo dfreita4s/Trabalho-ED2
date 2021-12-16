@@ -1,16 +1,20 @@
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include "../inc/registro.h"
 using namespace std;
 
-Registro::Registro(const std::string &caminhoArquivo, int N){
-     this->registros = new string[N]; //chama o array para salvar na memoria principal os N registros
+Registro::Registro(const std::string &caminhoArquivo, int N)
+{
+    this->registros = new string[N]; //chama o array para salvar na memoria principal os N registros
+    setRegistro(importaRegistros(N));
+    testeImportacao();
 }
 
-Registro::~Registro(){
+Registro::~Registro()
+{
     //Destructor
+    delete registros;
 }
-
 
 string Registro::leBinario(int k)
 {
@@ -45,18 +49,37 @@ string Registro::leBinario(int k)
     }
 }
 
+string *Registro::getRegistro(){
+    return this->registros;
+}
+
+void Registro::setRegistro(string *regist)
+{
+    this->registros = regist;
+}
+
+string *Registro::importaRegistros(int N)
+{
+    string *aux = new string[N];
+    for (int i = 0; i < N; i++)
+    {
+        aux[i] = leBinario(rand() % 3646475 + 0);
+    }
+    return aux;
+}
 
 void Registro::testeImportacao()
 {
-    int resp, N = 0;
+    int resp = 0;
+
     std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
     std::cin >> resp;
     if (resp == 1)
     {
         // Printar no terminal N = 10 registros aleatorios
-        N = 10;
+        
         for (int i = 0; i < 10; i++)
-            std::cout << leBinario(rand() % 3646475 + 0) << std::endl;
+            std::cout << getRegistro()->find(i) << std::endl;
     }
     else if (resp == 2)
     {
@@ -65,14 +88,14 @@ void Registro::testeImportacao()
         saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
         if (saidaTxt.is_open())
         {
-            N = 100;
+            
             std::string linha = "";
-            for (int i = 0; i < N; i++)
+            for (int i = 0; i < 100; i++)
             {
-                linha = leBinario(rand() % 3646475 + 0);
+                linha = getRegistro()->find(i);
                 saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
             }
-            cout<<"O arquivo de texto foi criado!"<<endl;
+            cout << "O arquivo de texto foi criado!" << endl;
         }
         saidaTxt.close();
     }
