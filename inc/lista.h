@@ -1,4 +1,5 @@
 #include "review.h"
+#include "tabelaHash.h"
 #include <fstream>
 #include <vector>
 
@@ -20,7 +21,9 @@ public:
     void inserirReview(Review *, Review *);
 
     bool criarArquivoBinario();
-    void usaListaImportacao();
+    int acessaVersao(int, int);
+    int pegaVersao(int, int);
+
 
 protected:
     bool abrirArquivo(const std::string &);
