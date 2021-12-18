@@ -1,12 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include "../inc/lista.h"
+#include <cstdlib>
+#include <ctime>
+#include <random>
 
 using namespace std;
 
 int obterReview();
 void testeImportacao();
 void acessaRegistro(int);
+void criaTabelaHash(Lista *lista);
 bool checaArqBin();
 string leBinario(int);
 
@@ -46,7 +50,7 @@ string leBinario(int k)
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Ordena Tabela Hash\n[4] Sair\nFunção: ";
     int resp = 0;
     cin >> resp;
     if (resp == 1)
@@ -59,11 +63,18 @@ void menu()
     }
     else if (resp == 2)
     {
-
         testeImportacao();
         menu();
     }
     else if (resp == 3)
+    {
+        int n = 0;
+        cout << "Informe quantos valores serao importados na tabela: " << endl;
+        cin >> n;
+
+        return;
+    }
+    else if (resp == 4)
     {
         return;
     }
@@ -79,18 +90,17 @@ int main(int argc, char const *argv[])
     if (!checaArqBin())
     {
         // Diretório completo para funcionar o Debug
-        string caminhoArquivo = "";
+        string caminhoArquivo = "./data/tiktok_app_reviews.csv";
         if (argc == 1)
         {
-            std::cout << "Nenhum aquivo foi passado como argumento." << std::endl;
-            return -1;
+            caminhoArquivo = "./data/tiktok_app_reviews.csv";
         }
-        else
+        else{
             caminhoArquivo = argv[1];
-
+        }
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews();        // Leitura e armazenamento dos dados.
-        listaReview->criarArquivoBinario(); // Criação do aquivo binário.
+        criaTabelaHash(listaReview);
         delete listaReview;
     }
 
@@ -98,6 +108,48 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
+
+//cria tabela hash de n = 500 posições randômicas da lista de reviews
+
+void criaTabelaHash(Lista *listaReview)
+{
+        int n = 500;
+        tabelaHash *tab = new tabelaHash[n*2];
+        tabelaHash aux;
+        int novaPosicao;
+        srand(time(NULL));
+        int *num = new int [n];
+        for (int i = 0; i < n; i++){
+            //cout << "Na execucao " << " " << i << endl;
+            num[i] = rand() % 3646475;
+            int chave = listaReview->pegaVersao(num[i], i);
+            if (tab[aux.funcaoHash(chave, n)].consultaChave() == 0)
+            {
+                tab[aux.funcaoHash(chave,n)].insereChave(chave);
+                cout << tab[aux.funcaoHash(chave,n)].consultaChave() << "" << "incluida na posicao" << " " << i << " " << "da lista" << endl;
+            }
+            else if ((tab[aux.funcaoHash(chave, n)].consultaChave() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave))
+            {
+                tab[aux.funcaoHash(chave,n)].somaContador();
+                cout << "Repeticao da chave " << " " << tab[aux.funcaoHash(chave, n)].consultaChave() << " " << "detectada" << endl;
+                cout << "Contador somado, agora ele eh: " << " " << tab[aux.funcaoHash(chave,n)].consultaContador() << endl;
+            }
+            else 
+            {
+                int j = 0;
+                while (tab[aux.trataColisao(chave, n, j)].consultaContador() != 0)
+                {
+                    j++;
+                }
+                tab[aux.trataColisao(chave,n,j)].insereChave(chave);
+                cout << chave << endl;
+                cout << "Colisao detectada e tratada..." << " " << "na posicao " << " " << i << " " << "da tabela "<< endl;
+                cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ",com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
+            }
+        }
+    cout << "Tabela Hash criada com sucesso" << endl;
+}
+
 
 bool checaArqBin()
 {
