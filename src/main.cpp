@@ -110,6 +110,7 @@ int main(int argc, char const *argv[])
 }
 
 //cria tabela hash de n = 500 posições randômicas da lista de reviews
+//falta garantir que um mesmo review não seja incluido no contador de repetições
 
 void criaTabelaHash(Lista *listaReview)
 {
