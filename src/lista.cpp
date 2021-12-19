@@ -242,68 +242,39 @@ int Lista::acessaVersao(int rand, int indice){
     } 
 }
 
-int Lista::pegaVersao(int rand, int indice){
+int Lista::pegaVersao(int rand){
     char removePonto[] = ".";
     int chave;
-    int contador;
     if (this->obterRaiz() != nullptr){
         Review *No = this->raiz;
         for (int i = 0; No != nullptr; i++){
             if (i == rand)
             {
                 std::string temp = No->obterVersao();
-                cout << "na inclusao da linha" << " " << rand << " " << endl; 
-                cout << temp << endl;
                 for(unsigned int j = 0; j < strlen(removePonto); j++)
                 {
                     temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
                 }
-                if(temp == "NaN");
+                if (temp == "NaN")
                 {
-                    cout << "Tentativa de incluir review sem informacao de versao, ignorado" << endl;
-                    contador++;
-                    return 0; 
+                    cout << "Opa, aqui teve NaN" << endl;
+                    return 0;
                 }
+                else
+                {
                     chave = stoi(temp);
                     return chave;
+                }
             }
             else
             {
                 No = No->obterProximo();
             }
         }
-        cout << "Durante a inclusao " << " " << contador << "" << "reviews com versao nula foram encontradas e ignoradas na tabela hash";
     }
     else{
         cout << "Raiz apontando para um ponteiro null " << endl;
     } 
-}
-
-int Lista::funcaoHash(int versao){
-    return versao % 30;
-}
-
-void Lista::fazHash(int chave, int indice){
-
-    tabelaHash *tabela = new tabelaHash[30];
-    tabelaHash aux;
-    if (tabela[aux.funcaoHash(chave, 30)].consultaContador() == 0)
-    {
-        tabela[aux.funcaoHash(chave, 30)].insereChave(chave);
-        //cout << chave << endl;
-        cout << tabela[aux.funcaoHash(chave, 30)].consultaChave() << endl;
-        cout << tabela[aux.funcaoHash(chave, 30)].consultaContador() << endl;
-    }
-    else if ((tabela[aux.funcaoHash(chave, 30)].consultaChave() == chave) && (tabela[aux.funcaoHash(chave, 30)].consultaContador() != 0))
-    {
-        tabela[aux.funcaoHash(chave, 30)].somaContador();
-        cout << "A versao abaixo teve mais de um review: " << endl << tabela[aux.funcaoHash(chave, 30)].consultaChave() << endl;
-        cout << tabela[aux.funcaoHash(chave, 30)].consultaContador() << endl;        
-    }
-    else if ((tabela[aux.funcaoHash(chave, 30)].consultaChave() != chave) && (tabela[aux.funcaoHash(chave, 30)].consultaContador() != 0))
-    {
-        cout << "ihhhh, deu colisao" << endl;
-    }
 }
 
 

@@ -12,6 +12,7 @@ void testeImportacao();
 void acessaRegistro(int);
 bool checaArqBin();
 void criaTabelaHash(Lista *lista);
+bool confereNum(int *num, int i);
 string leBinario(int);
 
 string leBinario(int k)
@@ -47,39 +48,65 @@ string leBinario(int k)
     }
 }
 
+bool confereNum(int *num, int i) // função avisa quando um número randômico é gerado mais de uma vez
+{
+    for (int j = i-1; j >= 0; j--)
+    {
+        if (num[i] == num[j])
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+}
+
 void criaTabelaHash(Lista *listaReview)
 {
-        int n = 500;
+        int n = 50;
         tabelaHash *tab = new tabelaHash[n*2];
         tabelaHash aux;
-        int novaPosicao;
         srand(time(NULL));
         int *num = new int [n];
         for (int i = 0; i < n; i++){
             //cout << "Na execucao " << " " << i << endl;
             num[i] = rand() % 3646475;
-            int chave = listaReview->pegaVersao(num[i], i);
-            if (tab[aux.funcaoHash(chave, n)].consultaChave() == 0)
+            if (confereNum(num,i) == true) // garante que um mesmo review não seja lido mais de uma vez
             {
-                tab[aux.funcaoHash(chave,n)].insereChave(chave);
-            }
-            else if ((tab[aux.funcaoHash(chave, n)].consultaChave() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave))
-            {
-                tab[aux.funcaoHash(chave,n)].somaContador();
-                cout << "Repeticao da chave " << " " << tab[aux.funcaoHash(chave, n)].consultaChave() << " " << "detectada" << endl;
-                cout << "Contador somado, agora ele eh: " << " " << tab[aux.funcaoHash(chave,n)].consultaContador() << endl;
-            }
-            else 
-            {
-                int j = 0;
-                while (tab[aux.trataColisao(chave, n, j)].consultaContador() != 0)
+                int chave = listaReview->pegaVersao(num[i]);
+                if (chave != 0) //será 0 caso o review retorne versão vazia
                 {
-                    j++;
+                    if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0)
+                    {
+                        tab[aux.funcaoHash(chave,n)].insereChave(chave);
+                        cout << "Chave" << " " <<  tab[aux.funcaoHash(chave,n)].consultaChave() << " " <<"inserida com sucesso na posicao " << " " << aux.funcaoHash(chave,n) << " " << endl;
+                    }
+                    else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave))
+                    {
+                        tab[aux.funcaoHash(chave,n)].somaContador();
+                        cout << "Repeticao da chave " << " " << tab[aux.funcaoHash(chave, n)].consultaChave() << " " << "detectada" << endl;
+                        cout << "Contador somado, agora ele eh: " << " " << tab[aux.funcaoHash(chave,n)].consultaContador() << endl;
+                    }
+                    else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave))
+                    {
+                        int j = 0;
+                        //while (tab[aux.trataColisao(chave, n, j)].consultaContador() != 0)
+                        //{
+                            //j++;
+                        //}
+                        //tab[aux.trataColisao(chave,n,j)].insereChave(chave);
+                        cout << "Deu colisao" << endl;
+                        //cout << chave << endl;
+                        //cout << "Colisao detectada e tratada..." << " " << "na posicao " << " " << i << " " << "da tabela "<< endl;
+                        //cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ",com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
+                    }
                 }
-                tab[aux.trataColisao(chave,n,j)].insereChave(chave);
-                cout << chave << endl;
-                cout << "Colisao detectada e tratada..." << " " << "na posicao " << " " << i << " " << "da tabela "<< endl;
-                cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ",com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
+                else
+                {
+                    // ignora review com versão vazia
+                }
             }
         }
     cout << "Tabela Hash criada com sucesso" << endl;

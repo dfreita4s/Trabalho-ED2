@@ -25,7 +25,7 @@ public:
     void insereTabelaHash(int);
     void populaTabela(int,int);
     int acessaVersao(int, int);
-    int pegaVersao(int, int);
+    int pegaVersao(int);
     int funcaoHash(int);
     void fazHash(int,int);
     void criaTabelaHash();
