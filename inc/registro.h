@@ -17,9 +17,14 @@ public:
     void setRegistro(std::string *registro); //setar o array registros
     std::string *getRegistro();              //pegar o registro
     void setID(std::string);
+    void setN(int);
+    int getN();
 
-
-
+    std::string pivoMediano(std::string *, int, int);
+    void trocaNo(std::string &r1, std::string &r2);
+    int quickSort_particionaLista(std::string *list, int i, int j);
+    void quickSort_ordena(std::string *list, int i, int k);
+    void quickSort_time(std::string *list, int n);
 
 
     std::string *importaRegistros(int); //importar aleatoriamente N registros aleatorios
@@ -30,4 +35,5 @@ private:
     int upvotes;
     std::string app_version;
     std::string posted_date;
+    int N;
 };
