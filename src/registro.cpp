@@ -14,7 +14,7 @@ Registro::~Registro()
     delete registros;
 }
 
-
+/*
 std::string Registro::getTerms(int i, std::string regist){ //i = (id, text, votes, version, date) = (1, 2, 3, ...)
     std::string term = "";
     
@@ -59,7 +59,7 @@ std::string Registro::getTerms(int i, std::string regist){ //i = (id, text, vote
         break;
     }
 }
-
+*/
 void Registro::setID(std::string){
     
 }
