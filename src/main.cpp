@@ -65,9 +65,10 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
 
 void criaTabelaHash(Lista *listaReview)
 {
-        int n = 50;
+        int n = 499;
         tabelaHash *tab = new tabelaHash[n*2];
         tabelaHash aux;
+        int contaColisao = 0;
         srand(time(NULL));
         int *num = new int [n];
         for (int i = 0; i < n; i++){
@@ -98,6 +99,8 @@ void criaTabelaHash(Lista *listaReview)
                         //}
                         //tab[aux.trataColisao(chave,n,j)].insereChave(chave);
                         cout << "Deu colisao" << endl;
+                        contaColisao++;
+                        //aux.transformaBase(chave, i);
                         //cout << chave << endl;
                         //cout << "Colisao detectada e tratada..." << " " << "na posicao " << " " << i << " " << "da tabela "<< endl;
                         //cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ",com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
@@ -109,7 +112,7 @@ void criaTabelaHash(Lista *listaReview)
                 }
             }
         }
-    cout << "Tabela Hash criada com sucesso" << endl;
+    cout << "Tabela Hash criada com sucesso," << " " << contaColisao << " " << "colisoes aconteceram" << endl;
 }
 
 void menu()
