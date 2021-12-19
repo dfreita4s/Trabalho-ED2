@@ -79,40 +79,36 @@ void criaTabelaHash(Lista *listaReview)
                 int chave = listaReview->pegaVersao(num[i]);
                 if (chave != 0) //será 0 caso o review retorne versão vazia
                 {
-                    if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0)
+                    if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0) //Caso a função hash encontre uma posição vazia na tabela para inserir a chave
                     {
                         tab[aux.funcaoHash(chave,n)].insereChave(chave);
                         cout << "Chave" << " " <<  tab[aux.funcaoHash(chave,n)].consultaChave() << " " <<"inserida com sucesso na posicao " << " " << aux.funcaoHash(chave,n) << " " << endl;
                     }
-                    else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave))
+                    else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave)) // Caso a função hash encontre uma posição na tabela onde outro review com a mesma versão já tenha sido inserido
                     {
                         tab[aux.funcaoHash(chave,n)].somaContador();
                         cout << "Repeticao da chave " << " " << tab[aux.funcaoHash(chave, n)].consultaChave() << " " << "detectada" << endl;
                         cout << "Contador somado, agora ele eh: " << " " << tab[aux.funcaoHash(chave,n)].consultaContador() << endl;
                     }
-                    else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave))
+                    else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave)) //Caso a função hash devolva uma posição da tabela não vazia e que a versão do review é diferente do já inserido, ocorre a colisão
                     {
                         int j = 0;
-                        while ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave))
+                        while ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) //Enquanto a colisão persistir, índice j, que entra na função de tratamento de colisão, é somado
                         {
                             j++;
                         }
-                        if ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() == chave))
+                        // ao sair do while, temos que a função trataColisao encontrou uma posição vazia na tabela para inserir a versão, ou ela encontrou uma posição na tabela onde a mesma versão de outro review já havia colidido e sido salva
+                        if ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() == chave)) // caso a tabela já tenha a versão inserida por um review anterior
                         {
                             tab[aux.trataColisao(chave, n, j)].somaContador();
                             cout << "repeticao via colisao detectada, versao" << " " << chave << " " << "teve seu contador somado para" << " " << tab[aux.trataColisao(chave, n, j)].consultaContador() << endl;
                         }
-                        else if ((tab[aux.trataColisao(chave, n, j)].consultaContador() == 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave))
+                        else if ((tab[aux.trataColisao(chave, n, j)].consultaContador() == 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) // caso uma posição vazia na tabela tenha sido encontrada para guardar a versão
                         {
                             tab[aux.trataColisao(chave, n , j)].insereChave(chave);
                             cout << "colisao detectada e chave" << " " << chave << " " << "tratada e inserida na posicao" << " " << aux.trataColisao(chave, n, j) << endl;
                         }
-                        //cout << "Deu colisao" << endl;
                         contaColisao++;
-                        //aux.transformaBase(chave, i);
-                        //cout << chave << endl;
-                        //cout << "Colisao detectada e tratada..." << " " << "na posicao " << " " << i << " " << "da tabela "<< endl;
-                        //cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ", com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
                     }
                 }
                 else
