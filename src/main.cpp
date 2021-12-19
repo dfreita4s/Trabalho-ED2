@@ -44,7 +44,7 @@ string leBinario(int k)
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Sair\nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Importar Registros\n[3] Sair\nFunção: ";
     int resp = 0;
     cin >> resp;
     if (resp == 1)
@@ -60,7 +60,14 @@ void menu()
         cout<<"Digite o numero de importacoes que deseja: ";
         cin>>resp;
         Registro *registro = new Registro("./data/tiktok_app_reviews.bin", resp);
+        cout<<"Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
+        cin>>resp;
+        if(resp == 1)
         registro->testeImportacao();
+        else if (resp == 2)
+        registro->ordenaRegistros();
+        else
+        cout<<"Digite um valor valido!"<<endl;
         menu();
     }
     else if (resp == 3)

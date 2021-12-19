@@ -1,11 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include "../inc/registro.h"
-using namespace std;
 
 Registro::Registro(const std::string &caminhoArquivo, int N)
 {
-    this->registros = new string[N]; //chama o array para salvar na memoria principal os N registros
+    this->registros = new std::string[N]; //chama o array para salvar na memoria principal os N registros
     setRegistro(importaRegistros(N));
 }
 
@@ -15,6 +14,57 @@ Registro::~Registro()
     delete registros;
 }
 
+
+std::string Registro::getTerms(int i, std::string regist){ //i = (id, text, votes, version, date) = (1, 2, 3, ...)
+    std::string term = "";
+    
+
+    
+
+    switch (i)
+    {
+    case 1: //id
+        int pos = regist.find(",");
+        term = regist.substr(0, pos);
+        return term;
+        break;
+    case 2: //txt
+        int pos = regist.find("\"");
+        term = regist.substr(pos, regist.find_last_of("\""));
+        return term;
+        break;
+    
+    case 3: //nota
+        int pos = regist.find_last_of("\"");
+
+        term = regist.substr(pos + 1, pos + 2);
+        return term;
+        break;
+
+    case 4: //version
+        int pos = regist.find("\"");
+        term = regist.substr(pos, regist.find_last_of(","));
+        return term;
+        break;
+
+    case 5: //data
+        int pos = regist.find("\"");
+        term = regist.substr(pos, regist.find_last_of("\""));
+        return term;
+        break;
+    
+    
+    
+    default:
+        break;
+    }
+}
+
+void Registro::setID(std::string){
+    
+}
+
+
 void Registro::acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
@@ -22,10 +72,12 @@ void Registro::acessaRegistro(int k)
     if (registro != "")
         std::cout << registro;
     else
-        std::cout << "Numero de registro não encontrado!" << endl;
+        std::cout << "Numero de registro não encontrado!" << std::endl;
 }
 
-string Registro::leBinario(int k)
+
+
+std::string Registro::leBinario(int k)
 {
 
     std::ifstream arqBin;
@@ -43,30 +95,30 @@ string Registro::leBinario(int k)
             else
                 cont++;
         }
-        cout << "Diretório " << k << " não existe!" << endl;
+        std::cout << "Diretório " << k << " não existe!" << std::endl;
         return "";
         arqBin.close();
     }
     else
     {
-        cout << "Não foi possível abrir o arquivo!" << endl;
+        std::cout << "Não foi possível abrir o arquivo!" << std::endl;
         return "";
     }
 }
 
-string *Registro::getRegistro()
+std::string *Registro::getRegistro()
 {
     return this->registros;
 }
 
-void Registro::setRegistro(string *regist)
+void Registro::setRegistro(std::string *regist)
 {
     this->registros = regist;
 }
 
-string *Registro::importaRegistros(int N) //retorna N registros aleatorios do arquivo binario
+std::string *Registro::importaRegistros(int N) //retorna N registros aleatorios do arquivo binario
 {
-    string *aux = new string[N];
+    std::string *aux = new std::string[N];
     for (int i = 0; i < N; i++)
         aux[i] = leBinario(rand() % 3646475 + 0);
 
@@ -98,9 +150,9 @@ void Registro::testeImportacao()
             for (int i = 0; i < 100; i++)
             {
                 linha = registro[i];
-                saidaTxt.write(registro[i].c_str(), sizeof(char) * linha.size());
+                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
             }
-            cout << "O arquivo de texto foi criado!" << endl;
+            std::cout << "O arquivo de texto foi criado!" << std::endl;
         }
         saidaTxt.close();
     }
@@ -109,3 +161,9 @@ void Registro::testeImportacao()
         std::cout << "Por favor, digite um valor válido!" << std::endl;
     }
 }
+
+
+void Registro::ordenaRegistros(){
+
+}
+
