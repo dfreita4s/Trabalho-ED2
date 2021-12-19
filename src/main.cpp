@@ -66,7 +66,7 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
 void criaTabelaHash(Lista *listaReview)
 {
         int n = 499;
-        tabelaHash *tab = new tabelaHash[n*2];
+        tabelaHash *tab = new tabelaHash[n];
         tabelaHash aux;
         int contaColisao = 0;
         srand(time(NULL));
@@ -93,17 +93,26 @@ void criaTabelaHash(Lista *listaReview)
                     else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave))
                     {
                         int j = 0;
-                        //while (tab[aux.trataColisao(chave, n, j)].consultaContador() != 0)
-                        //{
-                            //j++;
-                        //}
-                        //tab[aux.trataColisao(chave,n,j)].insereChave(chave);
-                        cout << "Deu colisao" << endl;
+                        while ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave))
+                        {
+                            j++;
+                        }
+                        if ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() == chave))
+                        {
+                            tab[aux.trataColisao(chave, n, j)].somaContador();
+                            cout << "repeticao via colisao detectada, versao" << " " << chave << " " << "teve seu contador somado para" << " " << tab[aux.trataColisao(chave, n, j)].consultaContador() << endl;
+                        }
+                        else if ((tab[aux.trataColisao(chave, n, j)].consultaContador() == 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave))
+                        {
+                            tab[aux.trataColisao(chave, n , j)].insereChave(chave);
+                            cout << "colisao detectada e chave" << " " << chave << " " << "tratada e inserida na posicao" << " " << aux.trataColisao(chave, n, j) << endl;
+                        }
+                        //cout << "Deu colisao" << endl;
                         contaColisao++;
                         //aux.transformaBase(chave, i);
                         //cout << chave << endl;
                         //cout << "Colisao detectada e tratada..." << " " << "na posicao " << " " << i << " " << "da tabela "<< endl;
-                        //cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ",com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
+                        //cout << "Sua nova posicao via trataColisao eh " << " " << aux.trataColisao(chave,n,j) << " " << ", com a versao" << " " << tab[aux.trataColisao(chave,n,j)].consultaChave() << endl;  
                     }
                 }
                 else

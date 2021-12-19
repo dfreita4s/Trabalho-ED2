@@ -106,10 +106,10 @@ int tabelaHash::funcaoHash(int versao, int tam) // função hash transforma valo
 }
 
 int tabelaHash::trataColisao(int chave, int tam, int i){
-    int m1 = 7;
-    int m2 = 5;
+    int m1 = 27;
+    int m2 = 26;
     int saida;
-    saida = ((chave % 7) + i*(chave % 5)) % 7;
+    saida = ((chave % m1) + i*((chave % m2)) + 1);
     return saida;
 }
 
