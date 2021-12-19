@@ -21,9 +21,15 @@ public:
     void inserirReview(Review *, Review *);
 
     bool criarArquivoBinario();
+    void usaListaImportacao();
+    void insereTabelaHash(int);
+    void populaTabela(int,int);
     int acessaVersao(int, int);
     int pegaVersao(int, int);
-
+    int funcaoHash(int);
+    void fazHash(int,int);
+    void criaTabelaHash();
+    //void recebeVetor(int*);
 
 protected:
     bool abrirArquivo(const std::string &);

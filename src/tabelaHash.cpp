@@ -91,3 +91,4 @@ int tabelaHash::totalColisoes(int *tabela, int m)
     }
     return cont;
 }
+

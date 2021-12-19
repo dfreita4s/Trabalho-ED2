@@ -242,25 +242,26 @@ int Lista::acessaVersao(int rand, int indice){
     } 
 }
 
-
-//pega review em posição randômica da lista, passada por parâmetro, e devolve a versão da lista convertida para inteiro e sem pontos 
-//função ignora reviews com campo de versão nulo
-
 int Lista::pegaVersao(int rand, int indice){
     char removePonto[] = ".";
     int chave;
+    int contador;
     if (this->obterRaiz() != nullptr){
         Review *No = this->raiz;
         for (int i = 0; No != nullptr; i++){
             if (i == rand)
             {
                 std::string temp = No->obterVersao();
+                cout << "na inclusao da linha" << " " << rand << " " << endl; 
+                cout << temp << endl;
                 for(unsigned int j = 0; j < strlen(removePonto); j++)
                 {
                     temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
                 }
                 if(temp == "NaN");
                 {
+                    cout << "Tentativa de incluir review sem informacao de versao, ignorado" << endl;
+                    contador++;
                     return 0; 
                 }
                     chave = stoi(temp);
@@ -271,55 +272,39 @@ int Lista::pegaVersao(int rand, int indice){
                 No = No->obterProximo();
             }
         }
+        cout << "Durante a inclusao " << " " << contador << "" << "reviews com versao nula foram encontradas e ignoradas na tabela hash";
     }
     else{
         cout << "Raiz apontando para um ponteiro null " << endl;
     } 
 }
 
-/*
-bool Lista::acessaRegistro(int k)
-{
-    if(this->obterRaiz() != nullptr)
+int Lista::funcaoHash(int versao){
+    return versao % 30;
+}
+
+void Lista::fazHash(int chave, int indice){
+
+    tabelaHash *tabela = new tabelaHash[30];
+    tabelaHash aux;
+    if (tabela[aux.funcaoHash(chave, 30)].consultaContador() == 0)
     {
-        Review *No = this->raiz;
-        for(int i=0; ((No != nullptr) && (i<=k)); i++)
-        {
-            if(i==k)
-            {
-                No->exibeRegistro();
-                return true;
-            }
-            else
-                No = No->obterProximo();
-        }
-        std::cout << std::endl << "Registro não encontrado." << std::endl;
-        return false;
+        tabela[aux.funcaoHash(chave, 30)].insereChave(chave);
+        //cout << chave << endl;
+        cout << tabela[aux.funcaoHash(chave, 30)].consultaChave() << endl;
+        cout << tabela[aux.funcaoHash(chave, 30)].consultaContador() << endl;
     }
-    else
+    else if ((tabela[aux.funcaoHash(chave, 30)].consultaChave() == chave) && (tabela[aux.funcaoHash(chave, 30)].consultaContador() != 0))
     {
-        std::cout << "Nenhum registro encontrado." << std::endl;
-        return false;
+        tabela[aux.funcaoHash(chave, 30)].somaContador();
+        cout << "A versao abaixo teve mais de um review: " << endl << tabela[aux.funcaoHash(chave, 30)].consultaChave() << endl;
+        cout << tabela[aux.funcaoHash(chave, 30)].consultaContador() << endl;        
+    }
+    else if ((tabela[aux.funcaoHash(chave, 30)].consultaChave() != chave) && (tabela[aux.funcaoHash(chave, 30)].consultaContador() != 0))
+    {
+        cout << "ihhhh, deu colisao" << endl;
     }
 }
 
-void Lista::testeImportacao(){
-    int resp, N = 0;
-    std::cout<<"Deseja exibir a saída no console ou salvá-la em um arquivo texto? 1 para no console 2 para salvar. "<<std::endl;
-    std::cin>>resp;
-    if(resp == 1){
-        //escolha saida em console N = 10
-        N = 10;
-        for(int i = N; i>=0; i--){
-         acessaRegistro(rand() % 3646475 + 0);
-        }
-    }else if(resp == 2){
-        //escolha salvar em um arquivo texto
-        N = 100;
-        //
-    }else {
-        std::cout<<"Por favor digite uma resposta válida!"<<std::endl;
-        testeImportacao();
-    }
-}
-*/
+
+
