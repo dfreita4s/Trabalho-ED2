@@ -4,6 +4,7 @@
 #include <fstream>
 #include<sstream>
 #include <vector>
+#include <chrono>
 
 Lista::Lista(const std::string &caminhoArquivo)
 {
@@ -207,4 +208,92 @@ bool Lista::criarArquivoBinario()
     }
     std::cout << "Erro ao criar arquivo binário." << std::endl;
     return false;
+}
+
+
+
+/// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
+
+//realizar a ordenação desses registros, utilizando como chave de ordenação upvotes. Durante a ordenação, deverão ser computados o 
+//total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
+//Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
+//Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
+
+int Lista::trocaNo(Review& r1, Review& r1){
+    Review aux = r1;
+    r1 = r2;
+    r2 = aux;   
+}
+
+Review Lista::pivoMediano(Review *l, int inicio, int fim){
+    int media = (inicio+fim)/2;
+    if(l[inicio]>l[fim])
+        trocaNo(l[inicio], l[fim]);
+    if(l[media]>l[fim])
+        trocaNo(l[media], l[fim]);
+    if(l[inicio]>l[media])
+        trocaNo(l[inicio], l[media]);
+    troca(l[media],l[fim]);
+    return l[fim];
+}
+
+int Lista::quickSort_particionaLista(Review* list, int i, int j){
+
+    int fim = j-1;
+    int init = i;
+    Review pivo = pivoMediano(list, i, j);
+
+    while(true){
+        while (i < j && list[i] < pivo){
+            i = i + 1;
+        }
+        while (j >= init && list[j] > PIVÔ){
+            j = j-1;    
+        }
+        if(i<=j){
+            trocaNo(list[i],list[j])
+            i = i+1;
+            j = j-1;
+        }
+       else
+            break;
+    trocaNo(list[i], list[j])
+   return i;
+ }
+
+ void Lista::quickSort_ordena(Review *list, int i, int k){
+    if(i-k > 0){
+        p = quickSort_particionaLista(list, i, k);
+        quickSort_ordena(list, i, p);
+        quickSort_ordena(list, p+1, k);  
+    }
+ }
+
+void quickSort_time(Review *list, int n)
+{
+    high_resolution_clock::time_point start = high_resolution_clock::now();
+    quickSort_ordena(list, 0, n-1);
+    high_resolution_clock::time_point end = high_resolution_clock::now();
+    cout << "/nTempo gasto na ordenação: " << duration_cast<duration<double>>(start - end).count() << " segundos" << endl;
+}
+
+/// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
+
+void Lista::heapSort_ordena(int *list, int tam)
+{
+    //constroiHeap(v, n);
+    while(tam > 0)
+    {
+        troca(list[0], list[tam-1]);
+        heapify(list, 0, tam-1);
+        tam = tam-1;
+    }
+}
+
+void heapSort_time(Review *list, int n)
+{
+    high_resolution_clock::time_point start = high_resolution_clock::now();
+    heapSort_ordena(list, 0, n-1);
+    high_resolution_clock::time_point end = high_resolution_clock::now();
+    cout << "/nTempo gasto na ordenação: " << duration_cast<duration<double>>(start - end).count() << " segundos" << endl;
 }
