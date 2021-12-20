@@ -19,7 +19,8 @@ void testeImportacao(Registro *lista) //passar esse para o registro.cpp
         // Printar no terminal N = 10 registros aleatorios
         N = 10;
         for (int i = 0; i < N; i++)
-            std::cout << lista[i].imprimeRegistros() << std::endl;
+            std::cout << lista[i].imprimeRegistros() << std::endl
+                      << std::endl;
     }
     else if (resp == 2)
     {
@@ -53,42 +54,43 @@ void leBinario(Registro *registro, int k)
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
+        // arqBin.seekg(0, arqBin.end);
+        // int tamTotal = arqBin.tellg();
+        // arqBin.seekg(0, arqBin.beg);
         int randm = rand() % 3646475 + 0;
         std::string str = "";
-        int i, j, pos = 0;
+        int i = 0;
+        int pos = 0;
+        int j = 0;
         while (getline(arqBin, str))
         {
+
             if (randm == j)
             {
 
-                while (i < k)
-                {
-                    pos = str.find(",");
-                    registro[i].setID(str.substr(0, pos)); // id
+                pos = str.find(",");
+                registro[i].setID(str.substr(0, pos)); // id
 
-                    str = str.substr(pos, str.length());
+                str = str.substr(pos + 1, str.length());
 
-                    pos = str.find_last_of("\"");
-                    registro[i].setText(str.substr(0, pos - 1)); // text
+                pos = str.find_last_of("\"") + 1;
+                registro[i].setText(str.substr(0, pos + 1)); // text
 
-                    str = str.substr(pos + 1, str.length());
+                str = str.substr(pos + 1, str.length());
 
-                    pos = str.find(",");
-                    registro[i].setVotes(stoi(str.substr(0, pos))); // votes
+                pos = str.find(",");
+                registro[i].setVotes(atoi(str.substr(0, pos).c_str())); // votes
 
-                    str = str.substr(pos, str.length());
+                str = str.substr(pos + 1, str.length());
 
-                    pos = str.find(",");
-                    registro[i].setVersion(str.substr(0, pos)); // version
+                pos = str.find(",");
 
-                    str = str.substr(pos, str.length());
+                registro[i].setVersion(str.substr(0, pos)); // version
+                str = str.substr(pos + 1, str.length());
 
-                    pos = str.length();
-                    registro[i].setVersion(str.substr(0, pos)); // data
+                registro[i].setDate(str.substr(0, str.length())); // data
 
-                    i++;
-                }
-
+                i++;
                 randm = rand() % 3646475 + 0;
             }
             else
@@ -96,7 +98,6 @@ void leBinario(Registro *registro, int k)
             if (i == k - 1)
                 break;
         }
-        cout << "Diretório " << k << " não existe!" << endl;
 
         arqBin.close();
     }
@@ -177,7 +178,6 @@ void acessaRegistro(int k)
             else
                 i++;
         }
-        cout << "Diretório " << k << " não existe!" << endl;
         arqBin.close();
     }
     else

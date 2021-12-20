@@ -4,12 +4,12 @@
 #include <chrono>
 #include "../inc/registro.h"
 
-Registro::Registro(const std::string &caminhoArquivo, int N)
-{
-    this->registros = new std::string[N]; //chama o array para salvar na memoria principal os N registros
-    setN(N);
-    setRegistro(importaRegistros(N));
-}
+// Registro::Registro(const std::string &caminhoArquivo, int N)
+// {
+//     this->registros = new std::string[N]; //chama o array para salvar na memoria principal os N registros
+//     setN(N);
+//     setRegistro(importaRegistros(N));
+// }
 
 Registro::Registro()
 {
@@ -72,33 +72,6 @@ int Registro::getVotes()
 {
     return this->upvotes;
 }
-
-// std::string Registro::getTerms(int i, std::string regist)
-// {
-//     std::string term = "";
-
-//     switch (i)
-//     {
-
-//     case 1: //nota
-//         int pos = regist.find_last_of("\"");
-//         int posfim = regist.substr(pos + 1).find(",");
-
-//         term = regist.substr(pos + 1, posfim);
-//         return term;
-//         break;
-
-//     case 2: //version
-
-//         int pos = regist.substr(regist.find("\"") + 1).find(",");
-//         term = regist.substr(pos, regist.find_last_of(","));
-//         return term;
-//         break;
-
-//     default:
-//         break;
-//     }
-// }
 
 void Registro::setN(int N)
 {
