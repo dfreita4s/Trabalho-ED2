@@ -1,8 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <string>
 #include "../inc/lista.h"
 #include "../inc/registro.h"
+
+#define NREGISTROS 3646475
 
 using namespace std;
 
@@ -10,7 +13,7 @@ int obterReview();
 void acessaRegistro(int);
 bool checaArqBin();
 
-void testeImportacao(Registro *lista) //passar esse para o registro.cpp
+void testeImportacao(Registro *lista)
 {
     int resp, N = 0;
     std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
@@ -55,99 +58,86 @@ void leBinario(Registro *registro, int k)
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        // arqBin.seekg(0, arqBin.end);
-        // int tamTotal = arqBin.tellg();
-        // arqBin.seekg(0, arqBin.beg);
-        int randm = rand() % 3646475 + 0;
+        arqBin.seekg(0, arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0, arqBin.beg);
         std::string str = "";
-        int i = 0;
+        char *buffer = new char[NREGISTROS];
         int pos = 0;
-        int j = 0;
+        int i = 0;
+        int cont = 0;
 
-        while (getline(arqBin, str))
+        for (int i = 0; i < k; i++)
         {
-            arqBin.seekg(0);
+            pos = rand() % NREGISTROS + 0;
+            arqBin.seekg(0, arqBin.end);
+            arqBin.read(buffer, 320);
+            str = buffer;
 
-            if (randm == j)
-            {
+            pos = str.find(",");
+            registro[i].setID(str.substr(0, pos)); // id
 
-                pos = str.find(",");
-                registro[i].setID(str.substr(0, pos)); // id
+            str = str.substr(pos + 1, str.length());
 
-                str = str.substr(pos + 1, str.length());
+            pos = str.find_last_of("\"") + 1;
+            registro[i].setText(str.substr(0, pos)); // text
 
-                pos = str.find_last_of("\"") + 1;
-                registro[i].setText(str.substr(0, pos)); // text
+            str = str.substr(pos + 1, str.length());
 
-                str = str.substr(pos + 1, str.length());
+            pos = str.find(",");
+            registro[i].setVotes(atoi(str.substr(0, pos).c_str())); // votes
 
-                pos = str.find(",");
-                registro[i].setVotes(atoi(str.substr(0, pos).c_str())); // votes
+            str = str.substr(pos + 1, str.length());
 
-                str = str.substr(pos + 1, str.length());
+            pos = str.find(",");
 
-                pos = str.find(",");
+            registro[i].setVersion(str.substr(0, pos)); // version
+            str = str.substr(pos + 1, str.length());
 
-                registro[i].setVersion(str.substr(0, pos)); // version
-                str = str.substr(pos + 1, str.length());
-
-                registro[i].setDate(str.substr(0, str.length())); // data
-
-                i++;
-                randm = rand() % 3646475 + 0;
-            }
-            else
-                j++;
-            if (i == k - 1)
-                break;
+            registro[i].setDate(str.substr(0, str.length())); // data
         }
+
+        // while (i < k)
+        // {
+        //     int j = rand() % 3646475 + 0;
+        //     while (getline(arqBin, str))
+        //     {
+
+        //         if (cont == j)
+        //         {
+        //             cout << "oi\n";
+        //             pos = str.find(",");
+        //             registro[i].setID(str.substr(0, pos)); // id
+
+        //             str = str.substr(pos + 1, str.length());
+
+        //             pos = str.find_last_of("\"") + 1;
+        //             registro[i].setText(str.substr(0, pos)); // text
+
+        //             str = str.substr(pos + 1, str.length());
+
+        //             pos = str.find(",");
+        //             registro[i].setVotes(atoi(str.substr(0, pos).c_str())); // votes
+
+        //             str = str.substr(pos + 1, str.length());
+
+        //             pos = str.find(",");
+
+        //             registro[i].setVersion(str.substr(0, pos)); // version
+        //             str = str.substr(pos + 1, str.length());
+
+        //             registro[i].setDate(str.substr(0, str.length())); // data
+        //             i++;
+        //             break;
+        //         }
+        //         else
+        //             cont++;
 
         arqBin.close();
     }
+
     else
         cout << "Não foi possível abrir o arquivo!" << endl;
-}
-
-void menu()
-{
-
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Importar Registros\n[3] Sair\nFunção: ";
-    int resp = 0;
-    cin >> resp;
-    if (resp == 1)
-    {
-        int n = 0;
-        cout << "Digite o registro que deseja: ";
-        cin >> n;
-        acessaRegistro(n);
-        menu();
-    }
-    else if (resp == 2)
-    {
-        cout << "Digite o numero de importacoes que deseja: ";
-        int N = 0;
-        cin >> N;
-        Registro *registro = new Registro[N];
-        leBinario(registro, N); //le e salva na memoria principal os registros
-        cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
-        cin >> resp;
-        if (resp == 1)
-            testeImportacao(registro);
-        else if (resp == 2)
-            quickSort_time(registro, N);
-        else
-            cout << "Digite um valor valido!" << endl;
-        menu();
-    }
-    else if (resp == 3)
-    {
-        return;
-    }
-    else
-    {
-        cout << "Por favor digite uma resposta válida!" << endl;
-        menu();
-    }
 }
 
 bool checaArqBin()
@@ -233,6 +223,7 @@ int quickSort_particionaLista(Registro *list, int i, int j)
         }
         while (j >= init && list[i].getVotes() < pivo.getVotes())
         {
+
             j = j - 1;
         }
         if (i <= j)
@@ -271,33 +262,33 @@ void quickSort_time(Registro *list, int n)
 
 */
 
-
 /// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
-
 
 void heapify(Registro *list, int i, int tam)
 {
-    while(i < tam)
+    while (i < tam)
     {
-        int filho = 2*i + 1;
-        if(filho < tam)
+        int filho = 2 * i + 1;
+        if (filho < tam)
         {
-            if(filho+1 < tam && list[filho+1].getVotes() > list[filho].getVotes()){
+            if (filho + 1 < tam && list[filho + 1].getVotes() > list[filho].getVotes())
+            {
                 filho++;
             }
-            
-            if(list[filho].getVotes() > list[i].getVotes()){
+
+            if (list[filho].getVotes() > list[i].getVotes())
+            {
                 trocaNo(list[i], list[filho]);
             }
         }
         i = filho;
     }
-
 }
 
 void build_heap(Registro *list, int tam)
 {
-    for(int i = tam/2-1; i >= 0; i--){
+    for (int i = tam / 2 - 1; i >= 0; i--)
+    {
         heapify(list, i, tam);
     }
 }
@@ -305,10 +296,10 @@ void build_heap(Registro *list, int tam)
 void heapSort_ordena(Registro *list, int tam)
 {
     build_heap(list, tam);
-    while(tam > 0)
+    while (tam > 0)
     {
-        trocaNo(list[0], list[tam-1]);
-        heapify(list, 0, tam-1);
+        trocaNo(list[0], list[tam - 1]);
+        heapify(list, 0, tam - 1);
         tam--;
     }
 }
@@ -319,29 +310,38 @@ void heapSort_time(Registro *list, int tam)
     heapSort_ordena(list, tam);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
-}
+    std::fstream saidaTxt;
+    saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
+    if (saidaTxt.is_open())
+    {
 
+        std::string linha = "";
+
+        linha = "Heapsort\nTempo gasto:  segundos\n";
+        saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
+
+        cout << "O arquivo de texto foi criado!" << endl;
+    }
+    saidaTxt.close();
+}
 
 /*
 ====================FIM HEAPSORT ============
 
 */
 
-
 /// ALGORITMO DE ORDENAÇÃO - COMB SORT ///
-
 
 int find_next(int gap)
 {
-    gap = (gap*10)/13;
- 
+    gap = (gap * 10) / 13;
+
     if (gap < 1)
         return 1;
     return gap;
 }
- 
 
-void combSort_ordena(Registro* list, int tam)
+void combSort_ordena(Registro *list, int tam)
 {
     int gap = tam;
     bool switched = true;
@@ -351,13 +351,13 @@ void combSort_ordena(Registro* list, int tam)
         gap = find_next(gap);
 
         switched = false;
- 
-        int i=0;
-        while(i < tam-gap)
+
+        int i = 0;
+        while (i < tam - gap)
         {
-            if (list[i].getVotes() > list[i+gap].getVotes())
+            if (list[i].getVotes() > list[i + gap].getVotes())
             {
-                trocaNo(list[i], list[i+gap]);
+                trocaNo(list[i], list[i + gap]);
                 switched = true;
             }
             i++;
@@ -365,13 +365,13 @@ void combSort_ordena(Registro* list, int tam)
     }
 }
 
-void combSort_time(Registro *list, int tam){
+void combSort_time(Registro *list, int tam)
+{
 
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     combSort_ordena(list, tam);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
-
 }
 
 /*
@@ -379,6 +379,60 @@ void combSort_time(Registro *list, int tam){
 ===================FIM COMBSORT =======================
 
 */
+
+void menu()
+{
+
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Importar Registros\n[3] Sair\nFunção: ";
+    int resp = 0;
+    cin >> resp;
+    if (resp == 1)
+    {
+        int n = 0;
+        cout << "Digite o registro que deseja: ";
+        cin >> n;
+        acessaRegistro(n);
+        menu();
+    }
+    else if (resp == 2)
+    {
+        cout << "Digite o numero de importacoes que deseja: ";
+        int N = 0;
+        cin >> N;
+        Registro *registro = new Registro[N];
+        // for (int i = 0; i < N; i++)
+        leBinario(registro, N); //le e salva na memoria principal os registros
+        cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
+        cin >> resp;
+        if (resp == 1)
+            testeImportacao(registro);
+        else if (resp == 2)
+        {
+            std::cout << "Qual Ordendação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nFunção: ";
+            cin >> resp;
+            if (resp == 1)
+                quickSort_time(registro, N);
+            else if (resp == 2)
+                heapSort_time(registro, N);
+            else if (resp == 3)
+                combSort_time(registro, N);
+            else
+                std::cout << "Digite uma resposta valida!" << std::endl;
+        }
+        else
+            cout << "Digite um valor valido!" << endl;
+        menu();
+    }
+    else if (resp == 3)
+    {
+        return;
+    }
+    else
+    {
+        cout << "Por favor digite uma resposta válida!" << endl;
+        menu();
+    }
+}
 
 int main(int argc, char const *argv[])
 {
