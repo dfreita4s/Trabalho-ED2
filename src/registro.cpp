@@ -16,61 +16,44 @@ Registro::~Registro()
     delete registros;
 }
 
-/*
-std::string Registro::getTerms(int i, std::string regist){ //i = (id, text, votes, version, date) = (1, 2, 3, ...)
+std::string Registro::getTerms(int i, std::string regist)
+{ 
     std::string term = "";
-    
-
-    
 
     switch (i)
     {
-    case 1: //id
-        int pos = regist.find(",");
-        term = regist.substr(0, pos);
-        return term;
-        break;
-    case 2: //txt
-        int pos = regist.find("\"");
-        term = regist.substr(pos, regist.find_last_of("\""));
-        return term;
-        break;
-    
-    case 3: //nota
+
+    case 1: //nota
         int pos = regist.find_last_of("\"");
+        int posfim = regist.substr(pos + 1).find(",");
 
-        term = regist.substr(pos + 1, pos + 2);
+        term = regist.substr(pos + 1, posfim);
         return term;
         break;
 
-    case 4: //version
-        int pos = regist.find("\"");
+    case 2: //version
+
+        int pos = regist.substr(regist.find("\"") + 1).find(",");
         term = regist.substr(pos, regist.find_last_of(","));
         return term;
         break;
 
-    case 5: //data
-        int pos = regist.find("\"");
-        term = regist.substr(pos, regist.find_last_of("\""));
-        return term;
-        break;
-    
-    
-    
     default:
         break;
     }
 }
-*/
-void Registro::setID(std::string){
-    
+
+void Registro::setID(std::string)
+{
 }
 
-void Registro::setN(int N){
+void Registro::setN(int N)
+{
     this->N = N;
 }
 
-int Registro::getN(){
+int Registro::getN()
+{
     return this->N;
 }
 
@@ -83,8 +66,6 @@ void Registro::acessaRegistro(int k)
     else
         std::cout << "Numero de registro não encontrado!" << std::endl;
 }
-
-
 
 std::string Registro::leBinario(int k)
 {
@@ -171,8 +152,8 @@ void Registro::testeImportacao()
     }
 }
 
-
-void Registro::ordenaRegistros(){
+void Registro::ordenaRegistros()
+{
     quickSort_time(getRegistro(), getN());
 }
 
@@ -232,41 +213,41 @@ int Registro::quickSort_particionaLista(std::string *list, int i, int j)
         return i;
     }
 }
-    void Registro::quickSort_ordena(std::string * list, int i, int k)
+void Registro::quickSort_ordena(std::string *list, int i, int k)
+{
+    if (i - k > 0)
     {
-        if (i - k > 0)
-        {
-            int p = quickSort_particionaLista(list, i, k);
-            quickSort_ordena(list, i, p);
-            quickSort_ordena(list, p + 1, k);
-        }
+        int p = quickSort_particionaLista(list, i, k);
+        quickSort_ordena(list, i, p);
+        quickSort_ordena(list, p + 1, k);
     }
+}
 
-    void Registro::quickSort_time(std::string *list, int n)
-    {
-        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-        quickSort_ordena(list, 0, n - 1);
-        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-        std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
-    }
+void Registro::quickSort_time(std::string *list, int n)
+{
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    quickSort_ordena(list, 0, n - 1);
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+}
 
-    /// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
+/// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
 
-    // void Registro::heapSort_ordena(int *list, int tam)
-    // {
-    //     //constroiHeap(v, n);
-    //     while (tam > 0)
-    //     {
-    //         troca(list[0], list[tam - 1]);
-    //         heapify(list, 0, tam - 1);
-    //         tam = tam - 1;
-    //     }
-    // }
+// void Registro::heapSort_ordena(int *list, int tam)
+// {
+//     //constroiHeap(v, n);
+//     while (tam > 0)
+//     {
+//         troca(list[0], list[tam - 1]);
+//         heapify(list, 0, tam - 1);
+//         tam = tam - 1;
+//     }
+// }
 
-    // void heapSort_time(Review * list, int n)
-    // {
-    //     high_resolution_clock::time_point start = high_resolution_clock::now();
-    //     heapSort_ordena(list, 0, n - 1);
-    //     high_resolution_clock::time_point end = high_resolution_clock::now();
-    //     cout << "/nTempo gasto na ordenação: " << duration_cast<duration<double>>(start - end).count() << " segundos" << endl;
-    // }
+// void heapSort_time(Review * list, int n)
+// {
+//     high_resolution_clock::time_point start = high_resolution_clock::now();
+//     heapSort_ordena(list, 0, n - 1);
+//     high_resolution_clock::time_point end = high_resolution_clock::now();
+//     cout << "/nTempo gasto na ordenação: " << duration_cast<duration<double>>(start - end).count() << " segundos" << endl;
+// }
