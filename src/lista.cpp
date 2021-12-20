@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-
+#include <chrono>
 
 Lista::Lista(const std::string &caminhoArquivo)
 {

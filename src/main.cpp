@@ -271,6 +271,115 @@ void quickSort_time(Registro *list, int n)
 
 */
 
+
+/// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
+
+
+void heapify(Registro *list, int i, int tam)
+{
+    while(i < tam)
+    {
+        int filho = 2*i + 1;
+        if(filho < tam)
+        {
+            if(filho+1 < tam && list[filho+1].getVotes() > list[filho].getVotes()){
+                filho++;
+            }
+            
+            if(list[filho].getVotes() > list[i].getVotes()){
+                trocaNo(list[i], list[filho]);
+            }
+        }
+        i = filho;
+    }
+
+}
+
+void build_heap(Registro *list, int tam)
+{
+    for(int i = tam/2-1; i >= 0; i--){
+        heapify(list, i, tam);
+    }
+}
+
+void heapSort_ordena(Registro *list, int tam)
+{
+    build_heap(list, tam);
+    while(tam > 0)
+    {
+        trocaNo(list[0], list[tam-1]);
+        heapify(list, 0, tam-1);
+        tam--;
+    }
+}
+
+void heapSort_time(Registro *list, int tam)
+{
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    heapSort_ordena(list, tam);
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+}
+
+
+/*
+====================FIM HEAPSORT ============
+
+*/
+
+
+/// ALGORITMO DE ORDENAÇÃO - COMB SORT ///
+
+
+int find_next(int gap)
+{
+    gap = (gap*10)/13;
+ 
+    if (gap < 1)
+        return 1;
+    return gap;
+}
+ 
+
+void combSort_ordena(Registro* list, int tam)
+{
+    int gap = tam;
+    bool switched = true;
+
+    while (gap != 1 || switched == true)
+    {
+        gap = find_next(gap);
+
+        switched = false;
+ 
+        int i=0;
+        while(i < tam-gap)
+        {
+            if (list[i].getVotes() > list[i+gap].getVotes())
+            {
+                trocaNo(list[i], list[i+gap]);
+                switched = true;
+            }
+            i++;
+        }
+    }
+}
+
+void combSort_time(Registro *list, int tam){
+
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    combSort_ordena(list, tam);
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+
+}
+
+/*
+
+===================FIM COMBSORT =======================
+
+*/
+
 int main(int argc, char const *argv[])
 {
     if (!checaArqBin())
