@@ -125,15 +125,16 @@ void menu()
     else if (resp == 2)
     {
         cout << "Digite o numero de importacoes que deseja: ";
-        cin >> resp;
-        Registro *registro = new Registro[resp];
-        leBinario(registro, resp); //le e salva na memoria principal os registros
+        int N = 0;
+        cin >> N;
+        Registro *registro = new Registro[N];
+        leBinario(registro, N); //le e salva na memoria principal os registros
         cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
         cin >> resp;
         if (resp == 1)
             testeImportacao(registro);
         else if (resp == 2)
-            registro->ordenaRegistros();
+            quickSort_time(registro, N);
         else
             cout << "Digite um valor valido!" << endl;
         menu();
