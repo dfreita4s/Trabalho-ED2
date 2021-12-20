@@ -6,39 +6,102 @@
 using namespace std;
 
 int obterReview();
-void testeImportacao();
 void acessaRegistro(int);
 bool checaArqBin();
-string leBinario(int);
 
-string leBinario(int k)
+void testeImportacao(Registro *lista) //passar esse para o registro.cpp
+{
+    int resp, N = 0;
+    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
+    std::cin >> resp;
+    if (resp == 1)
+    {
+        // Printar no terminal N = 10 registros aleatorios
+        N = 10;
+        for (int i = 0; i < N; i++)
+            std::cout << lista[i].imprimeRegistros() << std::endl;
+    }
+    else if (resp == 2)
+    {
+        //Salvar em um txt N = 100 registros aleatorios
+        std::fstream saidaTxt;
+        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
+        if (saidaTxt.is_open())
+        {
+            N = 100;
+            std::string linha = "";
+            for (int i = 0; i < N; i++)
+            {
+                // (rand() % 3646475 + 0)
+                linha = lista[i].imprimeRegistros();
+                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
+            }
+            cout << "O arquivo de texto foi criado!" << endl;
+        }
+        saidaTxt.close();
+    }
+    else
+    {
+        std::cout << "Por favor, digite um valor válido!" << std::endl;
+    }
+}
+
+void leBinario(Registro *registro, int k)
 {
 
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-       
+        int randm = rand() % 3646475 + 0;
         std::string str = "";
-        int cont = 0;
+        int i, j, pos = 0;
         while (getline(arqBin, str))
         {
-            if (cont == k)
-            {                      //se o cont == k chegou na linha certa
-                return str + "\n"; //retorna a linha
+            if (randm == j)
+            {
+
+                while (i < k)
+                {
+                    pos = str.find(",");
+                    registro[i].setID(str.substr(0, pos)); // id
+
+                    str = str.substr(pos, str.length());
+
+                    pos = str.find_last_of("\"");
+                    registro[i].setText(str.substr(0, pos - 1)); // text
+
+                    str = str.substr(pos + 1, str.length());
+
+                    pos = str.find(",");
+                    registro[i].setVotes(stoi(str.substr(0, pos))); // votes
+
+                    str = str.substr(pos, str.length());
+
+                    pos = str.find(",");
+                    registro[i].setVersion(str.substr(0, pos)); // version
+
+                    str = str.substr(pos, str.length());
+
+                    pos = str.length();
+                    registro[i].setVersion(str.substr(0, pos)); // data
+
+                    i++;
+                }
+
+                randm = rand() % 3646475 + 0;
             }
             else
-                cont++;
+                j++;
+            if (i == k - 1)
+                break;
         }
         cout << "Diretório " << k << " não existe!" << endl;
-        return "";
+
         arqBin.close();
     }
     else
-    {
         cout << "Não foi possível abrir o arquivo!" << endl;
-        return "";
-    }
 }
 
 void menu()
@@ -57,17 +120,18 @@ void menu()
     }
     else if (resp == 2)
     {
-        cout<<"Digite o numero de importacoes que deseja: ";
-        cin>>resp;
-        Registro *registro = new Registro("./data/tiktok_app_reviews.bin", resp);
-        cout<<"Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
-        cin>>resp;
-        if(resp == 1)
-        registro->testeImportacao();
+        cout << "Digite o numero de importacoes que deseja: ";
+        cin >> resp;
+        Registro *registro = new Registro[resp];
+        leBinario(registro, resp); //le e salva na memoria principal os registros
+        cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
+        cin >> resp;
+        if (resp == 1)
+            testeImportacao(registro);
         else if (resp == 2)
-        registro->ordenaRegistros();
+            registro->ordenaRegistros();
         else
-        cout<<"Digite um valor valido!"<<endl;
+            cout << "Digite um valor valido!" << endl;
         menu();
     }
     else if (resp == 3)
@@ -96,9 +160,30 @@ bool checaArqBin()
 void acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
-    std::string registro = leBinario(k);
-    if (registro != "")
-        std::cout << registro;
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+
+        std::string str = "";
+        int i = 0;
+        while (getline(arqBin, str))
+        {
+            if (i == k)
+            {                            //se o i == k chegou na linha certa
+                std::cout << str + "\n"; //retorna a linha
+                break;
+            }
+            else
+                i++;
+        }
+        cout << "Diretório " << k << " não existe!" << endl;
+        arqBin.close();
+    }
+    else
+    {
+        cout << "Não foi possível abrir o arquivo!" << endl;
+    }
 }
 
 int main(int argc, char const *argv[])
@@ -125,43 +210,3 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
-
-
-
-/*
-void testeImportacao() //passar esse para o registro.cpp
-{
-    int resp, N = 0;
-    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
-    std::cin >> resp;
-    if (resp == 1)
-    {
-        // Printar no terminal N = 10 registros aleatorios
-        N = 10;
-        for (int i = 0; i < 10; i++)
-            std::cout << leBinario(rand() % 3646475 + 0) << std::endl;
-    }
-    else if (resp == 2)
-    {
-        //Salvar em um txt N = 100 registros aleatorios
-        std::fstream saidaTxt;
-        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
-        if (saidaTxt.is_open())
-        {
-            N = 100;
-            std::string linha = "";
-            for (int i = 0; i < N; i++)
-            {
-                linha = leBinario(rand() % 3646475 + 0);
-                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
-            }
-            cout<<"O arquivo de texto foi criado!"<<endl;
-        }
-        saidaTxt.close();
-    }
-    else
-    {
-        std::cout << "Por favor, digite um valor válido!" << std::endl;
-    }
-}
-*/
