@@ -26,6 +26,15 @@ public:
     void quickSort_ordena(std::string *list, int i, int k);
     void quickSort_time(std::string *list, int n);
 
+    void heapify(std::string *list, int i, int tam);
+    void build_heap(std::string *list, int tam);
+    void heapSort_ordena(std::string *list, int tam);
+    void heapSort_time(std::string *list, int tam);
+
+    int find_next(int gap);
+    void combSort_ordena(std::string *list, int tam);
+    void combSort_time(std::string *list, int tam);
+
 
     std::string *importaRegistros(int); //importar aleatoriamente N registros aleatorios
 private:
