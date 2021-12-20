@@ -4,11 +4,10 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <chrono>
-
+#include <cstring>
+#include <algorithm>
 Lista::Lista(const std::string &caminhoArquivo)
 {
-    this->raiz = nullptr;
     this->abrirArquivo(caminhoArquivo);
 }
 
@@ -210,3 +209,72 @@ bool Lista::criarArquivoBinario()
     std::cout << "Erro ao criar arquivo binário." << std::endl;
     return false;
 }
+
+
+int Lista::acessaVersao(int rand, int indice){
+    tabelaHash *tabela = new tabelaHash[30];
+    tabelaHash aux;
+    char removePonto[] = ".";
+    int chave;
+    if (this->obterRaiz() != nullptr){
+        Review *No = this->raiz;
+        for (int i = 0; No != nullptr; i++){
+            if (i == rand)
+            {
+                std::string temp = No->obterVersao();
+                for(unsigned int j = 0; j < strlen(removePonto); j++)
+                {
+                    temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
+                }
+                chave = stoi(temp);
+                return chave;
+            }
+            else
+            {
+                No = No->obterProximo();
+            }
+        }
+    }
+    else
+    {
+        cout << "Raiz apontando para um ponteiro null " << endl;
+    } 
+}
+
+int Lista::pegaVersao(int rand){
+    char removePonto[] = ".";
+    int chave;
+    if (this->obterRaiz() != nullptr){
+        Review *No = this->raiz;
+        for (int i = 0; No != nullptr; i++){
+            if (i == rand)
+            {
+                std::string temp = No->obterVersao();
+                for(unsigned int j = 0; j < strlen(removePonto); j++)
+                {
+                    temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
+                }
+                if (temp == "NaN")
+                {
+                    cout << "Opa, aqui teve NaN" << endl;
+                    return 0;
+                }
+                else
+                {
+                    chave = stoi(temp);
+                    return chave;
+                }
+            }
+            else
+            {
+                No = No->obterProximo();
+            }
+        }
+    }
+    else{
+        cout << "Raiz apontando para um ponteiro null " << endl;
+    } 
+}
+
+
+

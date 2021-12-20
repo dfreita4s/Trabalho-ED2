@@ -12,7 +12,7 @@ class Review
 
     public:
         Review(){};
-        Review(std::string , std::string , int , std::string , std::string );
+        Review(std::string , std::string , int , std::string , std::string);
         ~Review();
 
         void setarProximo(Review *No);
