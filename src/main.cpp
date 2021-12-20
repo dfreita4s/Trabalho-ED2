@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include "../inc/lista.h"
 #include "../inc/registro.h"
 
@@ -62,8 +63,10 @@ void leBinario(Registro *registro, int k)
         int i = 0;
         int pos = 0;
         int j = 0;
+
         while (getline(arqBin, str))
         {
+            arqBin.seekg(0);
 
             if (randm == j)
             {
@@ -74,7 +77,7 @@ void leBinario(Registro *registro, int k)
                 str = str.substr(pos + 1, str.length());
 
                 pos = str.find_last_of("\"") + 1;
-                registro[i].setText(str.substr(0, pos + 1)); // text
+                registro[i].setText(str.substr(0, pos)); // text
 
                 str = str.substr(pos + 1, str.length());
 
@@ -185,6 +188,87 @@ void acessaRegistro(int k)
         cout << "Não foi possível abrir o arquivo!" << endl;
     }
 }
+
+/// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
+
+//realizar a ordenação desses registros, utilizando como chave de ordenação upvotes. Durante a ordenação, deverão ser computados o
+//total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
+//Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
+//Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
+
+void trocaNo(Registro r1, Registro r2)
+{
+    Registro aux;
+    aux = r1;
+    r1 = r2;
+    r2 = aux;
+}
+
+Registro pivoMediano(Registro *l, int inicio, int fim)
+{
+    int media = (inicio + fim) / 2;
+    if (l[inicio].getVotes() > l[fim].getVotes())
+        trocaNo(l[inicio], l[fim]);
+    if (l[media].getVotes() > l[fim].getVotes())
+        trocaNo(l[media], l[fim]);
+    if (l[inicio].getVotes() > l[media].getVotes())
+        trocaNo(l[inicio], l[media]);
+    trocaNo(l[media], l[fim]);
+    return l[fim];
+}
+
+int quickSort_particionaLista(Registro *list, int i, int j)
+{
+
+    int fim = j - 1;
+    int init = i;
+    Registro pivo = pivoMediano(list, i, j);
+
+    while (true)
+    {
+        while (i < j && list[i].getVotes() < pivo.getVotes())
+        {
+            i = i + 1;
+        }
+        while (j >= init && list[i].getVotes() < pivo.getVotes())
+        {
+            j = j - 1;
+        }
+        if (i <= j)
+        {
+            trocaNo(list[i], list[j]);
+            i = i + 1;
+            j = j - 1;
+        }
+        else
+            break;
+        trocaNo(list[i], list[j]);
+        return i;
+    }
+}
+void quickSort_ordena(Registro *list, int i, int k)
+{
+    if (i - k > 0)
+    {
+        int p = quickSort_particionaLista(list, i, k);
+        quickSort_ordena(list, i, p);
+        quickSort_ordena(list, p + 1, k);
+    }
+}
+
+void quickSort_time(Registro *list, int n)
+{
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    quickSort_ordena(list, 0, n - 1);
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+}
+
+/*
+
+===================FIM QUICKSORT========================
+
+*/
 
 int main(int argc, char const *argv[])
 {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <chrono>
+
 #include "../inc/registro.h"
 
 // Registro::Registro(const std::string &caminhoArquivo, int N)
@@ -22,8 +22,9 @@ Registro::~Registro()
     delete registros;
 }
 
-std::string Registro::imprimeRegistros(){
-    return ("ID: "+ getID()+"\nMensagem: "+ getText() +"\nVotos: "+std::to_string(getVotes())+"\nVersão: "+getVersion()+"\nData/Hora: "+getDate());
+std::string Registro::imprimeRegistros()
+{
+    return ("ID: " + getID() + "\nMensagem: " + getText() + "\nVotos: " + std::to_string(getVotes()) + "\nVersão: " + getVersion() + "\nData/Hora: " + getDate());
     // std::cout << "ID: " << getID() << std::endl;
     // std::cout << "Mensagem: \"" << getText() << "\"" <<std::endl;
     // std::cout << "Votos /\\: " << getVotes() << std::endl;
@@ -181,80 +182,6 @@ void Registro::testeImportacao()
 void Registro::ordenaRegistros()
 {
     quickSort_time(getRegistro(), getN());
-}
-
-/// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
-
-//realizar a ordenação desses registros, utilizando como chave de ordenação upvotes. Durante a ordenação, deverão ser computados o
-//total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
-//Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
-//Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
-
-void Registro::trocaNo(std::string &r1, std::string &r2)
-{
-    std::string aux = r1;
-    r1 = r2;
-    r2 = aux;
-}
-
-std::string Registro::pivoMediano(std::string *l, int inicio, int fim)
-{
-    int media = (inicio + fim) / 2;
-    if (l[inicio] > l[fim])
-        trocaNo(l[inicio], l[fim]);
-    if (l[media] > l[fim])
-        trocaNo(l[media], l[fim]);
-    if (l[inicio] > l[media])
-        trocaNo(l[inicio], l[media]);
-    trocaNo(l[media], l[fim]);
-    return l[fim];
-}
-
-int Registro::quickSort_particionaLista(std::string *list, int i, int j)
-{
-
-    int fim = j - 1;
-    int init = i;
-    std::string pivo = pivoMediano(list, i, j);
-
-    while (true)
-    {
-        while (i < j && list[i] < pivo)
-        {
-            i = i + 1;
-        }
-        while (j >= init && list[j] > pivo)
-        {
-            j = j - 1;
-        }
-        if (i <= j)
-        {
-            trocaNo(list[i], list[j]);
-            i = i + 1;
-            j = j - 1;
-        }
-        else
-            break;
-        trocaNo(list[i], list[j]);
-        return i;
-    }
-}
-void Registro::quickSort_ordena(std::string *list, int i, int k)
-{
-    if (i - k > 0)
-    {
-        int p = quickSort_particionaLista(list, i, k);
-        quickSort_ordena(list, i, p);
-        quickSort_ordena(list, p + 1, k);
-    }
-}
-
-void Registro::quickSort_time(std::string *list, int n)
-{
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    quickSort_ordena(list, 0, n - 1);
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
 }
 
 /// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
