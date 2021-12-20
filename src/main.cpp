@@ -10,7 +10,6 @@
 using namespace std;
 
 int obterReview();
-void acessaRegistro(int);
 bool checaArqBin();
 
 void testeImportacao(Registro *lista)
@@ -49,6 +48,74 @@ void testeImportacao(Registro *lista)
     {
         std::cout << "Por favor, digite um valor válido!" << std::endl;
     }
+}
+
+void acessaRegistro(int k, Registro registro)
+{
+    std::cout << "Acessando registro " << k << std::endl;
+
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(0, arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0, arqBin.beg);
+
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0; // tamanho de cada registro
+
+        do
+        {
+            arqBin.read((char *)&tamanhoRegistro, sizeof(tamanhoRegistro));
+            posInicial = arqBin.tellg();
+
+            posProximo = tamanhoRegistro + posInicial;
+            arqBin.seekg(posProximo);
+            i++;
+
+        } while (i <= k && posProximo <= tamTotal);
+
+        // Calcula o tamanho do registro
+        arqBin.seekg(posInicial);
+        int pos = 0;
+
+        char *buffer = new char[tamanhoRegistro];
+        arqBin.read(buffer, tamanhoRegistro);
+
+        std::string str = buffer;
+
+        pos = str.find(",");
+        registro.setID(str.substr(0, pos)); // id
+
+        str = str.substr(pos + 1, str.length());
+
+        pos = str.find_last_of("\"") + 1;
+        registro.setText(str.substr(0, pos)); // text
+
+        str = str.substr(pos + 1, str.length());
+
+        pos = str.find(",");
+        registro.setVotes(atoi(str.substr(0, pos).c_str())); // votes
+
+        str = str.substr(pos + 1, str.length());
+
+        pos = str.find(",");
+
+        registro.setVersion(str.substr(0, pos)); // version
+        str = str.substr(pos + 1, str.length());
+
+        registro.setDate(str.substr(0, str.length())); // data
+
+        // std::cout.write(buffer, tamanhoRegistro);
+        // std::cout << std::endl;
+
+        delete[] buffer;
+        arqBin.close();
+    }
+    else
+        std::cout << "Erro ao obter registro." << std::endl;
 }
 
 void leBinario(Registro *registro, int k)
@@ -159,7 +226,6 @@ void acessaRegistro(int k)
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-
         std::string str = "";
         int i = 0;
         while (getline(arqBin, str))
@@ -391,7 +457,7 @@ void menu()
         int n = 0;
         cout << "Digite o registro que deseja: ";
         cin >> n;
-        acessaRegistro(n);
+        // acessaRegistro(n);
         menu();
     }
     else if (resp == 2)
@@ -400,8 +466,10 @@ void menu()
         int N = 0;
         cin >> N;
         Registro *registro = new Registro[N];
+        for (int i = 0; i < N; i++)
+            acessaRegistro(rand() % 3646475 + 0, registro[i]);
         // for (int i = 0; i < N; i++)
-        leBinario(registro, N); //le e salva na memoria principal os registros
+        // leBinario(registro, N); //le e salva na memoria principal os registros
         cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
         cin >> resp;
         if (resp == 1)

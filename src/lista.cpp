@@ -178,15 +178,13 @@ bool Lista::criarArquivoBinario()
 
         Review *No = this->obterRaiz();
 
-        // Escreve cabeçalho
-        std::string linha = "review_id,review_text,upvotes,app_version,posted_date\n";
-        arqBin.write(linha.c_str(), sizeof(char) * linha.size());
-        int contador = 0;
+        std::string linha = "";
+
         while (No != nullptr)
         {
             linha = "";
             linha += No->obterID();
-            linha += ",\"";
+            linha += "\",";
             linha += No->obterTexto();
             linha += "\",";
             linha += std::to_string(No->obterVotos());
@@ -194,10 +192,15 @@ bool Lista::criarArquivoBinario()
             linha += No->obterVersao();
             linha += ",";
             linha += No->obterData();
-            linha += "\n";
+            //linha += "\n";
 
+            unsigned short tamRegistro = sizeof(char) * linha.size();
+            char *data = new char;
+
+            arqBin.write((char *)&tamRegistro, sizeof(tamRegistro));
             arqBin.write(linha.c_str(), sizeof(char) * linha.size());
 
+            delete data;
             No = No->obterProximo();
         }
         arqBin.close();
@@ -207,4 +210,3 @@ bool Lista::criarArquivoBinario()
     std::cout << "Erro ao criar arquivo binário." << std::endl;
     return false;
 }
-
