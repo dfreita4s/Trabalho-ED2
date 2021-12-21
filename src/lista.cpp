@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstring>
 #include <algorithm>
+
 Lista::Lista(const std::string &caminhoArquivo)
 {
     this->raiz = nullptr;
@@ -101,7 +102,7 @@ bool Lista::obterReviews()
             pos = linha.find_last_of(",");
             std::string versao = linha.substr(pos + 1); // Obter a versão
             if (versao.length() == 0)
-                versao = "NaN";
+                versao = "00.0.0";
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
@@ -184,23 +185,25 @@ bool Lista::criarArquivoBinario()
         {
             linha = "";
             linha += No->obterID();
-            linha += "\",";
+            linha += ",\"";
             linha += No->obterTexto();
             linha += "\",";
-            linha += std::to_string(No->obterVotos());
             linha += ",";
             linha += No->obterVersao();
             linha += ",";
             linha += No->obterData();
-            //linha += "\n";
+            // linha += std::to_string();
+            int upvotes =  No->obterVotos();
 
-            unsigned short tamRegistro = sizeof(char) * linha.size();
-            char *data = new char;
 
-            arqBin.write((char *)&tamRegistro, sizeof(tamRegistro));
+            unsigned short tamRegistro = sizeof(char) * linha.size() + sizeof(int);
+
+            arqBin.write((char *)& tamRegistro, sizeof(tamRegistro));
             arqBin.write(linha.c_str(), sizeof(char) * linha.size());
+            arqBin.write((char *)& upvotes, sizeof(int));
 
-            delete data;
+            // char *data = new char;
+            // delete data;
             No = No->obterProximo();
         }
         arqBin.close();

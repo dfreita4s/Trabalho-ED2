@@ -14,6 +14,7 @@ using namespace std;
 
 int obterReview();
 bool checaArqBin();
+void acessaRegistro(int);
 void criaTabelaHash(Lista *lista);
 void testeImportacao(Registro *lista)
 {
@@ -83,37 +84,60 @@ void acessaRegistro(int k, Registro registro)
         arqBin.seekg(posInicial);
         int pos = 0;
 
-        char *buffer = new char[tamanhoRegistro];
-        arqBin.read(buffer, tamanhoRegistro);
+        // char *buffer = new char[tamanhoRegistro];
+        // arqBin.read(buffer, tamanhoRegistro);
 
-        std::string str = buffer;
+        char *buffer = new char[86];
+        arqBin.read(buffer, 86);
+        std::string str(buffer);
+        delete [] buffer;
+        registro.setID(str);
+        int tamanhoTexto = tamanhoRegistro - (86+sizeof(int)+sizeof("00.0.0")+sizeof("00/00/00 00:00:00"));
+        char *buffer2 = new char[tamanhoTexto];
+        arqBin.read(buffer2, tamanhoTexto);
+        std::string str2(buffer2);
+        delete [] buffer2;
+        registro.setText(str2);
+        char *buffer3 = new char[sizeof("00.0.0")];
+        arqBin.read(buffer3, sizeof("00.0.0"));
+        std::string str3(buffer3);
+        delete [] buffer3;
+        registro.setVersion(str3);
+        char *buffer4 = new char[sizeof("00/00/00 00:00:00")];
+        arqBin.read(buffer4, sizeof("00/00/00 00:00:00"));
+        std::string str4(buffer4);
+        delete [] buffer4;
+        registro.setDate(str4);
+        int upvotes = 0;
+        arqBin.read((char *)& upvotes, sizeof(int));
+        registro.setVotes(upvotes);
+        std::cout << registro.imprimeRegistros() << std::endl;
 
-        pos = str.find(",");
-        registro.setID(str.substr(0, pos)); // id
+        // pos = str.find(",");
+        // registro.setID(str.substr(0, pos)); // id
 
-        str = str.substr(pos + 1, str.length());
+        // str = str.substr(pos + 1, str.length());
 
-        pos = str.find_last_of("\"") + 1;
-        registro.setText(str.substr(0, pos)); // text
+        // pos = str.find_last_of("\"") + 1;
+        // registro.setText(str.substr(0, pos)); // text
 
-        str = str.substr(pos + 1, str.length());
+        // str = str.substr(pos + 1, str.length());
 
-        pos = str.find(",");
-        registro.setVotes(atoi(str.substr(0, pos).c_str())); // votes
+        // pos = str.find(",");
+        // registro.setVotes(atoi(str.substr(0, pos).c_str())); // votes
 
-        str = str.substr(pos + 1, str.length());
+        // str = str.substr(pos + 1, str.length());
 
-        pos = str.find(",");
+        // pos = str.find(",");
 
-        registro.setVersion(str.substr(0, pos)); // version
-        str = str.substr(pos + 1, str.length());
+        // registro.setVersion(str.substr(0, pos)); // version
+        // str = str.substr(pos + 1, str.length());
 
-        registro.setDate(str.substr(0, str.length())); // data
+        // registro.setDate(str.substr(0, str.length())); // data
 
         // std::cout.write(buffer, tamanhoRegistro);
         // std::cout << std::endl;
 
-        delete[] buffer;
         arqBin.close();
     }
     else
@@ -221,7 +245,7 @@ bool checaArqBin()
     return false;
 }
 
-void acessaRegistro(int k)
+/* void acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
     std::ifstream arqBin;
@@ -246,7 +270,7 @@ void acessaRegistro(int k)
     {
         cout << "Não foi possível abrir o arquivo!" << endl;
     }
-}
+} */
 
 /// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
 
@@ -544,7 +568,7 @@ void menu()
         int n = 0;
         cout << "Digite o registro que deseja: ";
         cin >> n;
-        // acessaRegistro(n);
+        acessaRegistro(n);
         menu();
     }
     else if (resp == 2)
@@ -612,7 +636,7 @@ int main(int argc, char const *argv[])
         }
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-        criaTabelaHash(listaReview);
+        //criaTabelaHash(listaReview);
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
 
@@ -666,3 +690,47 @@ int main(int argc, char const *argv[])
 //         std::cout << "Por favor, digite um valor válido!" << std::endl;
 //     }
 // }
+
+void acessaRegistro(int k)
+{
+    std::cout << "Acessando registro " << k << std::endl;
+
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(0, arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0, arqBin.beg);
+
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0; // tamanho de cada registro
+
+        do
+        {
+            arqBin.read((char *)&tamanhoRegistro, sizeof(tamanhoRegistro));
+            posInicial = arqBin.tellg();
+
+            posProximo = tamanhoRegistro + posInicial;
+            arqBin.seekg(posProximo);
+            i++;
+
+        } while (i <= k && posProximo <= tamTotal);
+
+        // Calcula o tamanho do registro
+        arqBin.seekg(posInicial);
+        int pos = 0;
+
+        char *buffer = new char[tamanhoRegistro];
+        arqBin.read(buffer, tamanhoRegistro);
+
+        std::cout.write(buffer, tamanhoRegistro);
+        std::cout << std::endl;
+
+        delete[] buffer;
+        arqBin.close();
+    }
+    else
+        std::cout << "Erro ao obter registro." << std::endl;
+}

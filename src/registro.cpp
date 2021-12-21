@@ -20,7 +20,7 @@ Registro::Registro()
 Registro::~Registro()
 {
     //Destructor
-    delete registros;
+    //delete registros;
 }
 
 std::string Registro::imprimeRegistros()
