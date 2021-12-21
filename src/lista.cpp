@@ -8,6 +8,7 @@
 #include <algorithm>
 Lista::Lista(const std::string &caminhoArquivo)
 {
+    this->raiz = nullptr;
     this->abrirArquivo(caminhoArquivo);
 }
 
