@@ -8,6 +8,7 @@
 #include <algorithm>
 Lista::Lista(const std::string &caminhoArquivo)
 {
+    this->raiz = nullptr;
     this->abrirArquivo(caminhoArquivo);
 }
 
@@ -191,7 +192,7 @@ bool Lista::criarArquivoBinario()
             linha += No->obterVersao();
             linha += ",";
             linha += No->obterData();
-            //linha += "\n";
+            linha += "\n";
 
             unsigned short tamRegistro = sizeof(char) * linha.size();
             char *data = new char;

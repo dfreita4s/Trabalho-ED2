@@ -612,7 +612,8 @@ int main(int argc, char const *argv[])
         }
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-        criaTabelaHash(listaReview);
+        // criaTabelaHash(listaReview);
+
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
 
@@ -624,17 +625,6 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-bool checaArqBin()
-{
-    ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        std::cout << "O arquivo binário existe." << std::endl;
-        return true;
-    }
-    return false;
-}
 
 // void acessaRegistro(int k)
 // {
