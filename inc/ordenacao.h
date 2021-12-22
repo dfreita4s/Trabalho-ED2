@@ -1,0 +1,7 @@
+class Ordenacao{
+    public:
+
+    private:
+
+    
+};

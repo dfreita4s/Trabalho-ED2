@@ -19,6 +19,7 @@ void testeImportacao(Registro *lista)
 {
     int resp, N = 0;
     std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
+    std::cin >> resp;
     if (resp == 1)
     {
         // Printar no terminal N = 10 registros aleatorios
@@ -123,45 +124,46 @@ void acessaRegistro(int k, Registro registro)
 void leBinario(Registro *registro, int N)
 {
 
+    //pensei pra ler o review_text e saber o tamanho um for em cada catactere da linha e ir ate o caracter ser == \n
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
         int j = 0;
+        int randNum = 0;
         std::string str = "";
-        std::string *regist = new std::string[N]; //acho que to alocando isso
+        std::string *regist = new std::string[NREGISTROS];
         while (getline(arqBin, str)) //aloca todas a linhas no vetor regist
         {
             regist[j] = str + "\n";
             j++;
-        } //ta dando Segmentation fault (core dumped)
-        //pensei pra ler o review_text e saber o tamanho um for em cada catactere da linha e ir ate o caracter ser == \n
+        }
 
         for (int i = 0; i < N; i++)
         {
+            randNum = rand() % NREGISTROS + 1;
+            j = regist[randNum].find(",");
+            registro[i].setID(regist[randNum].substr(0, j));
 
-            j = regist[i].find(",");
-            registro[i].setID(regist[i].substr(0, j));
+            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
 
-            regist[i] = regist[i].substr(j + 1, regist[i].length());
+            j = regist[randNum].find_last_of("\"") + 1;
+            registro[i].setText(regist[randNum].substr(0, j));
 
-            j = regist[i].find_last_of("\"") + 1;
-            registro[i].setText(regist[i].substr(0, j));
+            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
 
-            regist[i] = regist[i].substr(j + 1, regist[i].length());
-
-            j = regist[i].find(",");
+            j = regist[randNum].find(",");
             registro[i].setVotes(atoi(str.substr(0, j).c_str()));
 
-            regist[i] = regist[i].substr(j + 1, regist[i].length());
+            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
 
-            j = regist[i].find(",");
+            j = regist[randNum].find(",");
             registro[i].setVersion(str.substr(0, j));
-            regist[i] = regist[i].substr(j + 1, str.length());
+            regist[randNum] = regist[randNum].substr(j + 1, str.length());
 
-            registro[i].setDate(regist[i].substr(0, regist[i].length()));
+            registro[i].setDate(regist[randNum].substr(0, regist[randNum].length()));
         }
-        delete [] regist;
+        delete[] regist;
         arqBin.close();
     }
 
@@ -208,191 +210,6 @@ void acessaRegistro(int k)
     }
 }
 
-/// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
-
-//realizar a ordenação desses registros, utilizando como chave de ordenação upvotes. Durante a ordenação, deverão ser computados o
-//total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
-//Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
-//Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
-
-void trocaNo(Registro r1, Registro r2)
-{
-    Registro aux;
-    aux = r1;
-    r1 = r2;
-    r2 = aux;
-}
-
-Registro pivoMediano(Registro *l, int inicio, int fim)
-{
-    int media = (inicio + fim) / 2;
-    if (l[inicio].getVotes() > l[fim].getVotes())
-        trocaNo(l[inicio], l[fim]);
-    if (l[media].getVotes() > l[fim].getVotes())
-        trocaNo(l[media], l[fim]);
-    if (l[inicio].getVotes() > l[media].getVotes())
-        trocaNo(l[inicio], l[media]);
-    trocaNo(l[media], l[fim]);
-    return l[fim];
-}
-
-int quickSort_particionaLista(Registro *list, int i, int j)
-{
-
-    int fim = j - 1;
-    int init = i;
-    Registro pivo = pivoMediano(list, i, j);
-
-    while (true)
-    {
-        while (i < j && list[i].getVotes() < pivo.getVotes())
-        {
-            i = i + 1;
-        }
-        while (j >= init && list[i].getVotes() < pivo.getVotes())
-        {
-
-            j = j - 1;
-        }
-        if (i <= j)
-        {
-            trocaNo(list[i], list[j]);
-            i = i + 1;
-            j = j - 1;
-        }
-        else
-            break;
-        trocaNo(list[i], list[j]);
-        return i;
-    }
-}
-void quickSort_ordena(Registro *list, int i, int k)
-{
-    if (i - k > 0)
-    {
-        int p = quickSort_particionaLista(list, i, k);
-        quickSort_ordena(list, i, p);
-        quickSort_ordena(list, p + 1, k);
-    }
-}
-
-void quickSort_time(Registro *list, int n)
-{
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    quickSort_ordena(list, 0, n - 1);
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
-}
-
-/*
-
-===================FIM QUICKSORT========================
-
-*/
-
-/// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
-
-void heapify(Registro *list, int i, int tam)
-{
-    while (i < tam)
-    {
-        int filho = 2 * i + 1;
-        if (filho < tam)
-        {
-            if (filho + 1 < tam && list[filho + 1].getVotes() > list[filho].getVotes())
-            {
-                filho++;
-            }
-
-            if (list[filho].getVotes() > list[i].getVotes())
-            {
-                trocaNo(list[i], list[filho]);
-            }
-        }
-        i = filho;
-    }
-}
-
-void build_heap(Registro *list, int tam)
-{
-    for (int i = tam / 2 - 1; i >= 0; i--)
-    {
-        heapify(list, i, tam);
-    }
-}
-
-void heapSort_ordena(Registro *list, int tam)
-{
-    build_heap(list, tam);
-    while (tam > 0)
-    {
-        trocaNo(list[0], list[tam - 1]);
-        heapify(list, 0, tam - 1);
-        tam--;
-    }
-}
-
-void heapSort_time(Registro *list, int tam)
-{
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    heapSort_ordena(list, tam);
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
-    std::fstream saidaTxt;
-    saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
-    if (saidaTxt.is_open())
-    {
-
-        std::string linha = "";
-
-        linha = "Heapsort\nTempo gasto:  segundos\n";
-        saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
-
-        cout << "O arquivo de texto foi criado!" << endl;
-    }
-    saidaTxt.close();
-}
-
-/*
-====================FIM HEAPSORT ============
-
-*/
-
-/// ALGORITMO DE ORDENAÇÃO - COMB SORT ///
-
-int find_next(int gap)
-{
-    gap = (gap * 10) / 13;
-
-    if (gap < 1)
-        return 1;
-    return gap;
-}
-
-void combSort_ordena(Registro *list, int tam)
-{
-    int gap = tam;
-    bool switched = true;
-
-    while (gap != 1 || switched == true)
-    {
-        gap = find_next(gap);
-
-        switched = false;
-
-        int i = 0;
-        while (i < tam - gap)
-        {
-            if (list[i].getVotes() > list[i + gap].getVotes())
-            {
-                trocaNo(list[i], list[i + gap]);
-                switched = true;
-            }
-            i++;
-        }
-    }
-}
-
 bool confereNum(int *num, int i) // função avisa quando um número randômico é gerado mais de uma vez
 {
     for (int j = i - 1; j >= 0; j--)
@@ -407,19 +224,6 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
         }
     }
 }
-
-void combSort_time(Registro *list, int tam)
-{
-
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    combSort_ordena(list, tam);
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
-}
-/*
-===================FIM COMBSORT =======================
-
-*/
 
 void criaTabelaHash(Lista *listaReview)
 {
@@ -527,11 +331,14 @@ void menu()
             std::cout << "Qual Ordendação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nFunção: ";
             cin >> resp;
             if (resp == 1)
-                quickSort_time(registro, N);
+                std::cout << "fazendo";
+            // quickSort_time(registro, N);
             else if (resp == 2)
-                heapSort_time(registro, N);
+                std::cout << "fazendo";
+            // heapSort_time(registro, N);
             else if (resp == 3)
-                combSort_time(registro, N);
+                std::cout << "fazendo";
+            // combSort_time(registro, N);
             else
                 std::cout << "Digite uma resposta valida!" << std::endl;
         }
