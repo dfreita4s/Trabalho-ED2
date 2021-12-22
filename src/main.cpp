@@ -120,88 +120,48 @@ void acessaRegistro(int k, Registro registro)
         std::cout << "Erro ao obter registro." << std::endl;
 }
 
-void leBinario(Registro *registro, int k)
+void leBinario(Registro *registro, int N)
 {
 
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        arqBin.seekg(0, arqBin.end);
-        int tamTotal = arqBin.tellg();
-        arqBin.seekg(0, arqBin.beg);
+        int j = 0;
         std::string str = "";
-        char *buffer = new char[NREGISTROS];
-        int pos = 0;
-        int i = 0;
-        int cont = 0;
-
-        for (int i = 0; i < k; i++)
+        std::string *regist = new std::string[N]; //acho que to alocando isso
+        while (getline(arqBin, str)) //aloca todas a linhas no vetor regist
         {
-            pos = rand() % NREGISTROS + 0;
-            arqBin.seekg(0, arqBin.end);
-            arqBin.read(buffer, 320);
-            str = buffer;
+            regist[j] = str + "\n";
+            j++;
+        } //ta dando Segmentation fault (core dumped)
+        //pensei pra ler o review_text e saber o tamanho um for em cada catactere da linha e ir ate o caracter ser == \n
 
-            pos = str.find(",");
-            registro[i].setID(str.substr(0, pos)); // id
+        for (int i = 0; i < N; i++)
+        {
 
-            str = str.substr(pos + 1, str.length());
+            j = regist[i].find(",");
+            registro[i].setID(regist[i].substr(0, j));
 
-            pos = str.find_last_of("\"") + 1;
-            registro[i].setText(str.substr(0, pos)); // text
+            regist[i] = regist[i].substr(j + 1, regist[i].length());
 
-            str = str.substr(pos + 1, str.length());
+            j = regist[i].find_last_of("\"") + 1;
+            registro[i].setText(regist[i].substr(0, j));
 
-            pos = str.find(",");
-            registro[i].setVotes(atoi(str.substr(0, pos).c_str())); // votes
+            regist[i] = regist[i].substr(j + 1, regist[i].length());
 
-            str = str.substr(pos + 1, str.length());
+            j = regist[i].find(",");
+            registro[i].setVotes(atoi(str.substr(0, j).c_str()));
 
-            pos = str.find(",");
+            regist[i] = regist[i].substr(j + 1, regist[i].length());
 
-            registro[i].setVersion(str.substr(0, pos)); // version
-            str = str.substr(pos + 1, str.length());
+            j = regist[i].find(",");
+            registro[i].setVersion(str.substr(0, j));
+            regist[i] = regist[i].substr(j + 1, str.length());
 
-            registro[i].setDate(str.substr(0, str.length())); // data
+            registro[i].setDate(regist[i].substr(0, regist[i].length()));
         }
-
-        // while (i < k)
-        // {
-        //     int j = rand() % 3646475 + 0;
-        //     while (getline(arqBin, str))
-        //     {
-
-        //         if (cont == j)
-        //         {
-        //             cout << "oi\n";
-        //             pos = str.find(",");
-        //             registro[i].setID(str.substr(0, pos)); // id
-
-        //             str = str.substr(pos + 1, str.length());
-
-        //             pos = str.find_last_of("\"") + 1;
-        //             registro[i].setText(str.substr(0, pos)); // text
-
-        //             str = str.substr(pos + 1, str.length());
-
-        //             pos = str.find(",");
-        //             registro[i].setVotes(atoi(str.substr(0, pos).c_str())); // votes
-
-        //             str = str.substr(pos + 1, str.length());
-
-        //             pos = str.find(",");
-
-        //             registro[i].setVersion(str.substr(0, pos)); // version
-        //             str = str.substr(pos + 1, str.length());
-
-        //             registro[i].setDate(str.substr(0, str.length())); // data
-        //             i++;
-        //             break;
-        //         }
-        //         else
-        //             cont++;
-
+        delete [] regist;
         arqBin.close();
     }
 
@@ -553,8 +513,9 @@ void menu()
         int N = 0;
         cin >> N;
         Registro *registro = new Registro[N];
-        for (int i = 0; i < N; i++)
-            acessaRegistro(rand() % 3646475 + 0, registro[i]);
+        leBinario(registro, N);
+        // for (int i = 0; i < N; i++)
+        //     acessaRegistro(rand() % 3646475 + 0, registro[i]);
         // for (int i = 0; i < N; i++)
         // leBinario(registro, N); //le e salva na memoria principal os registros
         cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
@@ -624,7 +585,6 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
-
 
 // void acessaRegistro(int k)
 // {
