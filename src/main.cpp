@@ -25,7 +25,7 @@ void testeImportacao(Registro *lista)
         // Printar no terminal N = 10 registros aleatorios
         N = 10;
         for (int i = 0; i < N; i++)
-            std::cout << lista[i].imprimeRegistros() << std::endl
+            std::cout << "["<<i<<"]"<<lista[i].imprimeRegistros() << std::endl
                       << std::endl;
     }
     else if (resp == 2)
@@ -127,6 +127,7 @@ void leBinario(Registro *registro, int N)
     //pensei pra ler o review_text e saber o tamanho um for em cada catactere da linha e ir ate o caracter ser == \n
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    srand(time(NULL));
     if (arqBin.is_open())
     {
         int j = 0;
@@ -153,15 +154,16 @@ void leBinario(Registro *registro, int N)
             regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
 
             j = regist[randNum].find(",");
-            registro[i].setVotes(atoi(str.substr(0, j).c_str()));
+            registro[i].setVotes(atoi(regist[randNum].substr(0, j).c_str()));
 
             regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
 
             j = regist[randNum].find(",");
-            registro[i].setVersion(str.substr(0, j));
-            regist[randNum] = regist[randNum].substr(j + 1, str.length());
-
+            registro[i].setVersion(regist[randNum].substr(0, j));
+            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            
             registro[i].setDate(regist[randNum].substr(0, regist[randNum].length()));
+            
         }
         delete[] regist;
         arqBin.close();
