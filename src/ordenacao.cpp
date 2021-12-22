@@ -13,7 +13,7 @@
 //Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
 //Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
 
-void trocaNo(Registro r1, Registro r2)
+void Ordenacao::trocaNo(Registro r1, Registro r2)
 {
     Registro aux;
     aux = r1;
@@ -21,7 +21,7 @@ void trocaNo(Registro r1, Registro r2)
     r2 = aux;
 }
 
-Registro pivoMediano(Registro *l, int inicio, int fim)
+Registro Ordenacao::pivoMediano(Registro *l, int inicio, int fim)
 {
     int media = (inicio + fim) / 2;
     if (l[inicio].getVotes() > l[fim].getVotes())
@@ -34,7 +34,7 @@ Registro pivoMediano(Registro *l, int inicio, int fim)
     return l[fim];
 }
 
-int quickSort_particionaLista(Registro *list, int i, int j)
+int Ordenacao::quickSort_particionaLista(Registro *list, int i, int j)
 {
 
     int fim = j - 1;
@@ -64,7 +64,7 @@ int quickSort_particionaLista(Registro *list, int i, int j)
         return i;
     }
 }
-void quickSort_ordena(Registro *list, int i, int k)
+void Ordenacao::quickSort_ordena(Registro *list, int i, int k)
 {
     if (i - k > 0)
     {
@@ -74,7 +74,7 @@ void quickSort_ordena(Registro *list, int i, int k)
     }
 }
 
-void quickSort_time(Registro *list, int n)
+void Ordenacao::quickSort_time(Registro *list, int n)
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     quickSort_ordena(list, 0, n - 1);
@@ -90,7 +90,7 @@ void quickSort_time(Registro *list, int n)
 
 /// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
 
-void heapify(Registro *list, int i, int tam)
+void Ordenacao::heapify(Registro *list, int i, int tam)
 {
     while (i < tam)
     {
@@ -111,7 +111,7 @@ void heapify(Registro *list, int i, int tam)
     }
 }
 
-void build_heap(Registro *list, int tam)
+void Ordenacao::build_heap(Registro *list, int tam)
 {
     for (int i = tam / 2 - 1; i >= 0; i--)
     {
@@ -119,7 +119,7 @@ void build_heap(Registro *list, int tam)
     }
 }
 
-void heapSort_ordena(Registro *list, int tam)
+void Ordenacao::heapSort_ordena(Registro *list, int tam)
 {
     build_heap(list, tam);
     while (tam > 0)
@@ -130,7 +130,7 @@ void heapSort_ordena(Registro *list, int tam)
     }
 }
 
-void heapSort_time(Registro *list, int tam)
+void Ordenacao::heapSort_time(Registro *list, int tam)
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     heapSort_ordena(list, tam);
@@ -158,7 +158,7 @@ void heapSort_time(Registro *list, int tam)
 
 /// ALGORITMO DE ORDENAÇÃO - COMB SORT ///
 
-int find_next(int gap)
+int Ordenacao::find_next(int gap)
 {
     gap = (gap * 10) / 13;
 
@@ -167,7 +167,7 @@ int find_next(int gap)
     return gap;
 }
 
-void combSort_ordena(Registro *list, int tam)
+void Ordenacao::combSort_ordena(Registro *list, int tam)
 {
     int gap = tam;
     bool switched = true;
@@ -191,7 +191,7 @@ void combSort_ordena(Registro *list, int tam)
     }
 }
 
-void combSort_time(Registro *list, int tam)
+void Ordenacao::combSort_time(Registro *list, int tam)
 {
 
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
