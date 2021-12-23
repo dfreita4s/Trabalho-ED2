@@ -1,5 +1,5 @@
 #include "review.h"
-#include "tabelaHash.h"
+//#include "tabelaHash.h"
 #include <fstream>
 #include <vector>
 
