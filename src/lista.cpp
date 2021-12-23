@@ -167,7 +167,6 @@ void Lista::listarTodas()
     else
         std::cout << "Impossível listar. O arquivo não existe." << std::endl;
 }
-
 bool Lista::criarArquivoBinario()
 {
     std::ofstream arqBin;
@@ -179,8 +178,10 @@ bool Lista::criarArquivoBinario()
 
         Review *No = this->obterRaiz();
 
-        std::string linha = "";
-
+        // Escreve cabeçalho
+        std::string linha = "review_id,review_text,upvotes,app_version,posted_date\n";
+        arqBin.write(linha.c_str(), sizeof(char) * linha.size());
+        int contador = 0;
         while (No != nullptr)
         {
             linha = "";
@@ -188,22 +189,15 @@ bool Lista::criarArquivoBinario()
             linha += ",\"";
             linha += No->obterTexto();
             linha += "\",";
+            linha += std::to_string(No->obterVotos());
             linha += ",";
             linha += No->obterVersao();
             linha += ",";
             linha += No->obterData();
-            // linha += std::to_string();
-            int upvotes =  No->obterVotos();
+            linha += "\n";
 
-
-            unsigned short tamRegistro = sizeof(char) * linha.size() + sizeof(int);
-
-            arqBin.write((char *)& tamRegistro, sizeof(tamRegistro));
             arqBin.write(linha.c_str(), sizeof(char) * linha.size());
-            arqBin.write((char *)& upvotes, sizeof(int));
 
-            // char *data = new char;
-            // delete data;
             No = No->obterProximo();
         }
         arqBin.close();
@@ -213,7 +207,6 @@ bool Lista::criarArquivoBinario()
     std::cout << "Erro ao criar arquivo binário." << std::endl;
     return false;
 }
-
 
 int Lista::acessaVersao(int rand, int indice){
     tabelaHash *tabela = new tabelaHash[30];

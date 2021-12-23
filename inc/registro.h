@@ -10,7 +10,6 @@ public:
     void ordenaRegistros();
 
     Registro();
-    // Registro(const std::string &, int);
     ~Registro();
 
     std::string getTerms(int, std::string); //pega um termo do array de registros(id, text...)
@@ -40,6 +39,7 @@ public:
     void quickSort_time(std::string *list, int n);
 
     std::string *importaRegistros(int); //importar aleatoriamente N registros aleatorios
+
 private:
     std::string *registros; //array de registros para a memoria principal
     std::string review_id;

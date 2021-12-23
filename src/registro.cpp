@@ -85,45 +85,6 @@ int Registro::getN()
     return this->N;
 }
 
-void Registro::acessaRegistro(int k)
-{
-    std::cout << "Acessando registro " << k << std::endl;
-    std::string registro = leBinario(k);
-    if (registro != "")
-        std::cout << registro;
-    else
-        std::cout << "Numero de registro não encontrado!" << std::endl;
-}
-
-std::string Registro::leBinario(int k)
-{
-
-    std::ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        std::string str = "";
-        int cont = 0;
-        while (getline(arqBin, str))
-        {
-            if (cont == k)
-            {                      //se o cont == k chegou na linha certa
-                return str + "\n"; //retorna a linha
-            }
-            else
-                cont++;
-        }
-        std::cout << "Diretório " << k << " não existe!" << std::endl;
-        return "";
-        arqBin.close();
-    }
-    else
-    {
-        std::cout << "Não foi possível abrir o arquivo!" << std::endl;
-        return "";
-    }
-}
-
 std::string *Registro::getRegistro()
 {
     return this->registros;
@@ -142,43 +103,6 @@ void Registro::setRegistro(std::string *regist)
 
 //     return aux;
 // }
-
-void Registro::testeImportacao()
-{
-    int resp = 0;
-    std::string *registro = getRegistro();
-    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar: ";
-    std::cin >> resp;
-    if (resp == 1)
-    {
-        // Printar no terminal N = 10 registros aleatorios
-
-        for (int i = 0; i < 10; i++)
-            std::cout << "[" << i + 1 << "]" << registro[i] << std::endl;
-    }
-    else if (resp == 2)
-    {
-        //Salvar em um txt N = 100 registros aleatorios
-        std::fstream saidaTxt;
-        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
-        if (saidaTxt.is_open())
-        {
-
-            std::string linha = "";
-            for (int i = 0; i < 100; i++)
-            {
-                linha = registro[i];
-                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
-            }
-            std::cout << "O arquivo de texto foi criado!" << std::endl;
-        }
-        saidaTxt.close();
-    }
-    else
-    {
-        std::cout << "Por favor, digite um valor válido!" << std::endl;
-    }
-}
 
 void Registro::ordenaRegistros()
 {
