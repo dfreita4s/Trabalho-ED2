@@ -207,18 +207,21 @@ bool Lista::criarArquivoBinario()
     return false;
 }
 
-int Lista::acessaVersao(int rand, int indice){
+int Lista::acessaVersao(int rand, int indice)
+{
     tabelaHash *tabela = new tabelaHash[30];
     tabelaHash aux;
     char removePonto[] = ".";
     int chave;
-    if (this->obterRaiz() != nullptr){
+    if (this->obterRaiz() != nullptr)
+    {
         Review *No = this->raiz;
-        for (int i = 0; No != nullptr; i++){
+        for (int i = 0; No != nullptr; i++)
+        {
             if (i == rand)
             {
                 std::string temp = No->obterVersao();
-                for(unsigned int j = 0; j < strlen(removePonto); j++)
+                for (unsigned int j = 0; j < strlen(removePonto); j++)
                 {
                     temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
                 }
@@ -230,23 +233,28 @@ int Lista::acessaVersao(int rand, int indice){
                 No = No->obterProximo();
             }
         }
+        return -1;
     }
     else
     {
         cout << "Raiz apontando para um ponteiro null " << endl;
-    } 
+        return -1;
+    }
 }
 
-int Lista::pegaVersao(int rand){
+int Lista::pegaVersao(int rand)
+{
     char removePonto[] = ".";
     int chave;
-    if (this->obterRaiz() != nullptr){
+    if (this->obterRaiz() != nullptr)
+    {
         Review *No = this->raiz;
-        for (int i = 0; No != nullptr; i++){
+        for (int i = 0; No != nullptr; i++)
+        {
             if (i == rand)
             {
                 std::string temp = No->obterVersao();
-                for(unsigned int j = 0; j < strlen(removePonto); j++)
+                for (unsigned int j = 0; j < strlen(removePonto); j++)
                 {
                     temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
                 }
@@ -267,10 +275,8 @@ int Lista::pegaVersao(int rand){
             }
         }
     }
-    else{
+    else
+    {
         cout << "Raiz apontando para um ponteiro null " << endl;
-    } 
+    }
 }
-
-
-

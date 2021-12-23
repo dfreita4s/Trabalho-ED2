@@ -198,6 +198,7 @@ void Ordenacao::combSort_time(Registro *list, int tam)
     combSort_ordena(list, tam);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+    
 }
 /*
 ===================FIM COMBSORT =======================

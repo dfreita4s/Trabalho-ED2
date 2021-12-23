@@ -1,3 +1,5 @@
+#include <iostream>
+#include "../src/registro.cpp"
 class Ordenacao{
     public:
 
@@ -25,6 +27,6 @@ class Ordenacao{
 
 
     private:
-    
+        // Registro *registro;
 
 };
