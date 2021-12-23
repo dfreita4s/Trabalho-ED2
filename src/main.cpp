@@ -162,13 +162,61 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
     }
 }
 
-int importarRegistros(Registro *registro)
+void ordenacao(Registro *registro, int N)
 {
-    int N = 0;
-    cout << "Digite o numero de registro que deseja importar: ";
-    cin >> N;
-    leBinario(registro, N);
-    return N;
+    Ordenacao sort;
+    srand(time(NULL));
+    int *dat = new int[5]; //vetor com os valores de N 
+    dat[0] = 10000;
+    dat[1] = 50000;
+    dat[2] = 100000;
+    dat[3] = 500000;
+    dat[4] = 1000000;
+
+    float tempoQuicksort = 0;
+    float tempoHeapsort = 0;
+    float tempoCombksort = 0;
+
+    float tempoMediaQuicksort = 0;
+    float tempoMediaHeapsort = 0;
+    float tempoMediaCombsort = 0;
+
+
+    int *comparcoesQuicksort = 0;
+    int *movimentacoesQuicksort = 0;
+
+    int *comparcoesHeapsort = 0;
+    int *movimentacoesHeapsort = 0;
+
+    int *comparcoesCombsort = 0;
+    int *movimentacoesCombsort = 0;
+
+    int M = 3;
+    std::fstream saida;
+    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
+    if (saida.is_open())
+    {
+        for (int i = 0; i < M; i++)
+        {
+            int tam = dat[rand() % 5];
+            leBinario(registro, tam);
+
+            tempoQuicksort = sort.quickSort_time(registro, tam, comparcoesQuicksort, movimentacoesQuicksort);
+            tempoHeapsort = sort.heapSort_time(registro, tam, movimentacoesHeapsort, movimentacoesHeapsort);
+            tempoCombksort = sort.combSort_time(registro, tam, movimentacoesCombsort, movimentacoesCombsort);
+
+            tempoMediaQuicksort += tempoQuicksort;
+            tempoMediaHeapsort += tempoHeapsort;
+            tempoMediaCombsort += tempoCombksort;
+
+
+        }
+
+        std::cout << "O arquivo de texto foi criado!" << std::endl;
+    }
+    else
+        std::cout << "Nao foi possivel abrir o arquivo" << std::endl;
+    saida.close();
 }
 
 void menu()
@@ -184,18 +232,19 @@ void menu()
         cin >> N;
         Registro *registro = new Registro[N];
         Registro reg;
-        Ordenacao sort;
+
         leBinario(registro, N); //importa N registros do arquivo Binario
-        cout << "\nQual metodo de ordenação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nResposta:";
-        cin >> resp;
-        if (resp == 1)
-        {
-            sort.quickSort_time(registro, N);
-        }
-        else if (resp == 2)
-            sort.heapSort_time(registro, N);
-        else if (resp == 3)
-            sort.combSort_time(registro, N);
+
+        // cout << "\nQual metodo de ordenação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nResposta:";
+        // cin >> resp;
+        // if (resp == 1)
+        // {
+        //     sort.quickSort_time(registro, N);
+        // }
+        // else if (resp == 2)
+        //     sort.heapSort_time(registro, N);
+        // else if (resp == 3)
+        //     sort.combSort_time(registro, N);
 
         delete[] registro;
         menu();
