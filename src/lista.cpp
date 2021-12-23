@@ -101,7 +101,7 @@ bool Lista::obterReviews()
             pos = linha.find_last_of(",");
             std::string versao = linha.substr(pos + 1); // Obter a versão
             if (versao.length() == 0)
-                versao = "00.0.0";
+                versao = "NaN";
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
