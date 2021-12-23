@@ -148,6 +148,7 @@ int tabelaHash::totalColisoes(int *tabela, int m)
     return cont;
 }
 
+/*
 void tabelaHash::criaTabelaHash(Registro *reg, int n)
 {
     tabelaHash *tab = new tabelaHash[n];
@@ -216,4 +217,5 @@ int tabelaHash::retiraPontos(std::string versao)
         return chave;
     }
 }
+*/
 

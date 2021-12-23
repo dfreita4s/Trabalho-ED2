@@ -2,19 +2,25 @@
 #include <fstream>
 #include <chrono>
 #include <string>
-#include "../inc/lista.h"
-#include "../inc/registro.h"
-#include "../inc/tabelaHash.h"
-
-#define NREGISTROS 3646475
 #include <cstdlib>
 #include <ctime>
 #include <random>
+#include <sstream>
+#include <cstring>
+#include <algorithm>
+#include "../inc/lista.h"
+#include "../inc/ordenacao.h"
+#include "../inc/tabelaHash.h"
+
+
+#define NREGISTROS 3646475
 
 using namespace std;
 
 int obterReview();
 bool checaArqBin();
+void criaTabelaHash(Registro *reg, int n);
+int retiraPontos(std::string versao);
 void testeImportacao(Registro *lista)
 {
     int resp, N = 0;
@@ -159,6 +165,8 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
     }
 }
 
+
+
 void menu()
 {
 
@@ -179,6 +187,7 @@ void menu()
         int N = 0;
         cin >> N;
         Registro *registro = new Registro[N];
+        Ordenacao sort;
         leBinario(registro, N); //importa N registros do arquivo Binario
         cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
         cin >> resp;
@@ -189,8 +198,7 @@ void menu()
             std::cout << "Qual Ordendação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nFunção: ";
             cin >> resp;
             if (resp == 1)
-            std::cout<<"";
-            // quickSort_time(registro, N);
+            sort.quickSort_time(registro, N);
             else if (resp == 2)
             std::cout<<"";
             // heapSort_time(registro, N);
@@ -209,8 +217,8 @@ void menu()
         int n = 99;
         int resp;
         Registro *reg = new Registro[n];
-        tabelaHash aux;
-        aux.criaTabelaHash(reg,n);
+        leBinario(reg,n);
+        criaTabelaHash(reg,n);
         cout << "Tabela Hash gerada com sucesso..." << endl;
         cout << "Digite 1 para fazer a ordenacao e 2 para retornar ao menu" << endl;
         cin >> resp;
@@ -231,6 +239,76 @@ void menu()
     {
         cout << "Por favor digite uma resposta válida!" << endl;
         menu();
+    }
+}
+
+void criaTabelaHash(Registro *reg, int n)
+{
+    tabelaHash *tab = new tabelaHash[n];
+    tabelaHash aux;
+    int chave;
+    std::string chaveOrig;
+    for (int i = 0; i < n; i++)
+    {
+        chave = retiraPontos(reg[i].getVersion());
+        chaveOrig = reg[i].getVersion();
+        if (chave != 0)
+        {
+            if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0) //Caso a função hash encontre uma posição vazia na tabela para inserir a chave
+            {
+                tab[aux.funcaoHash(chave, n)].insereChave(chave);
+                tab[aux.funcaoHash(chave, n)].insereChaveOrig(chaveOrig);
+            }
+            else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave)) // Caso a função hash encontre uma posição na tabela onde outro review com a mesma versão já tenha sido inserido
+            {
+                tab[aux.funcaoHash(chave, n)].somaContador();
+            }
+            else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave)) //Caso a função hash devolva uma posição da tabela não vazia e que a versão do review é diferente do já inserido, ocorre a colisão
+            {
+                int j = 0;
+                while ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) //Enquanto a colisão persistir, índice j, que entra na função de tratamento de colisão, é somado
+                {
+                    j++;
+                }
+                // ao sair do while, temos que a função trataColisao encontrou uma posição vazia na tabela para inserir a versão, ou ela encontrou uma posição na tabela onde a mesma versão de outro review já havia colidido e sido salva
+                if ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() == chave)) // caso a tabela já tenha a versão inserida por um review anterior
+                {
+                    tab[aux.trataColisao(chave, n, j)].somaContador();
+                }
+                else if ((tab[aux.trataColisao(chave, n, j)].consultaContador() == 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) // caso uma posição vazia na tabela tenha sido encontrada para guardar a versão
+                {
+                    tab[aux.trataColisao(chave, n, j)].insereChave(chave);
+                    tab[aux.trataColisao(chave, n, j)].insereChaveOrig(chaveOrig);
+                }
+                    //contaColisao++;
+            }            
+        }
+        else
+        {
+            // ignora review com versão vazia
+        }
+    }
+    cout << "Tabela Hash criada com sucesso" << endl;
+    aux.imprimeTabela(tab,n);
+}
+
+int retiraPontos(std::string versao)
+{
+    char removePonto[] = ".";
+    int chave;
+    if (versao == "NaN")
+    {
+        return 0;
+    }
+    else
+    {
+        std::string temp = versao;
+        for (unsigned int j = 0; j < strlen(removePonto); j++)
+        {
+            temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
+        }
+        chave = stoi(temp);
+        return chave;
     }
 }
 

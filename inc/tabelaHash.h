@@ -1,7 +1,7 @@
 #include <iostream>
 #include <list>
 #include <cstring>
-#include <registro.h>
+//#include "registro.h"
 using namespace std;
 
 class tabelaHash{
@@ -29,6 +29,6 @@ class tabelaHash{
         int funcaoHash (int, int);
         void imprimeTabela(tabelaHash*, int);
         int totalColisoes(int*,int);
-        void criaTabelaHash(Registro *, int);
-        int retiraPontos(std::string);
+        //void criaTabelaHash(Registro *, int);
+        //int retiraPontos(std::string);
 };

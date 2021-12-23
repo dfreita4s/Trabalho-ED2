@@ -10,7 +10,6 @@ public:
     void ordenaRegistros();
 
     Registro();
-    // Registro(const std::string &, int);
     ~Registro();
 
     std::string getTerms(int, std::string); //pega um termo do array de registros(id, text...)
@@ -29,7 +28,6 @@ public:
     std::string getDate();
     int getVotes();
     int getN();
-
 
     std::string imprimeRegistros();
 
