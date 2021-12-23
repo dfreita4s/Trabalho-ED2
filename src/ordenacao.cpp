@@ -179,7 +179,7 @@ void Ordenacao::combSort_ordena(Registro *list, int tam, int *compara, int *movi
         {
             if (list[i].getVotes() > list[i + gap].getVotes())
             {
-
+                std::cout<<"entrou";
                 trocaNo(list, i, i + gap, compara, movimenta);
                 switched = true;
             }
@@ -195,6 +195,9 @@ float Ordenacao::combSort_time(Registro *list, int tam, int *compara, int *movim
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     combSort_ordena(list, tam, compara, movimenta);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    // for(int i =0; i<tam;i++){
+    //     std::cout<<"\n"<<list[i].imprimeRegistros()<<std::endl;;
+    // }
     return std::chrono::duration<float>(end - start).count();
 
 }

@@ -216,6 +216,7 @@ void ordenacao()
             
             tempoCombsort = sort.combSort_time(registro, tam, &comparacoesCombsort, &movimentacoesCombsort);
             
+            cout<<"Movimentacoes comb sort"<<movimentacoesCombsort<<endl;
 
             tempoMediaQuicksort += tempoQuicksort;
             tempoMediaHeapsort += tempoHeapsort;
@@ -228,6 +229,7 @@ void ordenacao()
             movimentacoesMediaQuicksort += movimentacoesQuicksort / 3;
             movimentacoesMediaHeapsort += movimentacoesHeapsort / 3;
             movimentacoesMediaCombsort += movimentacoesCombsort / 3;
+
 
             saida << "Quicksort estatisticas para " << tam << " números de registros" << endl;
             saida << "Tempo de execução: " << tempoQuicksort << " segundos" << endl;
