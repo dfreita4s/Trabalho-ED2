@@ -1,12 +1,11 @@
-#include<iostream>
+#include <iostream>
 #include "../inc/lista.h"
 #include <string>
 #include <fstream>
-#include<sstream>
+#include <sstream>
 #include <vector>
 #include <cstring>
 #include <algorithm>
-
 Lista::Lista(const std::string &caminhoArquivo)
 {
     this->raiz = nullptr;
@@ -167,25 +166,22 @@ void Lista::listarTodas()
     else
         std::cout << "Impossível listar. O arquivo não existe." << std::endl;
 }
-
-
-
 bool Lista::criarArquivoBinario()
 {
     std::ofstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if(arqBin.is_open())
+    if (arqBin.is_open())
     {
-        if(this->obterRaiz() == nullptr)
+        if (this->obterRaiz() == nullptr)
             return false;
 
         Review *No = this->obterRaiz();
 
         // Escreve cabeçalho
         std::string linha = "review_id,review_text,upvotes,app_version,posted_date\n";
-        arqBin.write(linha.c_str() , sizeof(char)*linha.size());
+        arqBin.write(linha.c_str(), sizeof(char) * linha.size());
         int contador = 0;
-        while(No != nullptr)
+        while (No != nullptr)
         {
             linha = "";
             linha += No->obterID();
@@ -199,31 +195,33 @@ bool Lista::criarArquivoBinario()
             linha += No->obterData();
             linha += "\n";
 
-            arqBin.write(linha.c_str() , sizeof(char)*linha.size());
+            arqBin.write(linha.c_str(), sizeof(char) * linha.size());
 
-            No = No->obterProximo();            
+            No = No->obterProximo();
         }
         arqBin.close();
-        std::cout << "O arquivo binário foi criado." << std::endl;    
+        std::cout << "O arquivo binário foi criado." << std::endl;
         return true;
     }
     std::cout << "Erro ao criar arquivo binário." << std::endl;
     return false;
 }
 
-
-int Lista::acessaVersao(int rand, int indice){
+int Lista::acessaVersao(int rand, int indice)
+{
     tabelaHash *tabela = new tabelaHash[30];
     tabelaHash aux;
     char removePonto[] = ".";
     int chave;
-    if (this->obterRaiz() != nullptr){
+    if (this->obterRaiz() != nullptr)
+    {
         Review *No = this->raiz;
-        for (int i = 0; No != nullptr; i++){
+        for (int i = 0; No != nullptr; i++)
+        {
             if (i == rand)
             {
                 std::string temp = No->obterVersao();
-                for(unsigned int j = 0; j < strlen(removePonto); j++)
+                for (unsigned int j = 0; j < strlen(removePonto); j++)
                 {
                     temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
                 }
@@ -235,23 +233,28 @@ int Lista::acessaVersao(int rand, int indice){
                 No = No->obterProximo();
             }
         }
+        return -1;
     }
     else
     {
         cout << "Raiz apontando para um ponteiro null " << endl;
-    } 
+        return -1;
+    }
 }
 
-int Lista::pegaVersao(int rand){
+int Lista::pegaVersao(int rand)
+{
     char removePonto[] = ".";
     int chave;
-    if (this->obterRaiz() != nullptr){
+    if (this->obterRaiz() != nullptr)
+    {
         Review *No = this->raiz;
-        for (int i = 0; No != nullptr; i++){
+        for (int i = 0; No != nullptr; i++)
+        {
             if (i == rand)
             {
                 std::string temp = No->obterVersao();
-                for(unsigned int j = 0; j < strlen(removePonto); j++)
+                for (unsigned int j = 0; j < strlen(removePonto); j++)
                 {
                     temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
                 }
@@ -272,9 +275,10 @@ int Lista::pegaVersao(int rand){
             }
         }
     }
-    else{
+    else
+    {
         cout << "Raiz apontando para um ponteiro null " << endl;
-    } 
+    }
 }
 
 

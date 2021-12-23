@@ -19,6 +19,7 @@ public:
     void listarTodas();
 
     void inserirReview(Review *, Review *);
+   
 
     bool criarArquivoBinario();
     void usaListaImportacao();

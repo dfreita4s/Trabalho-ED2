@@ -8,6 +8,7 @@ class tabelaHash{
     private:
         int cont;
         int chave;
+        std::string chaveOrig;
 
     public:
 
@@ -18,10 +19,13 @@ class tabelaHash{
         // todos os n passados por paramêtros são a chave principal, no caso a versão do review
         int consultaContador();
         int consultaChave();
+        std::string consultaChaveOrig();
         void insereChave(int);
+        void insereContador(int);
+        void insereChaveOrig(std::string);
         void somaContador();
         int trataColisao(int, int, int);
         int funcaoHash (int, int);
-        void imprimeTabela(int*,int);
+        void imprimeTabela(tabelaHash*, int);
         int totalColisoes(int*,int);
 };
