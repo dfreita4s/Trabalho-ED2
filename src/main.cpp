@@ -322,7 +322,6 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
-
 // void acessaRegistro(int k)
 // {
 //     std::cout << "Acessando registro " << k << std::endl;

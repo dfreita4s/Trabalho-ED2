@@ -13,6 +13,7 @@ tabelaHash::tabelaHash(int chave){
 tabelaHash::tabelaHash(){
     this->chave = 0;
     this->cont = 0;
+    this->chaveOrig = "0";
 }
 
 
@@ -52,11 +53,22 @@ int tabelaHash::consultaChave(){
     return this->chave;
 }
 
+std::string tabelaHash::consultaChaveOrig(){
+    return this->chaveOrig;
+}
+
 void tabelaHash::insereChave(int chave){
     this->chave = chave;
     somaContador();
 }
 
+void tabelaHash::insereContador(int contador){
+    this->cont = contador;
+}
+
+void tabelaHash::insereChaveOrig(std::string chave){
+    this->chaveOrig = chave;
+}
 
 void tabelaHash::somaContador(){
     this->cont = cont + 1;
@@ -113,11 +125,13 @@ int tabelaHash::trataColisao(int chave, int tam, int i){
     return saida;
 }
 
-void tabelaHash::imprimeTabela(int *tabela, int m)
+void tabelaHash::imprimeTabela(tabelaHash *tabela, int n)
 {
-    for(int i = 0; i < m; i++)
-        cout << tabela[i] << ", ";
+    for (int i = 0; i < n; i++){
+    cout << "Versao" << " " << "," << " " << "Numero de reviews da mesma versao" << " " << endl;
+    cout << tabela[i].consultaChaveOrig() << ", " << tabela[i].consultaContador();
     cout << endl;
+    }
 }
 
 int tabelaHash::totalColisoes(int *tabela, int m)
