@@ -3,8 +3,14 @@
 #include <chrono>
 #include <string>
 #include "../inc/ordenacao.h"
-#include "../inc/registro.h"
 
+
+Ordenacao::Ordenacao(){
+
+}
+Ordenacao::~Ordenacao(){
+
+}
 
 /// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
 
@@ -12,7 +18,6 @@
 //total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
 //Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
 //Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
-
 void Ordenacao::trocaNo(Registro r1, Registro r2)
 {
     Registro aux;

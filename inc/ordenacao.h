@@ -1,8 +1,12 @@
 #include <iostream>
-#include "../src/registro.cpp"
+#include "./registro.h"
+
+typedef Registro* registro;
 class Ordenacao{
     public:
 
+    Ordenacao();
+    ~Ordenacao(); 
     void trocaNo(Registro r1, Registro r2);
     // QUICK SORT 
 
