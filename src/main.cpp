@@ -5,8 +5,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <random>
+#include <sstream>
+#include <cstring>
+#include <algorithm>
 #include "../inc/lista.h"
 #include "../inc/ordenacao.h"
+#include "../inc/tabelaHash.h"
 
 
 #define NREGISTROS 3646475
@@ -15,8 +19,8 @@ using namespace std;
 
 int obterReview();
 bool checaArqBin();
-void acessaRegistro(int);
-void criaTabelaHash(Lista *lista);
+void criaTabelaHash(Registro *reg, int n);
+int retiraPontos(std::string versao);
 void testeImportacao(Registro *lista)
 {
     int resp, N = 0;
@@ -161,77 +165,7 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
     }
 }
 
-void criaTabelaHash(Lista *listaReview) //passar pra Registro *registro
-{
-    int n = 499;
-    tabelaHash *tab = new tabelaHash[n];
-    tabelaHash aux;
-    int contaColisao = 0;
-    srand(time(NULL));
-    int *num = new int[n];
-    for (int i = 0; i < n; i++)
-    {
-        //cout << "Na execucao " << " " << i << endl;
-        num[i] = rand() % 3646475;
-        if (confereNum(num, i) == true) // garante que um mesmo review não seja lido mais de uma vez
-        {
-            int chave = listaReview->pegaVersao(num[i]);
-            if (chave != 0) //será 0 caso o review retorne versão vazia
-            {
-                if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0) //Caso a função hash encontre uma posição vazia na tabela para inserir a chave
-                {
-                    tab[aux.funcaoHash(chave, n)].insereChave(chave);
-                    cout << "Chave"
-                         << " " << tab[aux.funcaoHash(chave, n)].consultaChave() << " "
-                         << "inserida com sucesso na posicao "
-                         << " " << aux.funcaoHash(chave, n) << " " << endl;
-                }
-                else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave)) // Caso a função hash encontre uma posição na tabela onde outro review com a mesma versão já tenha sido inserido
-                {
-                    tab[aux.funcaoHash(chave, n)].somaContador();
-                    cout << "Repeticao da chave "
-                         << " " << tab[aux.funcaoHash(chave, n)].consultaChave() << " "
-                         << "detectada" << endl;
-                    cout << "Contador somado, agora ele eh: "
-                         << " " << tab[aux.funcaoHash(chave, n)].consultaContador() << endl;
-                }
-                else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave)) //Caso a função hash devolva uma posição da tabela não vazia e que a versão do review é diferente do já inserido, ocorre a colisão
-                {
-                    int j = 0;
-                    while ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) //Enquanto a colisão persistir, índice j, que entra na função de tratamento de colisão, é somado
-                    {
-                        j++;
-                    }
-                    // ao sair do while, temos que a função trataColisao encontrou uma posição vazia na tabela para inserir a versão, ou ela encontrou uma posição na tabela onde a mesma versão de outro review já havia colidido e sido salva
-                    if ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() == chave)) // caso a tabela já tenha a versão inserida por um review anterior
-                    {
-                        tab[aux.trataColisao(chave, n, j)].somaContador();
-                        cout << "repeticao via colisao detectada, versao"
-                             << " " << chave << " "
-                             << "teve seu contador somado para"
-                             << " " << tab[aux.trataColisao(chave, n, j)].consultaContador() << endl;
-                    }
-                    else if ((tab[aux.trataColisao(chave, n, j)].consultaContador() == 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) // caso uma posição vazia na tabela tenha sido encontrada para guardar a versão
-                    {
-                        tab[aux.trataColisao(chave, n, j)].insereChave(chave);
-                        cout << "colisao detectada e chave"
-                             << " " << chave << " "
-                             << "tratada e inserida na posicao"
-                             << " " << aux.trataColisao(chave, n, j) << endl;
-                    }
-                    contaColisao++;
-                }
-            }
-            else
-            {
-                // ignora review com versão vazia
-            }
-        }
-    }
-    cout << "Tabela Hash criada com sucesso,"
-         << " " << contaColisao << " "
-         << "colisoes aconteceram" << endl;
-}
+
 
 void menu()
 {
@@ -280,10 +214,22 @@ void menu()
     }
     else if (resp == 3)
     {
-        int n = 0;
-        cout << "Informe quantos valores serao importados na tabela: " << endl;
-        cin >> n;
-        return;
+        int n = 99;
+        int resp;
+        Registro *reg = new Registro[n];
+        leBinario(reg,n);
+        criaTabelaHash(reg,n);
+        cout << "Tabela Hash gerada com sucesso..." << endl;
+        cout << "Digite 1 para fazer a ordenacao e 2 para retornar ao menu" << endl;
+        cin >> resp;
+        if (resp == 1)
+        {
+            //chama ordenação
+        }
+        else
+        {
+            menu();
+        }
     }
     else if (resp == 4)
     {
@@ -293,6 +239,76 @@ void menu()
     {
         cout << "Por favor digite uma resposta válida!" << endl;
         menu();
+    }
+}
+
+void criaTabelaHash(Registro *reg, int n)
+{
+    tabelaHash *tab = new tabelaHash[n];
+    tabelaHash aux;
+    int chave;
+    std::string chaveOrig;
+    for (int i = 0; i < n; i++)
+    {
+        chave = retiraPontos(reg[i].getVersion());
+        chaveOrig = reg[i].getVersion();
+        if (chave != 0)
+        {
+            if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0) //Caso a função hash encontre uma posição vazia na tabela para inserir a chave
+            {
+                tab[aux.funcaoHash(chave, n)].insereChave(chave);
+                tab[aux.funcaoHash(chave, n)].insereChaveOrig(chaveOrig);
+            }
+            else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() == chave)) // Caso a função hash encontre uma posição na tabela onde outro review com a mesma versão já tenha sido inserido
+            {
+                tab[aux.funcaoHash(chave, n)].somaContador();
+            }
+            else if ((tab[aux.funcaoHash(chave, n)].consultaContador() != 0) && (tab[aux.funcaoHash(chave, n)].consultaChave() != chave)) //Caso a função hash devolva uma posição da tabela não vazia e que a versão do review é diferente do já inserido, ocorre a colisão
+            {
+                int j = 0;
+                while ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) //Enquanto a colisão persistir, índice j, que entra na função de tratamento de colisão, é somado
+                {
+                    j++;
+                }
+                // ao sair do while, temos que a função trataColisao encontrou uma posição vazia na tabela para inserir a versão, ou ela encontrou uma posição na tabela onde a mesma versão de outro review já havia colidido e sido salva
+                if ((tab[aux.trataColisao(chave, n, j)].consultaContador() != 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() == chave)) // caso a tabela já tenha a versão inserida por um review anterior
+                {
+                    tab[aux.trataColisao(chave, n, j)].somaContador();
+                }
+                else if ((tab[aux.trataColisao(chave, n, j)].consultaContador() == 0) && (tab[aux.trataColisao(chave, n, j)].consultaChave() != chave)) // caso uma posição vazia na tabela tenha sido encontrada para guardar a versão
+                {
+                    tab[aux.trataColisao(chave, n, j)].insereChave(chave);
+                    tab[aux.trataColisao(chave, n, j)].insereChaveOrig(chaveOrig);
+                }
+                    //contaColisao++;
+            }            
+        }
+        else
+        {
+            // ignora review com versão vazia
+        }
+    }
+    cout << "Tabela Hash criada com sucesso" << endl;
+    aux.imprimeTabela(tab,n);
+}
+
+int retiraPontos(std::string versao)
+{
+    char removePonto[] = ".";
+    int chave;
+    if (versao == "NaN")
+    {
+        return 0;
+    }
+    else
+    {
+        std::string temp = versao;
+        for (unsigned int j = 0; j < strlen(removePonto); j++)
+        {
+            temp.erase(std::remove(temp.begin(), temp.end(), removePonto[j]), temp.end());
+        }
+        chave = stoi(temp);
+        return chave;
     }
 }
 
@@ -312,7 +328,6 @@ int main(int argc, char const *argv[])
         }
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-        // criaTabelaHash(listaReview);
 
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
@@ -367,47 +382,3 @@ int main(int argc, char const *argv[])
 //         std::cout << "Por favor, digite um valor válido!" << std::endl;
 //     }
 // }
-
-/* void acessaRegistro(int k)
-{
-    std::cout << "Acessando registro " << k << std::endl;
-
-    std::ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        arqBin.seekg(0, arqBin.end);
-        int tamTotal = arqBin.tellg();
-        arqBin.seekg(0, arqBin.beg);
-
-        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
-        int i = 0;                          // Contador de linhas
-        unsigned short tamanhoRegistro = 0; // tamanho de cada registro
-
-        do
-        {
-            arqBin.read((char *)&tamanhoRegistro, sizeof(tamanhoRegistro));
-            posInicial = arqBin.tellg();
-
-            posProximo = tamanhoRegistro + posInicial;
-            arqBin.seekg(posProximo);
-            i++;
-
-        } while (i <= k && posProximo <= tamTotal);
-
-        // Calcula o tamanho do registro
-        arqBin.seekg(posInicial);
-        int pos = 0;
-
-        char *buffer = new char[tamanhoRegistro];
-        arqBin.read(buffer, tamanhoRegistro);
-
-        std::cout.write(buffer, tamanhoRegistro);
-        std::cout << std::endl;
-
-        delete[] buffer;
-        arqBin.close();
-    }
-    else
-        std::cout << "Erro ao obter registro." << std::endl;
-} */
