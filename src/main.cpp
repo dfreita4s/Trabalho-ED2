@@ -179,16 +179,19 @@ void menu()
     cin >> resp;
     if (resp == 1)
     {
-        cout << "Digite o numero de importacoes que deseja: ";
+        cout << "Digite o numero de importacoes que deseja: "; //mudar para testes com M = 3 e N = {10.000, 50.000, 100.000, 500.000, 1.000.000} ler de um .dat
         int N = 0;
         cin >> N;
         Registro *registro = new Registro[N];
+        Registro reg;
         Ordenacao sort;
         leBinario(registro, N); //importa N registros do arquivo Binario
         cout << "\nQual metodo de ordenação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nResposta:";
         cin >> resp;
         if (resp == 1)
+        {
             sort.quickSort_time(registro, N);
+        }
         else if (resp == 2)
             sort.heapSort_time(registro, N);
         else if (resp == 3)
@@ -209,7 +212,7 @@ void menu()
         criaTabelaHash(reg, n);
         cout << "Tabela Hash gerada com sucesso..." << endl;
 
-        delete [] reg;
+        delete[] reg;
         menu();
     }
     else if (resp == 3)

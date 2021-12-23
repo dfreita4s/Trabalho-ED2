@@ -6,7 +6,7 @@ class Ordenacao{
 
     Ordenacao();
     ~Ordenacao(); 
-    void trocaNo(Registro r1, Registro r2);
+    void trocaNo(Registro *, int, int);
     // QUICK SORT 
 
     Registro pivoMediano(Registro *l, int inicio, int fim);
