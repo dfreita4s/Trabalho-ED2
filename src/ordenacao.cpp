@@ -68,7 +68,7 @@ int Ordenacao::quickSort_particionaLista(Registro *list, int i, int j)
         return i;
     }
 }
-void Ordenacao::quickSort_ordena(Registro *list, int i, int k)
+void Ordenacao::quickSort_ordena(Registro *list, int i, int k) //oq essa funcao faz?
 {
     if (i - k > 0)
     {
@@ -136,12 +136,14 @@ void Ordenacao::heapSort_ordena(Registro *list, int tam)
     }
 }
 
-void Ordenacao::heapSort_time(Registro *list, int tam)
+void Ordenacao::heapSort_time(Registro *list, int tam) //parece que nao esta ordenando
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     heapSort_ordena(list, tam);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+    for(int i =0; i<tam; i++)
+        std::cout<<list[i].imprimeRegistros();
     std::fstream saidaTxt;
     saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
     if (saidaTxt.is_open())

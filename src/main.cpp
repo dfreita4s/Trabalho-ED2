@@ -12,7 +12,6 @@
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
 
-
 #define NREGISTROS 3646475
 
 using namespace std;
@@ -148,8 +147,6 @@ bool checaArqBin()
     return false;
 }
 
-
-
 bool confereNum(int *num, int i) // função avisa quando um número randômico é gerado mais de uma vez
 {
     for (int j = i - 1; j >= 0; j--)
@@ -165,23 +162,22 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
     }
 }
 
-
+int importarRegistros(Registro *registro)
+{
+    int N = 0;
+    cout << "Digite o numero de registro que deseja importar: ";
+    cin >> N;
+    leBinario(registro, N);
+    return N;
+}
 
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Importa na tabela Hash\n[4] Sair\nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Sair\nFunção: ";
     int resp = 0;
     cin >> resp;
     if (resp == 1)
-    {
-        int n = 0;
-        cout << "Digite o registro que deseja: ";
-        cin >> n;
-        acessaRegistro(n);
-        menu();
-    }
-    else if (resp == 2)
     {
         cout << "Digite o numero de importacoes que deseja: ";
         int N = 0;
@@ -189,45 +185,53 @@ void menu()
         Registro *registro = new Registro[N];
         Ordenacao sort;
         leBinario(registro, N); //importa N registros do arquivo Binario
-        cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
+        cout << "\nQual metodo de ordenação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nResposta:";
         cin >> resp;
         if (resp == 1)
-            testeImportacao(registro);
-        else if (resp == 2)
-        {
-            std::cout << "Qual Ordendação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nFunção: ";
-            cin >> resp;
-            if (resp == 1)
             sort.quickSort_time(registro, N);
-            else if (resp == 2)
-            std::cout<<"";
-            // heapSort_time(registro, N);
-            else if (resp == 3)
-            std::cout<<"";
-            // combSort_time(registro, N);
-            else
-                std::cout << "Digite uma resposta valida!" << std::endl;
-        }
-        else
-            cout << "Digite um valor valido!" << endl;
+        else if (resp == 2)
+            sort.heapSort_time(registro, N);
+        else if (resp == 3)
+            sort.combSort_time(registro, N);
+
+        delete[] registro;
+        menu();
+    }
+    else if (resp == 2)
+    {
+        int n = 99;
+        int resp;
+        cout << "Digite o numero de importacoes que deseja: ";
+        int N = 0;
+        cin >> N;
+        Registro *reg = new Registro[N];
+        leBinario(reg, n);
+        criaTabelaHash(reg, n);
+        cout << "Tabela Hash gerada com sucesso..." << endl;
+
+        delete [] reg;
         menu();
     }
     else if (resp == 3)
     {
-        int n = 99;
-        int resp;
-        Registro *reg = new Registro[n];
-        leBinario(reg,n);
-        criaTabelaHash(reg,n);
-        cout << "Tabela Hash gerada com sucesso..." << endl;
-        cout << "Digite 1 para fazer a ordenacao e 2 para retornar ao menu" << endl;
-        cin >> resp;
+        cout << "Escolha\n[1] Teste de Importação\n[2] outra coisa";
         if (resp == 1)
         {
-            //chama ordenação
+
+            cout << "Digite o numero de importacoes que deseja: ";
+            int N = 0;
+            cin >> N;
+            Registro *registro = new Registro[N];
+            Ordenacao sort;
+            leBinario(registro, N);
+
+            testeImportacao(registro);
+            delete[] registro;
+            menu();
         }
-        else
+        else if (resp == 2)
         {
+            cout << "Ui ui kk" << endl;
             menu();
         }
     }
@@ -280,8 +284,8 @@ void criaTabelaHash(Registro *reg, int n)
                     tab[aux.trataColisao(chave, n, j)].insereChave(chave);
                     tab[aux.trataColisao(chave, n, j)].insereChaveOrig(chaveOrig);
                 }
-                    //contaColisao++;
-            }            
+                //contaColisao++;
+            }
         }
         else
         {
@@ -289,7 +293,7 @@ void criaTabelaHash(Registro *reg, int n)
         }
     }
     cout << "Tabela Hash criada com sucesso" << endl;
-    aux.imprimeTabela(tab,n);
+    aux.imprimeTabela(tab, n);
 }
 
 int retiraPontos(std::string versao)
