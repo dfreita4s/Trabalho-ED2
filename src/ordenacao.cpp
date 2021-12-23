@@ -83,7 +83,9 @@ void Ordenacao::quickSort_time(Registro *list, int n)
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     quickSort_ordena(list, 0, n - 1);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+    std::cout << "\nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+    for(int i =0; i<n; i++)
+        std::cout<<list[i].imprimeRegistros();
 }
 
 /*
