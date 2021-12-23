@@ -7,6 +7,8 @@
 #include <random>
 #include "../inc/lista.h"
 #include "../inc/registro.h"
+#include "../inc/ordenacao.h"
+
 
 #define NREGISTROS 3646475
 
@@ -252,6 +254,7 @@ void menu()
         int N = 0;
         cin >> N;
         Registro *registro = new Registro[N];
+        Ordenacao sort;
         leBinario(registro, N); //importa N registros do arquivo Binario
         cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
         cin >> resp;
@@ -262,8 +265,7 @@ void menu()
             std::cout << "Qual Ordendação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nFunção: ";
             cin >> resp;
             if (resp == 1)
-            std::cout<<"";
-            // quickSort_time(registro, N);
+            sort.quickSort_time(registro, N);
             else if (resp == 2)
             std::cout<<"";
             // heapSort_time(registro, N);

@@ -29,7 +29,6 @@ public:
     int getVotes();
     int getN();
 
-
     std::string imprimeRegistros();
 
     std::string pivoMediano(std::string *, int, int);

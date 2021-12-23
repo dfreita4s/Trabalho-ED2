@@ -4,13 +4,19 @@
 #include <string>
 #include "../inc/ordenacao.h"
 
+Ordenacao::Ordenacao(){
+
+}
+Ordenacao::~Ordenacao(){
+
+}
+
 /// ALGORITMO DE ORDENAÇÃO - QUICK SORT ///
 
 //realizar a ordenação desses registros, utilizando como chave de ordenação upvotes. Durante a ordenação, deverão ser computados o
 //total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
 //Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
 //Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
-
 void Ordenacao::trocaNo(Registro r1, Registro r2)
 {
     Registro aux;
@@ -196,6 +202,7 @@ void Ordenacao::combSort_time(Registro *list, int tam)
     combSort_ordena(list, tam);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
+    
 }
 /*
 ===================FIM COMBSORT =======================
