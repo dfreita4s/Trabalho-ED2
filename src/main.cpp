@@ -296,7 +296,7 @@ int retiraPontos(std::string versao)
 {
     char removePonto[] = ".";
     int chave;
-    if (versao == "NaN")
+    if (versao == "00.0.0")
     {
         return 0;
     }
