@@ -1,7 +1,6 @@
 #include <iostream>
-#include "./registro.h"
+#include "registro.h"
 
-typedef Registro* registro;
 class Ordenacao{
     public:
 

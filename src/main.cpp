@@ -6,7 +6,6 @@
 #include <ctime>
 #include <random>
 #include "../inc/lista.h"
-#include "../inc/registro.h"
 #include "../inc/ordenacao.h"
 
 
