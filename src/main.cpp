@@ -250,10 +250,10 @@ void criaTabelaHash(Registro *reg, int n)
     std::string chaveOrig;
     for (int i = 0; i < n; i++)
     {
-        chave = retiraPontos(reg[i].getVersion());
-        chaveOrig = reg[i].getVersion();
-        if (chave != 0)
+        if (retiraPontos(reg[i].getVersion()) != 0)
         {
+            chave = retiraPontos(reg[i].getVersion());
+            chaveOrig = reg[i].getVersion();
             if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0) //Caso a função hash encontre uma posição vazia na tabela para inserir a chave
             {
                 tab[aux.funcaoHash(chave, n)].insereChave(chave);
