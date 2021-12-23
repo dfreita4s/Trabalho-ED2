@@ -201,6 +201,7 @@ float Ordenacao::combSort_time(Registro *list, int tam, int *compara, int *movim
     return std::chrono::duration<float>(end - start).count();
 
 }
+
 /*
 ===================FIM COMBSORT =======================
 
