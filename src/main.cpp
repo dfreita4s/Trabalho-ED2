@@ -148,21 +148,6 @@ bool checaArqBin()
     return false;
 }
 
-bool confereNum(int *num, int i) // função avisa quando um número randômico é gerado mais de uma vez
-{
-    for (int j = i - 1; j >= 0; j--)
-    {
-        if (num[i] == num[j])
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
-
 void ordenacao()
 {
     Ordenacao sort;
@@ -209,14 +194,14 @@ void ordenacao()
             int tam = dat[rand() % 5];
             Registro *registro = new Registro[tam];
             leBinario(registro, tam);
-            cout<<"Fazendo teste para " << tam << " números de registros" << endl;
+
+            cout << "Fazendo teste para " << tam << " números de registros" << endl;
+
             tempoQuicksort = sort.quickSort_time(registro, tam, &comparacoesQuicksort, &movimentacoesQuicksort);
-            
+
             tempoHeapsort = sort.heapSort_time(registro, tam, &comparacoesHeapsort, &movimentacoesHeapsort);
-            
+
             tempoCombsort = sort.combSort_time(registro, tam, &comparacoesCombsort, &movimentacoesCombsort);
-            
-            cout<<"Movimentacoes comb sort"<<movimentacoesCombsort<<endl;
 
             tempoMediaQuicksort += tempoQuicksort;
             tempoMediaHeapsort += tempoHeapsort;
@@ -230,24 +215,26 @@ void ordenacao()
             movimentacoesMediaHeapsort += movimentacoesHeapsort / 3;
             movimentacoesMediaCombsort += movimentacoesCombsort / 3;
 
-
-            saida << "Quicksort estatisticas para " << tam << " números de registros" << endl;
+            saida << "\n====Quicksort====" << endl;
+            saida << "Estatisticas para " << tam << " números de registros" << endl;
             saida << "Tempo de execução: " << tempoQuicksort << " segundos" << endl;
             saida << "Número de comparações: " << comparacoesQuicksort << endl;
             saida << "Número de movimentações: " << movimentacoesQuicksort << endl;
 
-            saida << "Heapsort estatisticas para " << tam << " números de registros" << endl;
+            saida << "\n====Heapsort====" << endl;
+            saida << "Estatisticas para " << tam << " números de registros" << endl;
             saida << "Tempo de execução: " << tempoHeapsort << " segundos" << endl;
             saida << "Número de comparações: " << comparacoesHeapsort << endl;
             saida << "Número de movimentações: " << movimentacoesHeapsort << endl;
 
-            saida << "Combsort estatisticas para " << tam << " números de registros" << endl;
+            saida << "\n====Combsort====" << endl;
+            saida << "Estatisticas para " << tam << " números de registros" << endl;
             saida << "Tempo de execução: " << tempoCombsort << " segundos" << endl;
             saida << "Número de comparações: " << comparacoesCombsort << endl;
             saida << "Número de movimentações: " << movimentacoesCombsort << endl;
             delete[] registro;
         }
-        saida << "Média final das execuções" << endl;
+        saida << "======Média final das execuções======" << endl;
         saida << "====Quicksort====" << endl;
         saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << endl;
         saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << endl;
@@ -277,8 +264,8 @@ void menu()
     cin >> resp;
     if (resp == 1)
     {
-       ordenacao();
-        
+        ordenacao();
+
         // cout << "Digite o numero de importacoes que deseja: "; //mudar para testes com M = 3 e N = {10.000, 50.000, 100.000, 500.000, 1.000.000} ler de um .dat
         // int N = 0;
         // cin >> N;

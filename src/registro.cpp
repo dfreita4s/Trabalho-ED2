@@ -93,13 +93,3 @@ void Registro::setRegistro(std::string *regist)
 {
     this->registros = regist;
 }
-
-// std::string *Registro::importaRegistros(int N) //retorna N registros aleatorios do arquivo binario
-// {
-//     std::string *aux = new std::string[N];
-//     for (int i = 0; i < N; i++)
-//         aux[i] = leBinario(rand() % 3646475 + 0);
-
-//     return aux;
-// }
-
