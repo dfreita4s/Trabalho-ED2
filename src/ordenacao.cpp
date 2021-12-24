@@ -81,10 +81,11 @@ void Ordenacao::quickSort_ordena(Registro *list, int i, int k, int *compara, int
     }
 }
 
-float Ordenacao::quickSort_time(Registro *list, int n, int *compara, int *movimenta)
+float Ordenacao::quickSort_time(Registro *list, int tam, int *compara, int *movimenta)
 {
+;
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    quickSort_ordena(list, 0, n - 1, compara, movimenta);
+    quickSort_ordena(list, 0, tam - 1, compara, movimenta);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     return std::chrono::duration<float>(end - start).count();
 }
@@ -179,7 +180,6 @@ void Ordenacao::combSort_ordena(Registro *list, int tam, int *compara, int *movi
         {
             if (list[i].getVotes() > list[i + gap].getVotes())
             {
-                std::cout<<"entrou";
                 trocaNo(list, i, i + gap, compara, movimenta);
                 switched = true;
             }
@@ -195,11 +195,7 @@ float Ordenacao::combSort_time(Registro *list, int tam, int *compara, int *movim
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     combSort_ordena(list, tam, compara, movimenta);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    // for(int i =0; i<tam;i++){
-    //     std::cout<<"\n"<<list[i].imprimeRegistros()<<std::endl;;
-    // }
     return std::chrono::duration<float>(end - start).count();
-
 }
 
 /*
