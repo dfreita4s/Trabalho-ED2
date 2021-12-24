@@ -2,6 +2,7 @@
 #include <list>
 #include <cstring>
 //#include "registro.h"
+
 using namespace std;
 
 class tabelaHash{

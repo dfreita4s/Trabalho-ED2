@@ -12,13 +12,15 @@
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
 
-
 #define NREGISTROS 3646475
 
 using namespace std;
 
+void exportaHashing();
+void exportaHashingOrdenacao();
 int obterReview();
 bool checaArqBin();
+void criaTabelaHash(tabelaHash *, Registro *, int );
 void criaTabelaHash(Registro *reg, int n);
 int retiraPontos(std::string versao);
 void testeImportacao(Registro *lista)
@@ -136,6 +138,18 @@ void leBinario(Registro *registro, int N)
         cout << "Não foi possível abrir o arquivo!" << endl;
 }
 
+void copiaRegistro(Registro *registro, Registro *registro2, int N)
+{
+    for (int i = 0; i < N; i++)
+    {
+        registro[i].setID(registro2[i].getID());
+        registro[i].setText(registro2[i].getText());
+        registro[i].setVotes(registro2[i].getVotes());
+        registro[i].setVersion(registro2[i].getVersion());
+        registro[i].setDate(registro2[i].getDate());
+    }
+}
+
 bool checaArqBin()
 {
     ifstream arqBin;
@@ -147,8 +161,6 @@ bool checaArqBin()
     }
     return false;
 }
-
-
 
 bool confereNum(int *num, int i) // função avisa quando um número randômico é gerado mais de uma vez
 {
@@ -165,69 +177,133 @@ bool confereNum(int *num, int i) // função avisa quando um número randômico 
     }
 }
 
+void ordenacao(Registro *registro, int N)
+{
+    Ordenacao sort;
+    srand(time(NULL));
+    
+    int *dat = new int[5]; //vetor com os valores de N 
+    dat[0] = 10000;
+    dat[1] = 50000;
+    dat[2] = 100000;
+    dat[3] = 500000;
+    dat[4] = 1000000;
 
+    float tempoQuicksort = 0;
+    float tempoHeapsort = 0;
+    float tempoCombksort = 0;
+
+    float tempoMediaQuicksort = 0;
+    float tempoMediaHeapsort = 0;
+    float tempoMediaCombsort = 0;
+
+
+    int *comparcoesQuicksort = 0;
+    int *movimentacoesQuicksort = 0;
+
+    int *comparcoesHeapsort = 0;
+    int *movimentacoesHeapsort = 0;
+
+    int *comparcoesCombsort = 0;
+    int *movimentacoesCombsort = 0;
+
+    int M = 3;
+    std::fstream saida;
+    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
+    if (saida.is_open())
+    {
+        for (int i = 0; i < M; i++)
+        {
+            int tam = dat[rand() % 5];
+            leBinario(registro, tam);
+
+            tempoQuicksort = sort.quickSort_time(registro, tam, comparcoesQuicksort, movimentacoesQuicksort);
+            tempoHeapsort = sort.heapSort_time(registro, tam, movimentacoesHeapsort, movimentacoesHeapsort);
+            tempoCombksort = sort.combSort_time(registro, tam, movimentacoesCombsort, movimentacoesCombsort);
+
+            tempoMediaQuicksort += tempoQuicksort;
+            tempoMediaHeapsort += tempoHeapsort;
+            tempoMediaCombsort += tempoCombksort;
+
+
+        }
+
+        std::cout << "O arquivo de texto foi criado!" << std::endl;
+    }
+    else
+        std::cout << "Nao foi possivel abrir o arquivo" << std::endl;
+    saida.close();
+}
 
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Acessa Registro\n[2] Teste Importação\n[3] Importa na tabela Hash\n[4] Sair\nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Sair\nFunção: ";
     int resp = 0;
     cin >> resp;
+
     if (resp == 1)
     {
-        int n = 0;
-        cout << "Digite o registro que deseja: ";
-        cin >> n;
-        acessaRegistro(n);
+        cout << "Digite o numero de importacoes que deseja: "; //mudar para testes com M = 3 e N = {10.000, 50.000, 100.000, 500.000, 1.000.000} ler de um .dat
+        int N = 0;
+        cin >> N;
+        Registro *registro = new Registro[N];
+        Registro reg;
+
+        leBinario(registro, N); //importa N registros do arquivo Binario
+
+        // cout << "\nQual metodo de ordenação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nResposta:";
+        // cin >> resp;
+        // if (resp == 1)
+        // {
+        //     sort.quickSort_time(registro, N);
+        // }
+        // else if (resp == 2)
+        //     sort.heapSort_time(registro, N);
+        // else if (resp == 3)
+        //     sort.combSort_time(registro, N);
+
+        delete[] registro;
         menu();
     }
     else if (resp == 2)
     {
+        int n = 99;
+        int resp;
         cout << "Digite o numero de importacoes que deseja: ";
         int N = 0;
         cin >> N;
-        Registro *registro = new Registro[N];
-        Ordenacao sort;
-        leBinario(registro, N); //importa N registros do arquivo Binario
-        cout << "Digite a funçao que deseja acessar\n[1] Teste Importação\n[2] Ordenar Registros\nFunção: ";
-        cin >> resp;
-        if (resp == 1)
-            testeImportacao(registro);
-        else if (resp == 2)
-        {
-            std::cout << "Qual Ordendação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nFunção: ";
-            cin >> resp;
-            if (resp == 1)
-            sort.quickSort_time(registro, N);
-            else if (resp == 2)
-            std::cout<<"";
-            // heapSort_time(registro, N);
-            else if (resp == 3)
-            std::cout<<"";
-            // combSort_time(registro, N);
-            else
-                std::cout << "Digite uma resposta valida!" << std::endl;
-        }
-        else
-            cout << "Digite um valor valido!" << endl;
+        Registro *reg = new Registro[N];
+        leBinario(reg, n);
+        criaTabelaHash(reg, n);
+        cout << "Tabela Hash gerada com sucesso..." << endl;
+
+        delete[] reg;
         menu();
     }
     else if (resp == 3)
     {
-        int n = 99;
-        int resp;
-        Registro *reg = new Registro[n];
-        leBinario(reg,n);
-        criaTabelaHash(reg,n);
-        cout << "Tabela Hash gerada com sucesso..." << endl;
-        cout << "Digite 1 para fazer a ordenacao e 2 para retornar ao menu" << endl;
+        cout << "Escolha\n[1] Teste de Importação\n[2] Módulo de teste - Parte 2";
         cin >> resp;
+
         if (resp == 1)
         {
-            //chama ordenação
+
+            cout << "Digite o numero de importacoes que deseja: ";
+            int N = 0;
+            cin >> N;
+            Registro *registro = new Registro[N];
+            Ordenacao sort;
+            leBinario(registro, N);
+
+            testeImportacao(registro);
+            delete[] registro;
+            menu();
         }
-        else
+        else if (resp == 2)
         {
+            std::cout << "Módulo de teste - Parte 2" << std::endl;
+            exportaHashingOrdenacao();
             menu();
         }
     }
@@ -245,15 +321,21 @@ void menu()
 void criaTabelaHash(Registro *reg, int n)
 {
     tabelaHash *tab = new tabelaHash[n];
+    criaTabelaHash(tab, reg, n);
+    delete [] tab;
+}
+
+void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
+{
     tabelaHash aux;
     int chave;
     std::string chaveOrig;
     for (int i = 0; i < n; i++)
     {
-        chave = retiraPontos(reg[i].getVersion());
-        chaveOrig = reg[i].getVersion();
-        if (chave != 0)
+        if (retiraPontos(reg[i].getVersion()) != 0)
         {
+            chave = retiraPontos(reg[i].getVersion());
+            chaveOrig = reg[i].getVersion();
             if (tab[aux.funcaoHash(chave, n)].consultaContador() == 0) //Caso a função hash encontre uma posição vazia na tabela para inserir a chave
             {
                 tab[aux.funcaoHash(chave, n)].insereChave(chave);
@@ -280,8 +362,8 @@ void criaTabelaHash(Registro *reg, int n)
                     tab[aux.trataColisao(chave, n, j)].insereChave(chave);
                     tab[aux.trataColisao(chave, n, j)].insereChaveOrig(chaveOrig);
                 }
-                    //contaColisao++;
-            }            
+                //contaColisao++;
+            }
         }
         else
         {
@@ -289,7 +371,7 @@ void criaTabelaHash(Registro *reg, int n)
         }
     }
     cout << "Tabela Hash criada com sucesso" << endl;
-    aux.imprimeTabela(tab,n);
+    aux.imprimeTabela(tab, n);
 }
 
 int retiraPontos(std::string versao)
@@ -335,50 +417,46 @@ int main(int argc, char const *argv[])
         delete listaReview;
     }
 
-    menu();
+    // men;
+    exportaHashingOrdenacao();
 
     return 0;
 }
-// void acessaRegistro(int k)
-// {
-//     std::cout << "Acessando registro " << k << std::endl;
-//     std::string registro = leBinario(k);
-//     if (registro != "")
-//         std::cout << registro;
-// }
 
-// void testeImportacao()
-// {
-//     int resp, N = 0;
-//     std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
-//     std::cin >> resp;
-//     if (resp == 1)
-//     {
-//         // Printar no terminal N = 10 registros aleatorios
-//         N = 10;
-//         for (int i = 0; i < 10; i++)
-//             std::cout << leBinario(rand() % 3646475 + 0) << std::endl;
-//     }
-//     else if (resp == 2)
-//     {
-//         //Salvar em um txt N = 100 registros aleatorios
-//         std::fstream saidaTxt;
-//         saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
-//         if (saidaTxt.is_open())
-//         {
-//             N = 100;
-//             std::string linha = "";
-//             for (int i = 0; i < N; i++)
-//             {
-//                 linha = leBinario(rand() % 3646475 + 0);
-//                 saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
-//             }
-//             cout << "O arquivo de texto foi criado!" << endl;
-//         }
-//         saidaTxt.close();
-//     }
-//     else
-//     {
-//         std::cout << "Por favor, digite um valor válido!" << std::endl;
-//     }
-// }
+void exportaHashingOrdenacao()
+{
+    
+    int n = 99;
+    int N = 100;
+    Registro *reg = new Registro[N];
+    leBinario(reg, N);
+
+    tabelaHash *tab = new tabelaHash[n];
+    criaTabelaHash(tab, reg, n);
+    std::cout << "Criando tabela .." << std::endl;
+
+    Ordenacao ordenacao;
+    Registro *regQS = new Registro[N];
+    Registro *regHS = new Registro[N];
+
+    copiaRegistro(regQS, reg, N);
+    copiaRegistro(regHS, reg, N);
+    
+    int movimentacoes=0, comparacoes=0;
+    float tempoQuicksort = ordenacao.quickSort_time(regQS, N, &comparacoes, &movimentacoes);
+    for(int i=95; i<N; i++)       
+        std::cout << regQS[i].imprimeRegistros() << std::endl;
+    delete [] regQS;
+
+    float tempoHeapsort = ordenacao.heapSort_time(regHS, N, &comparacoes, &movimentacoes);
+    for(int i=95; i<N; i++)       
+        std::cout << regHS[i].imprimeRegistros() << std::endl;
+    delete [] regHS;
+
+    float tempoCombsort = ordenacao.combSort_time(reg, N, &comparacoes, &movimentacoes);
+    for(int i=95; i<N; i++)       
+        std::cout << reg[i].imprimeRegistros() << std::endl;
+    delete [] reg;
+
+    delete [] tab;
+}
