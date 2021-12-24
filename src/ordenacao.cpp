@@ -17,76 +17,77 @@ Ordenacao::~Ordenacao()
 //total de comparações de chaves e o total de movimentações de chaves. Além disso, o tempo de execução do algoritmo deverá ser medido.
 //Para gerar as estatísticas de desempenho, você deverá executar os passos acima para M diferentes conjuntos de N registros aleatórios.
 //Minimamente, utilize M=3. Ao final, compute as médias de cada uma das métricas (comparações, movimentações e tempo)
-void Ordenacao::trocaNo(Registro *troca, int a, int b , int *comparacoes, int *movimentacoes)
+void Ordenacao::trocaNo(Registro *troca, int a, int b, int *compara, int *movimenta)
 {
     Registro aux;
     aux = troca[a];
     troca[a] = troca[b];
     troca[b] = aux;
-    movimentacoes++;
+    (*movimenta)++;
 }
 
-Registro Ordenacao::pivoMediano(Registro *l, int inicio, int fim, int *comparacoes, int *movimentacoes)
+Registro Ordenacao::pivoMediano(Registro *l, int inicio, int fim, int *compara, int *movimenta)
 {
     int media = (inicio + fim) / 2;
 
     if (l[inicio].getVotes() > l[fim].getVotes())
-        trocaNo(l, inicio, fim, comparacoes, movimentacoes);
+        trocaNo(l, inicio, fim, compara, movimenta);
     if (l[media].getVotes() > l[fim].getVotes())
-        trocaNo(l, media, fim, comparacoes, movimentacoes);
+        trocaNo(l, media, fim, compara, movimenta);
     if (l[inicio].getVotes() > l[media].getVotes())
-        trocaNo(l, inicio, media, comparacoes, movimentacoes);
-    trocaNo(l, media, fim, comparacoes, movimentacoes);
+        trocaNo(l, inicio, media, compara, movimenta);
+    trocaNo(l, media, fim, compara, movimenta);
     return l[fim];
 }
 
-int Ordenacao::quickSort_particionaLista(Registro *list, int inicio, int fim, int *comparacoes, int *movimentacoes)
+int Ordenacao::quickSort_particionaLista(Registro *list, int inicio, int fim, int *compara, int *movimenta)
 {
 
-    Registro pivo = pivoMediano(list, inicio, fim, comparacoes, movimentacoes);
+    Registro pivo = pivoMediano(list, inicio, fim, compara, movimenta);
     int j = fim - 1;
     int i = inicio;
 
     while (true)
     {
-        while (i < fim && list[i].getVotes() < pivo.getVotes()){
+        while (i < fim && list[i].getVotes() < pivo.getVotes())
+        {
             i = i + 1;
-            comparacoes++;
-            }
-        while (j >= inicio && list[j].getVotes() > pivo.getVotes()){
+            (*compara)++;
+        }
+        while (j >= inicio && list[j].getVotes() > pivo.getVotes())
+        {
             j = j - 1;
-            comparacoes++;
-            }
+            (*compara)++;
+        }
         if (i < j)
         {
-            trocaNo(list, i, j, comparacoes, movimentacoes);
+            trocaNo(list, i, j, compara, movimenta);
             i = i + 1;
             j = j - 1;
         }
         else
             break;
     }
-    trocaNo(list, i, fim, comparacoes, movimentacoes);
+    trocaNo(list, i, fim, compara, movimenta);
     return i;
 }
-void Ordenacao::quickSort_ordena(Registro *list, int i, int k, int *comparacoes, int *movimentacoes)
+void Ordenacao::quickSort_ordena(Registro *list, int i, int k, int *compara, int *movimenta)
 {
     if (i < k)
     {
-        int p = quickSort_particionaLista(list, i, k, comparacoes, movimentacoes); //onde terminou a particao
-        quickSort_ordena(list, i, p - 1, comparacoes, movimentacoes);
-        quickSort_ordena(list, p + 1, k, comparacoes, movimentacoes);
+        int p = quickSort_particionaLista(list, i, k, compara, movimenta); //onde terminou a particao
+        quickSort_ordena(list, i, p - 1, compara, movimenta);
+        quickSort_ordena(list, p + 1, k, compara, movimenta);
     }
 }
 
-float Ordenacao::quickSort_time(Registro *list, int n, int *comparacoes, int *movimentacoes)
+float Ordenacao::quickSort_time(Registro *list, int tam, int *compara, int *movimenta)
 {
+;
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    quickSort_ordena(list, 0, n - 1, comparacoes, movimentacoes);
+    quickSort_ordena(list, 0, tam - 1, compara, movimenta);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "\nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
     return std::chrono::duration<float>(end - start).count();
-    
 }
 
 /*
@@ -97,7 +98,7 @@ float Ordenacao::quickSort_time(Registro *list, int n, int *comparacoes, int *mo
 
 /// ALGORITMO DE ORDENAÇÃO - HEAPSORT ///
 
-void Ordenacao::heapify(Registro *list, int i, int tam, int *comparacoes, int *movimentacoes)
+void Ordenacao::heapify(Registro *list, int i, int tam, int *compara, int *movimenta)
 {
     while (i < tam)
     {
@@ -108,42 +109,42 @@ void Ordenacao::heapify(Registro *list, int i, int tam, int *comparacoes, int *m
             {
                 filho++;
             }
+            (*compara)++;
 
             if (list[filho].getVotes() > list[i].getVotes())
             {
-                trocaNo(list, i, filho, comparacoes, movimentacoes);
+                trocaNo(list, i, filho, compara, movimenta);
             }
+            (*compara)++;
         }
         i = filho;
     }
 }
 
-void Ordenacao::build_heap(Registro *list, int tam, int *comparacoes, int *movimentacoes)
+void Ordenacao::build_heap(Registro *list, int tam, int *compara, int *movimenta)
 {
     for (int i = tam / 2 - 1; i >= 0; i--)
     {
-        heapify(list, i, tam, comparacoes, movimentacoes);
+        heapify(list, i, tam, compara, movimenta);
     }
 }
 
-void Ordenacao::heapSort_ordena(Registro *list, int tam, int *comparacoes, int *movimentacoes)
+void Ordenacao::heapSort_ordena(Registro *list, int tam, int *compara, int *movimenta)
 {
-    build_heap(list, tam, comparacoes, movimentacoes);
+    build_heap(list, tam, compara, movimenta);
     while (tam > 0)
     {
-        trocaNo(list, 0, tam - 1, comparacoes, movimentacoes);
-        heapify(list, 0, tam - 1, comparacoes, movimentacoes);
+        trocaNo(list, 0, tam - 1, compara, movimenta);
+        heapify(list, 0, tam - 1, compara, movimenta);
         tam--;
     }
 }
 
-float Ordenacao::heapSort_time(Registro *list, int tam, int *comparacoes, int *movimentacoes) //parece que nao esta ordenando
+float Ordenacao::heapSort_time(Registro *list, int tam, int *compara, int *movimenta) //parece que nao esta ordenando
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    heapSort_ordena(list, tam, comparacoes, movimentacoes);
+    heapSort_ordena(list, tam, compara, movimenta);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    
-    
     return std::chrono::duration<float>(end - start).count();
 }
 
@@ -154,7 +155,7 @@ float Ordenacao::heapSort_time(Registro *list, int tam, int *comparacoes, int *m
 
 /// ALGORITMO DE ORDENAÇÃO - COMB SORT ///
 
-int Ordenacao::find_next(int gap) //isso é uma comparacao?
+int Ordenacao::find_next(int gap)
 {
     gap = (gap * 10) / 13;
 
@@ -163,7 +164,7 @@ int Ordenacao::find_next(int gap) //isso é uma comparacao?
     return gap;
 }
 
-void Ordenacao::combSort_ordena(Registro *list, int tam, int *comparacoes, int *movimentacoes)
+void Ordenacao::combSort_ordena(Registro *list, int tam, int *compara, int *movimenta)
 {
     int gap = tam;
     bool switched = true;
@@ -179,23 +180,24 @@ void Ordenacao::combSort_ordena(Registro *list, int tam, int *comparacoes, int *
         {
             if (list[i].getVotes() > list[i + gap].getVotes())
             {
-                trocaNo(list, i, i + gap, comparacoes, movimentacoes);
+                trocaNo(list, i, i + gap, compara, movimenta);
                 switched = true;
             }
+            (*compara)++;
             i++;
         }
     }
 }
 
-float Ordenacao::combSort_time(Registro *list, int tam, int *comparacoes, int *movimentacoes)
+float Ordenacao::combSort_time(Registro *list, int tam, int *compara, int *movimenta)
 {
 
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    combSort_ordena(list, tam, comparacoes, movimentacoes);
+    combSort_ordena(list, tam, compara, movimenta);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "/nTempo gasto na ordenação: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << " segundos" << std::endl;
     return std::chrono::duration<float>(end - start).count();
 }
+
 /*
 ===================FIM COMBSORT =======================
 

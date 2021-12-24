@@ -60,6 +60,7 @@ void testeImportacao(Registro *lista)
         std::cout << "Por favor, digite um valor válido!" << std::endl;
     }
 }
+
 void acessaRegistro(int k) // acessa o K-ésimo registro do arquivo binario
 {
     std::cout << "Acessando registro " << k << std::endl;
@@ -132,12 +133,14 @@ void leBinario(Registro *registro, int N)
         }
         delete[] regist;
         arqBin.close();
+        cout << N << " registros foram importados\n";
     }
 
     else
         cout << "Não foi possível abrir o arquivo!" << endl;
 }
 
+// Faz cópia dos registros para usar nos testes
 void copiaRegistro(Registro *registro, Registro *registro2, int N)
 {
     for (int i = 0; i < N; i++)
@@ -162,22 +165,7 @@ bool checaArqBin()
     return false;
 }
 
-bool confereNum(int *num, int i) // função avisa quando um número randômico é gerado mais de uma vez
-{
-    for (int j = i - 1; j >= 0; j--)
-    {
-        if (num[i] == num[j])
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-}
-
-void ordenacao(Registro *registro, int N)
+void ordenacao()
 {
     Ordenacao sort;
     srand(time(NULL));
@@ -191,21 +179,28 @@ void ordenacao(Registro *registro, int N)
 
     float tempoQuicksort = 0;
     float tempoHeapsort = 0;
-    float tempoCombksort = 0;
+    float tempoCombsort = 0;
 
     float tempoMediaQuicksort = 0;
     float tempoMediaHeapsort = 0;
     float tempoMediaCombsort = 0;
 
+    float comparacoesMediaQuicksort = 0;
+    float comparacoesMediaHeapsort = 0;
+    float comparacoesMediaCombsort = 0;
 
-    int *comparcoesQuicksort = 0;
-    int *movimentacoesQuicksort = 0;
+    float movimentacoesMediaQuicksort = 0;
+    float movimentacoesMediaHeapsort = 0;
+    float movimentacoesMediaCombsort = 0;
 
-    int *comparcoesHeapsort = 0;
-    int *movimentacoesHeapsort = 0;
+    int comparacoesQuicksort = 0;
+    int movimentacoesQuicksort = 0;
 
-    int *comparcoesCombsort = 0;
-    int *movimentacoesCombsort = 0;
+    int comparacoesHeapsort = 0;
+    int movimentacoesHeapsort = 0;
+
+    int comparacoesCombsort = 0;
+    int movimentacoesCombsort = 0;
 
     int M = 3;
     std::fstream saida;
@@ -215,19 +210,69 @@ void ordenacao(Registro *registro, int N)
         for (int i = 0; i < M; i++)
         {
             int tam = dat[rand() % 5];
+            Registro *registro = new Registro[tam];
             leBinario(registro, tam);
 
-            tempoQuicksort = sort.quickSort_time(registro, tam, comparcoesQuicksort, movimentacoesQuicksort);
-            tempoHeapsort = sort.heapSort_time(registro, tam, movimentacoesHeapsort, movimentacoesHeapsort);
-            tempoCombksort = sort.combSort_time(registro, tam, movimentacoesCombsort, movimentacoesCombsort);
+            Registro *registro2 = new Registro[tam];
+            copiaRegistro(registro2, registro, tam);
+
+            Registro *registro3 = new Registro[tam];
+            copiaRegistro(registro3, registro, tam);
+
+            cout << "Fazendo teste para " << tam << " números de registros" << endl;
+
+            tempoQuicksort = sort.quickSort_time(registro2, tam, &comparacoesQuicksort, &movimentacoesQuicksort);
+            delete [] registro2;
+            tempoHeapsort = sort.heapSort_time(registro3, tam, &comparacoesHeapsort, &movimentacoesHeapsort);
+            delete [] registro3;
+            tempoCombsort = sort.combSort_time(registro, tam, &comparacoesCombsort, &movimentacoesCombsort);
+            delete[] registro;
 
             tempoMediaQuicksort += tempoQuicksort;
             tempoMediaHeapsort += tempoHeapsort;
-            tempoMediaCombsort += tempoCombksort;
+            tempoMediaCombsort += tempoCombsort;
 
+            comparacoesMediaQuicksort += comparacoesQuicksort / 3;
+            comparacoesMediaHeapsort += comparacoesHeapsort / 3;
+            comparacoesMediaCombsort += comparacoesCombsort / 3;
 
+            movimentacoesMediaQuicksort += movimentacoesQuicksort / 3;
+            movimentacoesMediaHeapsort += movimentacoesHeapsort / 3;
+            movimentacoesMediaCombsort += movimentacoesCombsort / 3;
+
+            saida << "\n====Quicksort====" << endl;
+            saida << "Estatisticas para " << tam << " números de registros" << endl;
+            saida << "Tempo de execução: " << tempoQuicksort << " segundos" << endl;
+            saida << "Número de comparações: " << comparacoesQuicksort << endl;
+            saida << "Número de movimentações: " << movimentacoesQuicksort << endl;
+
+            saida << "\n====Heapsort====" << endl;
+            saida << "Estatisticas para " << tam << " números de registros" << endl;
+            saida << "Tempo de execução: " << tempoHeapsort << " segundos" << endl;
+            saida << "Número de comparações: " << comparacoesHeapsort << endl;
+            saida << "Número de movimentações: " << movimentacoesHeapsort << endl;
+
+            saida << "\n====Combsort====" << endl;
+            saida << "Estatisticas para " << tam << " números de registros" << endl;
+            saida << "Tempo de execução: " << tempoCombsort << " segundos" << endl;
+            saida << "Número de comparações: " << comparacoesCombsort << endl;
+            saida << "Número de movimentações: " << movimentacoesCombsort << endl;
         }
+        saida << "======Média final das execuções======" << endl;
+        saida << "====Quicksort====" << endl;
+        saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort << endl;
 
+        saida << "====Heapsort====" << endl;
+        saida << "Média tempo de execução: " << tempoMediaHeapsort << " segundos" << endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort << endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort << endl;
+
+        saida << "====Combsort====" << endl;
+        saida << "Média tempo de execução: " << tempoMediaCombsort << " segundos" << endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaCombsort << endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort << endl;
         std::cout << "O arquivo de texto foi criado!" << std::endl;
     }
     else
@@ -244,26 +289,8 @@ void menu()
 
     if (resp == 1)
     {
-        cout << "Digite o numero de importacoes que deseja: "; //mudar para testes com M = 3 e N = {10.000, 50.000, 100.000, 500.000, 1.000.000} ler de um .dat
-        int N = 0;
-        cin >> N;
-        Registro *registro = new Registro[N];
-        Registro reg;
+        ordenacao();
 
-        leBinario(registro, N); //importa N registros do arquivo Binario
-
-        // cout << "\nQual metodo de ordenação voce deseja?\n[1] Quicksort\n[2] Heapsort\n[3] Combsort\nResposta:";
-        // cin >> resp;
-        // if (resp == 1)
-        // {
-        //     sort.quickSort_time(registro, N);
-        // }
-        // else if (resp == 2)
-        //     sort.heapSort_time(registro, N);
-        // else if (resp == 3)
-        //     sort.combSort_time(registro, N);
-
-        delete[] registro;
         menu();
     }
     else if (resp == 2)
@@ -417,46 +444,67 @@ int main(int argc, char const *argv[])
         delete listaReview;
     }
 
-    // men;
-    exportaHashingOrdenacao();
+    menu();
 
     return 0;
 }
 
 void exportaHashingOrdenacao()
 {
-    
-    int n = 99;
-    int N = 100;
-    Registro *reg = new Registro[N];
-    leBinario(reg, N);
+    std::ofstream arquivoSaida;
+    arquivoSaida.open("./data/teste.txt", std::ios_base::out | std::ios_base::app);
+    if (arquivoSaida.is_open())
+    {
+        int n = 99;
+        int N = 100;
+        Registro *reg = new Registro[N];
+        leBinario(reg, N);
 
-    tabelaHash *tab = new tabelaHash[n];
-    criaTabelaHash(tab, reg, n);
-    std::cout << "Criando tabela .." << std::endl;
+        arquivoSaida << " === " << N << " registro importados. === " << std::endl;
+        for (int i = 0; i < N; i++)
+            arquivoSaida << reg[i].imprimeRegistros() << std::endl;
+        
+        arquivoSaida << std::endl;
 
-    Ordenacao ordenacao;
-    Registro *regQS = new Registro[N];
-    Registro *regHS = new Registro[N];
+        tabelaHash *tab = new tabelaHash[n];
+        tabelaHash aux;
 
-    copiaRegistro(regQS, reg, N);
-    copiaRegistro(regHS, reg, N);
-    
-    int movimentacoes=0, comparacoes=0;
-    float tempoQuicksort = ordenacao.quickSort_time(regQS, N, &comparacoes, &movimentacoes);
-    for(int i=95; i<N; i++)       
-        std::cout << regQS[i].imprimeRegistros() << std::endl;
-    delete [] regQS;
+        criaTabelaHash(tab, reg, n);
+        arquivoSaida << " === Tabela Hashing === " << std::endl;
+        for(int i=0; i<n; i++)
+            if(tab[i].consultaChave() != 0)
+                arquivoSaida << "Versão " << tab[i].consultaChaveOrig() << " : " << tab[i].consultaContador() << std::endl;
+        
+        Ordenacao ordenacao;
+        Registro *regQS = new Registro[N];
+        Registro *regHS = new Registro[N];
 
-    float tempoHeapsort = ordenacao.heapSort_time(regHS, N, &comparacoes, &movimentacoes);
-    for(int i=95; i<N; i++)       
-        std::cout << regHS[i].imprimeRegistros() << std::endl;
-    delete [] regHS;
+        copiaRegistro(regQS, reg, N);
+        copiaRegistro(regHS, reg, N);
+        
+        int movimentacoes=0, comparacoes=0;
 
-    float tempoCombsort = ordenacao.combSort_time(reg, N, &comparacoes, &movimentacoes);
-    for(int i=95; i<N; i++)       
-        std::cout << reg[i].imprimeRegistros() << std::endl;
-    delete [] reg;
+        arquivoSaida << std::endl;
+        arquivoSaida << " === Ordenação QuickSort === " << std::endl;
+        float tempoQuicksort = ordenacao.quickSort_time(regQS, N, &comparacoes, &movimentacoes);
+        for(int i=0; i<N; i++)       
+            arquivoSaida << regQS[i].imprimeRegistros() << std::endl;
+        delete [] regQS;
 
-    delete [] tab;
+        arquivoSaida << std::endl;
+        arquivoSaida << " === Ordenação HeapSort === " << std::endl;
+        float tempoHeapsort = ordenacao.heapSort_time(regHS, N, &comparacoes, &movimentacoes);
+        for(int i=0; i<N; i++)       
+            arquivoSaida << regHS[i].imprimeRegistros() << std::endl;
+        delete [] regHS;
+
+        arquivoSaida << std::endl;
+        arquivoSaida << " === Ordenação CombSort === " << std::endl;
+        float tempoCombsort = ordenacao.combSort_time(reg, N, &comparacoes, &movimentacoes);
+        for(int i=0; i<N; i++)       
+            arquivoSaida << reg[i].imprimeRegistros() << std::endl;
+        delete [] reg;
+
+        delete [] tab;
+    }
 }

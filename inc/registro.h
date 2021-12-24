@@ -37,7 +37,6 @@ public:
     void quickSort_ordena(std::string *list, int i, int k);
     void quickSort_time(std::string *list, int n);
 
-    std::string *importaRegistros(int); //importar aleatoriamente N registros aleatorios
 private:
     std::string *registros; //array de registros para a memoria principal
     std::string review_id;
