@@ -342,6 +342,14 @@ void menu()
     {
         return;
     }
+    else if(resp == 5)
+    {
+        int n = 99;
+        Registro *registro = new Registro[n];
+        leBinario(registro,n);
+        criaTabelaHash(registro,n);
+        menu();
+    }
     else
     {
         cout << "Por favor digite uma resposta válida!" << endl;
@@ -395,6 +403,10 @@ void criaTabelaHash(Registro *reg, int n)
             // ignora review com versão vazia
         }
     }
+    int *i = new int [n];
+    int *j = new int [n];
+    aux.quickSort_time(tab, n, i, j);
+    
     cout << "Tabela Hash criada com sucesso" << endl;
     aux.imprimeTabela(tab, n);
 }
