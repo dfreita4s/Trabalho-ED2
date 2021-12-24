@@ -38,4 +38,6 @@ class tabelaHash{
         void quickSort_ordena(tabelaHash *, int, int, int *, int *);
         float quickSort_time(tabelaHash *, int, int *, int *);
 
+        std::string imprimeFrequentes(tabelaHash *, int);
+
 };

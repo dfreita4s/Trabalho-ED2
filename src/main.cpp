@@ -297,10 +297,7 @@ void menu()
     {
         int n = 99;
         int resp;
-        cout << "Digite o numero de importacoes que deseja: ";
-        int N = 0;
-        cin >> N;
-        Registro *reg = new Registro[N];
+        Registro *reg = new Registro[n];
         leBinario(reg, n);
         criaTabelaHash(reg, n);
         cout << "Tabela Hash gerada com sucesso..." << endl;
@@ -310,42 +307,12 @@ void menu()
     }
     else if (resp == 3)
     {
-        cout << "Escolha\n[1] Teste de Importação\n[2] Módulo de teste - Parte 2";
-        cin >> resp;
 
-        if (resp == 1)
-        {
-
-            cout << "Digite o numero de importacoes que deseja: ";
-            int N = 0;
-            cin >> N;
-            Registro *registro = new Registro[N];
-            Ordenacao sort;
-            leBinario(registro, N);
-
-            testeImportacao(registro);
-            delete[] registro;
-            menu();
-        }
-        else if (resp == 2)
-        {
-            std::cout << "Módulo de teste - Parte 2" << std::endl;
-            exportaHashingOrdenacao();
-            menu();
-        }
-    }
-    else if (resp == 4)
-    {
-        return;
-    }
-    else if(resp == 5)
-    {
-        int n = 99;
-        Registro *registro = new Registro[n];
-        leBinario(registro,n);
-        criaTabelaHash(registro,n);
+        exportaHashingOrdenacao();
         menu();
     }
+    else if (resp == 4)
+        exit(0);
     else
     {
         cout << "Por favor digite uma resposta válida!" << endl;
@@ -405,12 +372,11 @@ void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
             // ignora review com versão vazia
         }
     }
-    int *i = new int [n];
-    int *j = new int [n];
-    aux.quickSort_time(tab, n, i, j);
+    int qualquer;
+    aux.quickSort_time(tab, n, &qualquer, &qualquer);
     
     cout << "Tabela Hash criada com sucesso" << endl;
-    aux.imprimeTabela(tab, n);
+    std::cout << aux.imprimeFrequentes(tab, n) << std::endl;
 }
 
 int retiraPontos(std::string versao)
@@ -482,10 +448,10 @@ void exportaHashingOrdenacao()
         tabelaHash aux;
 
         criaTabelaHash(tab, reg, n);
-        arquivoSaida << " === Tabela Hashing === " << std::endl;
-        for(int i=0; i<n; i++)
-            if(tab[i].consultaChave() != 0)
-                arquivoSaida << "Versão " << tab[i].consultaChaveOrig() << " : " << tab[i].consultaContador() << std::endl;
+        arquivoSaida << " === Versões mais frequentes === " << std::endl;
+        int qualquer;
+        aux.quickSort_time(tab, n, &qualquer, &qualquer);
+        arquivoSaida << aux.imprimeFrequentes(tab, n) << std::endl;
         
         Ordenacao ordenacao;
         Registro *regQS = new Registro[N];

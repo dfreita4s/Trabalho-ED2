@@ -19,18 +19,12 @@ Registro::Registro()
 Registro::~Registro()
 {
     //Destructor
-    //delete registros;
+    //delete [] registros;
 }
 
 std::string Registro::imprimeRegistros()
 {
     return ("ID: " + getID() + "\nMensagem: " + getText() + "\nVotos: " + std::to_string(getVotes()) + "\nVersão: " + getVersion() + "\nData/Hora: " + getDate());
-    // std::cout << "ID: " << getID() << std::endl;
-    // std::cout << "Mensagem: \"" << getText() << "\"" <<std::endl;
-    // std::cout << "Votos /\\: " << getVotes() << std::endl;
-    // std::cout << "Versão do Aplicativo: " << getVersion() << std::endl;
-    // std::cout << "Data/Hora: " << getDate() << std::endl;
-    // std::cout << std::endl;
 }
 
 void Registro::setID(std::string id)

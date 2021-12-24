@@ -163,12 +163,12 @@ int tabelaHash::quick_particionaTabela (tabelaHash *tabela, int inicio, int fim,
 
     while (true)
     {
-        while (i < fim && tabela[i].consultaContador() < pivo.consultaContador())
+        while (i < fim && tabela[i].consultaContador() > pivo.consultaContador())
         {
             i = i + 1;
             (*compara)++;
         }
-        while (j >= inicio && tabela[j].consultaContador() > pivo.consultaContador())
+        while (j >= inicio && tabela[j].consultaContador() < pivo.consultaContador())
         {
             j = j - 1;
             (*compara)++;
@@ -204,87 +204,17 @@ float tabelaHash::quickSort_time (tabelaHash *tabela, int n, int *compara, int *
     return std::chrono::duration<float>(end - start).count();
 }
 
-
-/*
-
-float Ordenacao::quickSort_time(Registro *list, int n, int *compara, int *movimenta)
+std::string tabelaHash::imprimeFrequentes(tabelaHash *tab, int n)
 {
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    quickSort_ordena(list, 0, n - 1, compara, movimenta);
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<float>(end - start).count();
+    std::string saidaFrequencias("");
+    for(int i=0; i<n; i++)
+            if(tab[i].consultaChave() != 0)
+            {
+                saidaFrequencias += "Versão ";
+                saidaFrequencias += tab[i].consultaChaveOrig() ;
+                saidaFrequencias += " : " ;
+                saidaFrequencias += to_string(tab[i].consultaContador()) + "\n";
+            }
+    return saidaFrequencias;
+
 }
-
-void Ordenacao::quickSort_ordena(Registro *list, int i, int k, int *compara, int *movimenta)
-{
-    if (i < k)
-    {
-        int p = quickSort_particionaLista(list, i, k, compara, movimenta); //onde terminou a particao
-        quickSort_ordena(list, i, p - 1, compara, movimenta);
-        quickSort_ordena(list, p + 1, k, compara, movimenta);
-    }
-}
-
-int Ordenacao::quickSort_particionaLista(Registro *list, int inicio, int fim, int *compara, int *movimenta)
-{
-
-    Registro pivo = pivoMediano(list, inicio, fim, compara, movimenta);
-    int j = fim - 1;
-    int i = inicio;
-
-    while (true)
-    {
-        while (i < fim && list[i].getVotes() < pivo.getVotes())
-        {
-            i = i + 1;
-            (*compara)++;
-        }
-        while (j >= inicio && list[j].getVotes() > pivo.getVotes())
-        {
-            j = j - 1;
-            (*compara)++;
-        }
-        if (i < j)
-        {
-            trocaNo(list, i, j, compara, movimenta);
-            i = i + 1;
-            j = j - 1;
-        }
-        else
-            break;
-    }
-    trocaNo(list, i, fim, compara, movimenta);
-    return i;
-}
-
-void Ordenacao::trocaNo(Registro *troca, int a, int b, int *compara, int *movimenta)
-{
-    Registro aux;
-    aux = troca[a];
-    troca[a] = troca[b];
-    troca[b] = aux;
-    (*movimenta)++;
-}
-
-Registro Ordenacao::pivoMediano(Registro *l, int inicio, int fim, int *compara, int *movimenta)
-{
-    int media = (inicio + fim) / 2;
-
-    if (l[inicio].getVotes() > l[fim].getVotes())
-        trocaNo(l, inicio, fim, compara, movimenta);
-    if (l[media].getVotes() > l[fim].getVotes())
-        trocaNo(l, media, fim, compara, movimenta);
-    if (l[inicio].getVotes() > l[media].getVotes())
-        trocaNo(l, inicio, media, compara, movimenta);
-    trocaNo(l, media, fim, compara, movimenta);
-    return l[fim];
-}
-
-float Ordenacao::quickSort_time(Registro *list, int n, int *compara, int *movimenta)
-{
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    quickSort_ordena(list, 0, n - 1, compara, movimenta);
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<float>(end - start).count();
-}
-*/
