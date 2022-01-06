@@ -363,9 +363,10 @@ void analiseEstruturas()
     Registro *regEstrutura = new Registro[1000000];
     //inserir na estrutura 
 
-    
+
 
 }
+
 
 void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
 {
