@@ -11,6 +11,8 @@
 #include "../inc/lista.h"
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
+#include "../inc/analise.h"
+#include "analise.cpp"
 
 #define NREGISTROS 3646475
 
@@ -223,56 +225,56 @@ void ordenacao()
 
             tempoQuicksort = sort.quickSort_time(registro2, tam, &comparacoesQuicksort, &movimentacoesQuicksort);
             delete[] registro2;
-            tempoHeapsort  = sort.heapSort_time(registro3, tam, &comparacoesHeapsort, &movimentacoesHeapsort);
+            tempoHeapsort = sort.heapSort_time(registro3, tam, &comparacoesHeapsort, &movimentacoesHeapsort);
             delete[] registro3;
-            tempoCombsort  = sort.combSort_time(registro, tam, &comparacoesCombsort, &movimentacoesCombsort);
+            tempoCombsort = sort.combSort_time(registro, tam, &comparacoesCombsort, &movimentacoesCombsort);
             delete[] registro;
 
             tempoMediaQuicksort += tempoQuicksort;
-            tempoMediaHeapsort  += tempoHeapsort;
-            tempoMediaCombsort  += tempoCombsort;
+            tempoMediaHeapsort += tempoHeapsort;
+            tempoMediaCombsort += tempoCombsort;
 
             comparacoesMediaQuicksort += comparacoesQuicksort / 3;
-            comparacoesMediaHeapsort  += comparacoesHeapsort / 3;
-            comparacoesMediaCombsort  += comparacoesCombsort / 3;
+            comparacoesMediaHeapsort += comparacoesHeapsort / 3;
+            comparacoesMediaCombsort += comparacoesCombsort / 3;
 
             movimentacoesMediaQuicksort += movimentacoesQuicksort / 3;
-            movimentacoesMediaHeapsort  += movimentacoesHeapsort / 3;
-            movimentacoesMediaCombsort  += movimentacoesCombsort / 3;
+            movimentacoesMediaHeapsort += movimentacoesHeapsort / 3;
+            movimentacoesMediaCombsort += movimentacoesCombsort / 3;
 
             saida << "\n====Quicksort====" << endl;
             saida << "Estatisticas para " << tam << " números de registros" << endl;
             saida << "Tempo de execução: " << tempoQuicksort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesQuicksort      << endl;
-            saida << "Número de movimentações: " << movimentacoesQuicksort  << endl;
+            saida << "Número de comparações: " << comparacoesQuicksort << endl;
+            saida << "Número de movimentações: " << movimentacoesQuicksort << endl;
 
             saida << "\n====Heapsort====" << endl;
             saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoHeapsort << " segundos"  << endl;
-            saida << "Número de comparações: " << comparacoesHeapsort       << endl;
-            saida << "Número de movimentações: " << movimentacoesHeapsort   << endl;
+            saida << "Tempo de execução: " << tempoHeapsort << " segundos" << endl;
+            saida << "Número de comparações: " << comparacoesHeapsort << endl;
+            saida << "Número de movimentações: " << movimentacoesHeapsort << endl;
 
             saida << "\n====Combsort====" << endl;
             saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoCombsort << " segundos"  << endl;
-            saida << "Número de comparações: " << comparacoesCombsort       << endl;
-            saida << "Número de movimentações: " << movimentacoesCombsort   << endl;
+            saida << "Tempo de execução: " << tempoCombsort << " segundos" << endl;
+            saida << "Número de comparações: " << comparacoesCombsort << endl;
+            saida << "Número de movimentações: " << movimentacoesCombsort << endl;
         }
         saida << "======Média final das execuções======" << endl;
         saida << "====Quicksort====" << endl;
         saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort      << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort  << endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort << endl;
 
         saida << "====Heapsort====" << endl;
         saida << "Média tempo de execução: " << tempoMediaHeapsort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort      << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort  << endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort << endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort << endl;
 
         saida << "====Combsort====" << endl;
         saida << "Média tempo de execução: " << tempoMediaCombsort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaCombsort      << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort  << endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaCombsort << endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort << endl;
         std::cout << "O arquivo de texto foi criado!" << std::endl;
     }
     else
@@ -344,29 +346,29 @@ void criaTabelaHash(Registro *reg, int n)
 
 void analiseEstruturas()
 {
-    int comparacoesAVP   =0;
-    int comparacoesAB20  =0;
-    int comparacoesAB200 =0;
+    int comparacoesAVP = 0;
+    int comparacoesAB20 = 0;
+    int comparacoesAB200 = 0; //acho que nao precisa dessas variaveis, pode colocar so uma para AB
 
-    float tempoExecAVP   =0;
-    float tempoExecAB20  =0;
-    float tempoExecAB200 =0;
+    float tempoExecAVP = 0;
+    float tempoExecAB20 = 0;
+    float tempoExecAB200 = 0;
 
-    float mediaComparacoesAVP  =0;
-    float mediaComparacoesAB20 =0;
-    float mediaComparacoesAB200=0;
-    float mediaTempoExecAVP    =0;
-    float mediaTempoExecAB20   =0;
-    float mediaTempoExecAB200  =0;
+    float mediaComparacoesAVP = 0;
+    float mediaComparacoesAB20 = 0;
+    float mediaComparacoesAB200 = 0;
+    float mediaTempoExecAVP = 0;
+    float mediaTempoExecAB20 = 0;
+    float mediaTempoExecAB200 = 0;
 
+    int N = 1000000;
 
-    Registro *regEstrutura = new Registro[1000000];
-    //inserir na estrutura 
+    Registro *regEstrutura = new Registro[N];
+    leBinario(regEstrutura, N); //importa N registros aleatorios
 
-
-
+    for (int i = 0; i < 3; i++)
+        Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
 }
-
 
 void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
 {

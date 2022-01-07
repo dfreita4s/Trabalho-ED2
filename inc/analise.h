@@ -8,6 +8,6 @@ public:
     ~Analise(){};
     //M B N(registros)
     //Passar registro pra arvore
-    void processAVP(int, int, Registro);
+    static void processAVP(int, int, Registro *);
     void processAB(int, int, Registro);
 };
