@@ -53,7 +53,7 @@ void testeImportacao(Registro *lista)
                 linha = lista[i].imprimeRegistros() + "\n";
                 saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
             }
-            cout << "O arquivo de texto foi criado!" << endl;
+            std::cout << "O arquivo de texto foi criado!" << std::endl;
         }
         saidaTxt.close();
     }
@@ -86,7 +86,7 @@ void acessaRegistro(int k) // acessa o K-ésimo registro do arquivo binario
     }
     else
     {
-        cout << "Não foi possível abrir o arquivo!" << endl;
+        std::cout << "Não foi possível abrir o arquivo!" << std::endl;
     }
 }
 
@@ -135,11 +135,11 @@ void leBinario(Registro *registro, int N)
         }
         delete[] regist;
         arqBin.close();
-        cout << N << " registros foram importados\n";
+        std::cout << N << " registros foram importados\n";
     }
 
     else
-        cout << "Não foi possível abrir o arquivo!" << endl;
+        std::cout << "Não foi possível abrir o arquivo!" << std::endl;
 }
 
 // Faz cópia dos registros para usar nos testes
@@ -221,7 +221,7 @@ void ordenacao()
             Registro *registro3 = new Registro[tam];
             copiaRegistro(registro3, registro, tam);
 
-            cout << "Fazendo teste para " << tam << " números de registros" << endl;
+            std::cout << "Fazendo teste para " << tam << " números de registros" << std::endl;
 
             tempoQuicksort = sort.quickSort_time(registro2, tam, &comparacoesQuicksort, &movimentacoesQuicksort);
             delete[] registro2;
@@ -242,39 +242,39 @@ void ordenacao()
             movimentacoesMediaHeapsort += movimentacoesHeapsort / 3;
             movimentacoesMediaCombsort += movimentacoesCombsort / 3;
 
-            saida << "\n====Quicksort====" << endl;
-            saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoQuicksort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesQuicksort << endl;
-            saida << "Número de movimentações: " << movimentacoesQuicksort << endl;
+            saida << "\n====Quicksort====" << std::endl;
+            saida << "Estatisticas para " << tam << " números de registros" << std::endl;
+            saida << "Tempo de execução: " << tempoQuicksort << " segundos" << std::endl;
+            saida << "Número de comparações: " << comparacoesQuicksort << std::endl;
+            saida << "Número de movimentações: " << movimentacoesQuicksort << std::endl;
 
-            saida << "\n====Heapsort====" << endl;
-            saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoHeapsort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesHeapsort << endl;
-            saida << "Número de movimentações: " << movimentacoesHeapsort << endl;
+            saida << "\n====Heapsort====" << std::endl;
+            saida << "Estatisticas para " << tam << " números de registros" << std::endl;
+            saida << "Tempo de execução: " << tempoHeapsort << " segundos" << std::endl;
+            saida << "Número de comparações: " << comparacoesHeapsort << std::endl;
+            saida << "Número de movimentações: " << movimentacoesHeapsort << std::endl;
 
-            saida << "\n====Combsort====" << endl;
-            saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoCombsort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesCombsort << endl;
-            saida << "Número de movimentações: " << movimentacoesCombsort << endl;
+            saida << "\n====Combsort====" << std::endl;
+            saida << "Estatisticas para " << tam << " números de registros" << std::endl;
+            saida << "Tempo de execução: " << tempoCombsort << " segundos" << std::endl;
+            saida << "Número de comparações: " << comparacoesCombsort << std::endl;
+            saida << "Número de movimentações: " << movimentacoesCombsort << std::endl;
         }
-        saida << "======Média final das execuções======" << endl;
-        saida << "====Quicksort====" << endl;
-        saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort << endl;
+        saida << "======Média final das execuções======" << std::endl;
+        saida << "====Quicksort====" << std::endl;
+        saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << std::endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << std::endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort << std::endl;
 
-        saida << "====Heapsort====" << endl;
-        saida << "Média tempo de execução: " << tempoMediaHeapsort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort << endl;
+        saida << "====Heapsort====" << std::endl;
+        saida << "Média tempo de execução: " << tempoMediaHeapsort << " segundos" << std::endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort << std::endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort << std::endl;
 
-        saida << "====Combsort====" << endl;
-        saida << "Média tempo de execução: " << tempoMediaCombsort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaCombsort << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort << endl;
+        saida << "====Combsort====" << std::endl;
+        saida << "Média tempo de execução: " << tempoMediaCombsort << " segundos" << std::endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaCombsort << std::endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort << std::endl;
         std::cout << "O arquivo de texto foi criado!" << std::endl;
     }
     else
@@ -285,7 +285,7 @@ void ordenacao()
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Sair\nFunção: ";
+    std::cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Sair\nFunção: ";
     int resp = 0;
     cin >> resp;
 
@@ -302,7 +302,7 @@ void menu()
         Registro *reg = new Registro[n];
         leBinario(reg, n);
         criaTabelaHash(reg, n);
-        cout << "Tabela Hash gerada com sucesso..." << endl;
+        std::cout << "Tabela Hash gerada com sucesso..." << std::endl;
 
         delete[] reg;
         menu();
@@ -317,7 +317,7 @@ void menu()
         exit(0);
     else
     {
-        cout << "Por favor digite uma resposta válida!" << endl;
+        std::cout << "Por favor digite uma resposta válida!" << std::endl;
         menu();
     }
 }
@@ -346,28 +346,186 @@ void criaTabelaHash(Registro *reg, int n)
 
 void analiseEstruturas()
 {
+    srand(time(NULL));
     int comparacoesAVP = 0;
     int comparacoesAB20 = 0;
     int comparacoesAB200 = 0; //acho que nao precisa dessas variaveis, pode colocar so uma para AB
 
-    float tempoExecAVP = 0;
-    float tempoExecAB20 = 0;
-    float tempoExecAB200 = 0;
+    int comparacoesBuscaAVP = 0;
+    int comparacoesBuscaAB20 = 0;
+    int comparacoesBuscaAB200 = 0;
 
-    float mediaComparacoesAVP = 0;
-    float mediaComparacoesAB20 = 0;
-    float mediaComparacoesAB200 = 0;
-    float mediaTempoExecAVP = 0;
-    float mediaTempoExecAB20 = 0;
-    float mediaTempoExecAB200 = 0;
+    int comparacoesInserirAVP = 0;
+    int comparacoesInserirAB20 = 0;
+    int comparacoesInserirAB200 = 0;
+
+    float tempoExecAVP = 0.0000f;
+    float tempoExecAB20 = 0.0000f;
+    float tempoExecAB200 = 0.0000f;
+
+    float tempoBuscaAVP = 0.0000f;
+    float tempoBuscaAB20 = 0.0000f;
+    float tempoBuscaAB200 = 0.0000f;
+
+    float tempoInserirAVP = 0.0000f;
+    float tempoInserirAB20 = 0.0000f;
+    float tempoInserirAB200 = 0.0000f;
+
+    float mediaComparacoesAVP = 0.0000f;
+    float mediaComparacoesAB20 = 0.0000f;
+    float mediaComparacoesAB200 = 0.0000f;
+    float mediaTempoExecAVP = 0.0000f;
+    float mediaTempoExecAB20 = 0.0000f;
+    float mediaTempoExecAB200 = 0.0000f;
+
+    float mediaComparacoesInserirAVP = 0.0000f;
+    float mediaComparacoesInserirAB20 = 0.0000f;
+    float mediaComparacoesInserirAB200 = 0.0000f;
+
+    float mediaComparacoesBuscaAVP = 0.0000f;
+    float mediaComparacoesBuscaAB20 = 0.0000f;
+    float mediaComparacoesBuscaAB200 = 0.0000f;
+
+    float mediaTempoInserirAVP = 0.0000f;
+    float mediaTempoInserirAB20 = 0.0000f;
+    float mediaTempoInserirAB200 = 0.0000f;
+    float mediaTempoBuscaAVP = 0.0000f;
+    float mediaTempoBuscaAB20 = 0.0000f;
+    float mediaTempoBuscaAB200 = 0.0000f;
 
     int N = 1000000;
 
-    Registro *regEstrutura = new Registro[N];
-    leBinario(regEstrutura, N); //importa N registros aleatorios
+    std::fstream saida;
+    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
+    if (saida.is_open())
+    {
 
-    for (int i = 0; i < 3; i++)
-        Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
+        Registro *regEstrutura = new Registro[N];
+        leBinario(regEstrutura, N); //importa N registros aleatorios
+
+        //para AVP
+        std::cout << "Arvore Vermelho-Preto\nTeste:[";
+        for (int i = 0; i < 3; i++)
+        // Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
+        {
+            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            //inserir registros na estrutura
+            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            tempoInserirAVP = std::chrono::duration<float>(end - start).count();
+
+            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            //buscar B registros aleatorios
+            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
+
+            //escrever no txt os valores encontrados
+            saida << "===========ARVORE VERMELHO-PRETO===========" << std::endl;
+            saida << "Teste: " << (i + 1) << std::endl;
+            saida << "Tempo de inserção: " << tempoInserirAVP << std::endl;
+            saida << "Comparações inseção: " << comparacoesInserirAVP << std::endl;
+            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAVP << std::endl;
+            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAVP << std::endl
+                  << std::endl;
+
+            mediaTempoBuscaAVP += tempoBuscaAVP / 3;
+            mediaTempoInserirAVP += tempoInserirAVP / 3;
+
+            std::cout << "///";
+        }
+        std::cout << "]" << std::endl;
+
+        //para Arvore B m = 20
+        std::cout << "Arvore B (m = 20)\nTeste:[";
+        for (int i = 0; i < 3; i++)
+
+        {
+            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            //inserir registros na estrutura
+            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
+
+            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            //buscar B registros aleatorios
+            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            tempoBuscaAB20 = std::chrono::duration<float>(end - start).count();
+
+            //escrever no txt os valores encontrados
+            saida << "===========ARVORE B (m = 20)===========" << std::endl;
+            saida << "Teste: " << (i + 1) << std::endl;
+            saida << "Tempo de inserção: " << tempoInserirAB20 << std::endl;
+            saida << "Comparações inseção: " << comparacoesInserirAB20 << std::endl;
+            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAB20 << std::endl;
+            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB20 << std::endl
+                  << std::endl;
+
+            mediaTempoBuscaAB20 += tempoBuscaAB20 / 3;
+            mediaTempoInserirAB20 += tempoInserirAB20 / 3;
+
+            std::cout << "///";
+        }
+        std::cout << "]" << std::endl;
+
+        //para Arvore B m = 200
+        std::cout << "Arvore B (m = 200)\nTeste:[";
+        for (int i = 0; i < 3; i++)
+
+        {
+            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            //inserir registros na estrutura
+            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            tempoInserirAB200 = std::chrono::duration<float>(end - start).count();
+
+            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            //buscar B registros aleatorios
+            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            tempoBuscaAB200 = std::chrono::duration<float>(end - start).count();
+
+            //escrever no txt os valores encontrados
+            saida << "===========ARVORE B (m = 200)===========" << std::endl;
+            saida << "Teste: " << (i + 1) << std::endl;
+            saida << "Tempo de inserção: " << tempoInserirAB200 << std::endl;
+            saida << "Comparações inseção: " << comparacoesInserirAB200 << std::endl;
+            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAB200 << std::endl;
+            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB200 << std::endl
+                  << std::endl;
+
+            mediaTempoBuscaAB200 += tempoBuscaAB200 / 3;
+            mediaTempoInserirAB200 += tempoInserirAB200 / 3;
+
+            std::cout << "///";
+        }
+        std::cout << "]" << std::endl;
+
+        saida << "======Estatisticas de Desempenho======" << std::endl
+              << std::endl;
+        saida << "====Arvore Vermelho-Preto====" << std::endl
+              << std::endl;
+        saida << "Media tempo inserção: " << mediaTempoInserirAVP << std::endl;
+        saida << "Media comparacoes inserção: " << mediaComparacoesInserirAVP << std::endl;
+        saida << "Media tempo busca: " << mediaTempoExecAVP << std::endl;
+        saida << "Media comparacoes busca: " << mediaComparacoesBuscaAVP << std::endl
+              << std::endl;
+
+        saida << "====Arvore B(m = 20)====" << std::endl
+              << std::endl;
+        saida << "Media tempo inserção: " << mediaTempoInserirAB20 << std::endl;
+        saida << "Media comparacoes inserção: " << mediaComparacoesInserirAB20 << std::endl;
+        saida << "Media tempo busca: " << mediaTempoExecAB20 << std::endl;
+        saida << "Media comparacoes busca: " << mediaComparacoesBuscaAB20 << std::endl
+              << std::endl;
+
+        saida << "====Arvore B(m = 200)====" << std::endl
+              << std::endl;
+        saida << "Media tempo inserção: " << mediaTempoInserirAB200 << std::endl;
+        saida << "Media comparacoes inserção: " << mediaComparacoesInserirAB200 << std::endl;
+        saida << "Media tempo busca: " << mediaTempoExecAB200 << std::endl;
+        saida << "Media comparacoes busca: " << mediaComparacoesBuscaAB200 << std::endl
+              << std::endl;
+
+        //escrever no txt
+    }
+    else
+        std::cout << "Não foi possivel abrir o arquivo!" << std::endl;
 }
 
 void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
@@ -418,7 +576,7 @@ void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
     int qualquer;
     aux.quickSort_time(tab, n, &qualquer, &qualquer);
 
-    cout << "Tabela Hash criada com sucesso" << endl;
+    std::cout << "Tabela Hash criada com sucesso" << std::endl;
     std::cout << aux.imprimeFrequentes(tab, n) << std::endl;
 }
 
