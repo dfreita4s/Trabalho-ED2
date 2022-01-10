@@ -166,43 +166,66 @@ void Lista::listarTodas()
     else
         std::cout << "Impossível listar. O arquivo não existe." << std::endl;
 }
+
 bool Lista::criarArquivoBinario()
 {
     std::ofstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
+    if(arqBin.is_open())
     {
-        if (this->obterRaiz() == nullptr)
+        if(this->obterRaiz() == nullptr)
             return false;
 
         Review *No = this->obterRaiz();
 
-        // Escreve cabeçalho
-        std::string linha = "review_id,review_text,upvotes,app_version,posted_date\n";
-        arqBin.write(linha.c_str(), sizeof(char) * linha.size());
-        int contador = 0;
-        while (No != nullptr)
-        {
-            linha = "";
-            linha += No->obterID();
-            linha += ",\"";
-            linha += No->obterTexto();
-            linha += "\",";
-            linha += std::to_string(No->obterVotos());
-            linha += ",";
-            linha += No->obterVersao();
-            linha += ",";
-            linha += No->obterData();
-            linha += "\n";
+        std::string linha = "";
+        
+        //Grava o número total de registros
+        // int numRegistros = this->obterTotal();
+        int numRegistros = 3646475;
+        arqBin.write((char*) &numRegistros , sizeof(int));
 
-            arqBin.write(linha.c_str(), sizeof(char) * linha.size());
+        
+        while(No != nullptr)
+        {            
+            std::string id = No->obterID();
+            arqBin.write(id.c_str() , sizeof(char)*id.size());
+            
+            std::string texto = No->obterTexto();
+            unsigned short tamanhoReviewText = sizeof(char)*texto.size();
+            arqBin.write( (char*) &tamanhoReviewText , sizeof(tamanhoReviewText));
+            arqBin.write(texto.c_str() , sizeof(char)*texto.size());
 
-            No = No->obterProximo();
+            int votos = No->obterVotos();
+            arqBin.write((char*) &votos , sizeof(int));
+
+            int versao = versaoToInt(No->obterVersao());
+            arqBin.write((char*) &versao , sizeof(int));
+
+            std::string data = No->obterData();
+            arqBin.write(data.c_str() , sizeof(char)*data.size());
+
+            No = No->obterProximo();  
         }
+        
         arqBin.close();
-        std::cout << "O arquivo binário foi criado." << std::endl;
+        std::cout << "O arquivo binário foi criado." << std::endl;    
         return true;
     }
     std::cout << "Erro ao criar arquivo binário." << std::endl;
     return false;
+}
+
+int Lista::versaoToInt(std::string sversao)
+{
+    std::string aux;
+
+    for(int i=0; i<sversao.length(); i++)
+        if(sversao[i] != '.' && sversao[i] != 'v')
+            aux += sversao[i];
+    
+    if(aux == "")
+        aux = '0';
+    
+    return stoi(aux);
 }

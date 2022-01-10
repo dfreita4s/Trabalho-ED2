@@ -11,8 +11,8 @@
 #include "../inc/lista.h"
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
-#include "../inc/analise.h"
-#include "analise.cpp"
+// #include "../inc/analise.h"
+// #include "analise.cpp"
 
 #define NREGISTROS 3646475
 
@@ -25,6 +25,10 @@ bool checaArqBin();
 void criaTabelaHash(tabelaHash *, Registro *, int);
 void criaTabelaHash(Registro *reg, int n);
 int retiraPontos(std::string versao);
+// Nova leitura/escrita binário
+int retornaRegistro(int);
+void exibeRegistro(int);
+
 void testeImportacao(Registro *lista)
 {
     int resp, N = 0;
@@ -60,33 +64,6 @@ void testeImportacao(Registro *lista)
     else
     {
         std::cout << "Por favor, digite um valor válido!" << std::endl;
-    }
-}
-
-void acessaRegistro(int k) // acessa o K-ésimo registro do arquivo binario
-{
-    std::cout << "Acessando registro " << k << std::endl;
-    std::ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        std::string str = "";
-        int i = 0;
-        while (getline(arqBin, str))
-        {
-            if (i == k)
-            {                            //se o i == k chegou na linha certa
-                std::cout << str + "\n"; //retorna a linha
-                break;
-            }
-            else
-                i++;
-        }
-        arqBin.close();
-    }
-    else
-    {
-        std::cout << "Não foi possível abrir o arquivo!" << std::endl;
     }
 }
 
@@ -400,6 +377,8 @@ void analiseEstruturas()
     if (saida.is_open())
     {
 
+        std::chrono::high_resolution_clock::time_point start;
+        std::chrono::high_resolution_clock::time_point end;
         Registro *regEstrutura = new Registro[N];
         leBinario(regEstrutura, N); //importa N registros aleatorios
 
@@ -408,14 +387,14 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
         // Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
         {
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             //inserir registros na estrutura
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
 
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             //buscar B registros aleatorios
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
 
             //escrever no txt os valores encontrados
@@ -439,14 +418,15 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            
+            start = std::chrono::high_resolution_clock::now();
             //inserir registros na estrutura
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
 
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             //buscar B registros aleatorios
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             tempoBuscaAB20 = std::chrono::duration<float>(end - start).count();
 
             //escrever no txt os valores encontrados
@@ -470,14 +450,14 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             //inserir registros na estrutura
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             tempoInserirAB200 = std::chrono::duration<float>(end - start).count();
 
-            std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             //buscar B registros aleatorios
-            std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             tempoBuscaAB200 = std::chrono::duration<float>(end - start).count();
 
             //escrever no txt os valores encontrados
@@ -623,6 +603,19 @@ int main(int argc, char const *argv[])
         delete listaReview;
     }
 
+    // Teste nova leitura/escrita binário
+    exibeRegistro(retornaRegistro(125840));
+    exibeRegistro(retornaRegistro(138450));
+    exibeRegistro(retornaRegistro(123840));
+    exibeRegistro(retornaRegistro(125340));
+    exibeRegistro(retornaRegistro(125830));
+    exibeRegistro(retornaRegistro(225840));
+    exibeRegistro(retornaRegistro(325840));
+    exibeRegistro(retornaRegistro(1125840));
+    exibeRegistro(retornaRegistro(2125840));
+    exibeRegistro(retornaRegistro(20));
+    exibeRegistro(retornaRegistro(5896));
+
     menu();
 
     return 0;
@@ -685,5 +678,138 @@ void exportaHashingOrdenacao()
         delete[] reg;
 
         delete[] tab;
+    }
+}
+
+// Modificações Leitura/Escrita Binário
+
+void acessaRegistro(int k)
+{
+    std::cout << "Acessando registro " << k << std::endl;
+    
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(0,arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0,arqBin.beg);
+
+        int posInicial=0, posProximo=0; // Ponteiro no arquivo
+        int i = 0; // Contador de linhas
+        unsigned short tamanhoRegistro=0;
+
+        int totalReview = 0;
+        arqBin.read((char*)& totalReview, sizeof(int) );
+
+        std::cout << "Total de Registros:" << totalReview << std::endl;
+        
+        do
+        {
+            //Lê ID (86 bytes)
+            char * buffer = new char[86];
+            arqBin.read(buffer, sizeof(char)*86);
+            std::string id(buffer);
+            delete [] buffer;
+            std::cout << arqBin.tellg() << std::endl;
+            
+            // Lê tamanho do review e o review
+            unsigned short tamanhoReviewText = 0; // tamanho de cada texto
+            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short) );
+            buffer = new char[tamanhoReviewText];
+            arqBin.read(buffer, sizeof(char)*tamanhoReviewText );
+            std::string reviewText(buffer);
+            delete [] buffer;
+            
+            //Lê votos favoráveis (sizeof(int))
+            int votesup = 0; // tamanho de cada texto
+            arqBin.read((char*)& votesup, sizeof(int) );
+            
+            //Lê versão do app (sizeof(int))
+            int versao = 0;
+            arqBin.read((char*)& versao, sizeof(int) );
+            
+            //Lê data
+            buffer = new char[19];
+            arqBin.read(buffer, sizeof(char)*19 );
+            std::string dateReview(buffer);
+            delete [] buffer;
+            
+            std::cout << std::endl;
+            
+            posInicial = arqBin.tellg();
+            
+            // id(86)+2*size(int)+data(19)+reviewText(?)
+            tamanhoRegistro = (86+2*sizeof(int)+sizeof(short)+19+tamanhoReviewText);
+            posProximo = posInicial;
+            arqBin.seekg(posProximo);
+            i++;
+
+        } while(i<=k && posProximo <= tamTotal );
+        
+        // Calcula o tamanho do registro
+        arqBin.seekg(posInicial);
+
+        arqBin.close();
+    }
+    else
+        std::cout << "Erro ao obter registro." << std::endl;
+}
+
+int retornaRegistro(int k)
+{    
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(0,arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0,arqBin.beg);
+
+        int posInicial=0, posProximo=0; // Ponteiro no arquivo
+        int i = 0; // Contador de linhas
+        unsigned short tamanhoRegistro=0;
+        unsigned short tamanhoReviewText = 0; // tamanho de cada texto
+
+        posProximo += sizeof(int);
+
+        do
+        {
+            arqBin.seekg(posProximo+86);
+            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short) );
+
+            tamanhoRegistro = (86+2*sizeof(int)+19+sizeof(short)+tamanhoReviewText);
+            posProximo += tamanhoRegistro;
+            i++;
+            
+        } while (i<=k);
+
+
+        arqBin.seekg(posProximo);
+        
+
+        arqBin.close();
+        return posProximo;
+    }
+    else
+        std::cout << "Erro ao ler arquivo." << std::endl;
+    
+    return -1;
+
+}
+
+void exibeRegistro(int posicao)
+{
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+
+    if(arqBin.is_open())
+    {
+        arqBin.seekg(posicao);
+        char * buffer = new char[86];
+        arqBin.read(buffer, sizeof(char)*86);
+        std::string reviewID(buffer);
+        std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
+        delete [] buffer;
     }
 }
