@@ -17,6 +17,7 @@ public:
     bool obterReviews();
     Review *obterRaiz();
     void listarTodas();
+    int versaoToInt(std::string);
 
     void inserirReview(Review *, Review *);
    
