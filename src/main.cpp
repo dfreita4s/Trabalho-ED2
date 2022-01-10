@@ -613,8 +613,8 @@ int main(int argc, char const *argv[])
     exibeRegistro(retornaRegistro(325840));
     exibeRegistro(retornaRegistro(1125840));
     exibeRegistro(retornaRegistro(2125840));
-    exibeRegistro(retornaRegistro(20));
     exibeRegistro(retornaRegistro(5896));
+    exibeRegistro(retornaRegistro(1));
 
     menu();
 
