@@ -72,6 +72,8 @@ void leBinario(Registro *registro, int N)
 
     //pensei pra ler o review_text e saber o tamanho um for em cada catactere da linha e ir ate o caracter ser == \n
     std::ifstream arqBin;
+    std::ifstream textBin;
+    textBin.open("./data/textBin.bin", std::ios::binary);
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     srand(time(NULL));
     if (arqBin.is_open())
@@ -80,6 +82,8 @@ void leBinario(Registro *registro, int N)
         int randNum = 0;
         std::string str = "";
         std::string *regist = new std::string[NREGISTROS];
+
+        
         while (getline(arqBin, str)) //aloca todas a linhas no vetor regist
         {
             regist[j] = str + "\n";
@@ -418,7 +422,7 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
-            
+
             start = std::chrono::high_resolution_clock::now();
             //inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
@@ -686,67 +690,67 @@ void exportaHashingOrdenacao()
 void acessaRegistro(int k)
 {
     std::cout << "Acessando registro " << k << std::endl;
-    
+
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        arqBin.seekg(0,arqBin.end);
+        arqBin.seekg(0, arqBin.end);
         int tamTotal = arqBin.tellg();
-        arqBin.seekg(0,arqBin.beg);
+        arqBin.seekg(0, arqBin.beg);
 
-        int posInicial=0, posProximo=0; // Ponteiro no arquivo
-        int i = 0; // Contador de linhas
-        unsigned short tamanhoRegistro=0;
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0;
 
         int totalReview = 0;
-        arqBin.read((char*)& totalReview, sizeof(int) );
+        arqBin.read((char *)&totalReview, sizeof(int));
 
         std::cout << "Total de Registros:" << totalReview << std::endl;
-        
+
         do
         {
             //Lê ID (86 bytes)
-            char * buffer = new char[86];
-            arqBin.read(buffer, sizeof(char)*86);
+            char *buffer = new char[86];
+            arqBin.read(buffer, sizeof(char) * 86);
             std::string id(buffer);
-            delete [] buffer;
+            delete[] buffer;
             std::cout << arqBin.tellg() << std::endl;
-            
+
             // Lê tamanho do review e o review
             unsigned short tamanhoReviewText = 0; // tamanho de cada texto
-            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short) );
+            arqBin.read((char *)&tamanhoReviewText, sizeof(unsigned short));
             buffer = new char[tamanhoReviewText];
-            arqBin.read(buffer, sizeof(char)*tamanhoReviewText );
+            arqBin.read(buffer, sizeof(char) * tamanhoReviewText);
             std::string reviewText(buffer);
-            delete [] buffer;
-            
+            delete[] buffer;
+
             //Lê votos favoráveis (sizeof(int))
             int votesup = 0; // tamanho de cada texto
-            arqBin.read((char*)& votesup, sizeof(int) );
-            
+            arqBin.read((char *)&votesup, sizeof(int));
+
             //Lê versão do app (sizeof(int))
             int versao = 0;
-            arqBin.read((char*)& versao, sizeof(int) );
-            
+            arqBin.read((char *)&versao, sizeof(int));
+
             //Lê data
             buffer = new char[19];
-            arqBin.read(buffer, sizeof(char)*19 );
+            arqBin.read(buffer, sizeof(char) * 19);
             std::string dateReview(buffer);
-            delete [] buffer;
-            
+            delete[] buffer;
+
             std::cout << std::endl;
-            
+
             posInicial = arqBin.tellg();
-            
+
             // id(86)+2*size(int)+data(19)+reviewText(?)
-            tamanhoRegistro = (86+2*sizeof(int)+sizeof(short)+19+tamanhoReviewText);
+            tamanhoRegistro = (86 + 2 * sizeof(int) + sizeof(short) + 19 + tamanhoReviewText);
             posProximo = posInicial;
             arqBin.seekg(posProximo);
             i++;
 
-        } while(i<=k && posProximo <= tamTotal );
-        
+        } while (i <= k && posProximo <= tamTotal);
+
         // Calcula o tamanho do registro
         arqBin.seekg(posInicial);
 
@@ -757,59 +761,62 @@ void acessaRegistro(int k)
 }
 
 int retornaRegistro(int k)
-{    
+{
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        arqBin.seekg(0,arqBin.end);
+        arqBin.seekg(0, arqBin.end);
         int tamTotal = arqBin.tellg();
-        arqBin.seekg(0,arqBin.beg);
+        arqBin.seekg(0, arqBin.beg);
 
-        int posInicial=0, posProximo=0; // Ponteiro no arquivo
-        int i = 0; // Contador de linhas
-        unsigned short tamanhoRegistro=0;
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0;
         unsigned short tamanhoReviewText = 0; // tamanho de cada texto
 
         posProximo += sizeof(int);
 
         do
         {
-            arqBin.seekg(posProximo+86);
-            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short) );
+            arqBin.seekg(posProximo + 86);
+            arqBin.read((char *)&tamanhoReviewText, sizeof(unsigned short));
 
-            tamanhoRegistro = (86+2*sizeof(int)+19+sizeof(short)+tamanhoReviewText);
+            tamanhoRegistro = (86 + 2 * sizeof(int) + 19 + sizeof(short) + tamanhoReviewText);
             posProximo += tamanhoRegistro;
             i++;
-            
-        } while (i<=k);
 
+        } while (i <= k);
 
         arqBin.seekg(posProximo);
-        
 
         arqBin.close();
         return posProximo;
     }
     else
         std::cout << "Erro ao ler arquivo." << std::endl;
-    
-    return -1;
 
+    return -1;
 }
 
 void exibeRegistro(int posicao)
 {
     std::ifstream arqBin;
+    std::ifstream textBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    textBin.open("./data/textBin.bin", std::ios::binary);
 
-    if(arqBin.is_open())
+    if (arqBin.is_open())
     {
-        arqBin.seekg(posicao);
-        char * buffer = new char[86];
-        arqBin.read(buffer, sizeof(char)*86);
-        std::string reviewID(buffer);
-        std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
-        delete [] buffer;
+        if (textBin.is_open())
+        {
+
+            arqBin.seekg(posicao);
+            char *buffer = new char[86];
+            arqBin.read(buffer, sizeof(char) * 86);
+            std::string reviewID(buffer);
+            std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
+            delete[] buffer;
+        }
     }
 }

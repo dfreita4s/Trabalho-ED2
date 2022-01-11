@@ -72,6 +72,12 @@ bool Lista::obterReviews()
         getline(this->arquivo, linha);
 
         int k = 0; // contar registros
+        int pos = 0;
+        std::string id;
+        std::string data;
+        char *id_c = new char[86];
+        char *data_c = new char[19];
+        char *versao_c = new char[10];
 
         while (!arquivo.eof() && linha != "")
         {
@@ -88,14 +94,13 @@ bool Lista::obterReviews()
 
             k++;
 
-            int pos;
             pos = linha.find(",");
-            std::string id = linha.substr(3, pos - 3); // Inicio em 3 para retirar 'gp:'
+            id = linha.substr(3, pos - 3); // Inicio em 3 para retirar 'gp:'
 
             linha = linha.substr(pos + 1, linha.length());
 
             pos = linha.find_last_of(",");
-            std::string data = linha.substr(pos + 1); // Obter a Data
+            data = linha.substr(pos + 1).c_str(); // Obter a Data
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
@@ -112,9 +117,13 @@ bool Lista::obterReviews()
             if (texto.find("\"") != -1)
                 texto = texto.substr(1, texto.length() - 2); // Caso comece com esteja entre "", retirá-los
 
-            Review *review = new Review(id, texto, upvotes, versao, data); // Cria o Review
-            this->inserirReview(review, ultimo);                           // Insere na lista
-            ultimo = review;                                               // Atualiza ponteiro do último Review para o atual.
+            strcpy(id_c, id.c_str());
+            strcpy(data_c, data.c_str());
+            strcpy(versao_c, versao.c_str());
+
+            Review *review = new Review(id_c, texto, upvotes, versao_c, data_c); // Cria o Review
+            this->inserirReview(review, ultimo);                                 // Insere na lista
+            ultimo = review;                                                     // Atualiza ponteiro do último Review para o atual.
 
             getline(this->arquivo, linha);
         }
@@ -178,32 +187,45 @@ bool Lista::criarArquivoBinario()
 
         Review *No = this->obterRaiz();
 
-        std::string linha = "";
+        char *id = new char[86];
+        int votos = 0;
+        int versao = 0;
+        char *data = new char[19];
+        int tamTexto = 0, posTexto = 0;
 
         //Grava o número total de registros
         // int numRegistros = this->obterTotal();
         int numRegistros = 3646475;
         arqBin.write((char *)&numRegistros, sizeof(int));
 
+        std::ofstream textBin;
+        textBin.open("./data/textBin.bin", std::ios::binary); //binario dos textos
+
         int i = 0;
         while (No != nullptr)
         {
-            std::string id = No->obterID();
-            arqBin.write(id.c_str(), sizeof(char) * id.size());
-
-            std::string texto = No->obterTexto();
-            unsigned short tamanhoReviewText = sizeof(char) * texto.size();
-            arqBin.write((char *)&tamanhoReviewText, sizeof(tamanhoReviewText));
-            arqBin.write(texto.c_str(), sizeof(char) * texto.size());
-
-            int votos = No->obterVotos();
+            // id, votos,tamanho texto, pos texto,versao, data
+            id = No->obterID();
+            arqBin.write(No->obterID(), sizeof(char) * 86);
+            votos = No->obterVotos();
             arqBin.write((char *)&votos, sizeof(int));
 
-            int versao = versaoToInt(No->obterVersao());
-            arqBin.write((char *)&versao, sizeof(int));
+            //passar o texto para outro arquivo binario com o tamanho dele e pos dele
+            tamTexto = No->obterTexto().length();
+            posTexto += tamTexto;
+            arqBin.write((char *)&tamTexto, sizeof(int));
+            arqBin.write((char *)&posTexto, sizeof(int));
+            textBin.write(No->obterTexto().c_str(), sizeof(char) * No->obterTexto().length());
 
-            std::string data = No->obterData();
-            arqBin.write(data.c_str(), sizeof(char) * data.size());
+            // std::string texto = No->obterTexto();
+            // unsigned short tamanhoReviewText = sizeof(char) * texto.size();
+            // arqBin.write((char *)&tamanhoReviewText, sizeof(tamanhoReviewText));
+            // arqBin.write(texto.c_str(), sizeof(char) * texto.size());
+
+            versao = versaoToInt(No->obterVersao());
+            arqBin.write(No->obterVersao(), sizeof(int));
+
+            arqBin.write(No->obterData(), sizeof(char) * 19);
 
             No = No->obterProximo();
             i++;
