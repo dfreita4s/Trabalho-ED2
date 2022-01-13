@@ -75,47 +75,61 @@ void leBinario(Registro *registro, int N)
     std::ifstream textBin;
     textBin.open("./data/textBin.bin", std::ios::binary);
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    srand(time(NULL));
-    if (arqBin.is_open())
+    if (arqBin.is_open() && textBin.is_open())
     {
         int j = 0;
         int randNum = 0;
-        std::string str = "";
+        int tamanhoRegistro = 127;
+        int posTexto = 0;
+        char *id_buffer = new char[87];
+        char *data_buffer = new char[20];
+        char *versaoApp_buffer = new char[11];
+        char *str = new char[1000000];
+        int tamTexto = 0;
+        int votos = 0;
         std::string *regist = new std::string[NREGISTROS];
+        srand(time(NULL));
 
-        
-        while (getline(arqBin, str)) //aloca todas a linhas no vetor regist
-        {
-            regist[j] = str + "\n";
-            j++;
-        }
-
+        arqBin.seekg(0, ios::beg);
+        textBin.seekg(0, ios::beg);
         for (int i = 0; i < N; i++) //pega alguma linha aleatoria do regist e passa para o registro.cpp
         {
-            randNum = rand() % NREGISTROS + 1;
-            j = regist[randNum].find(",");
-            registro[i].setID(regist[randNum].substr(0, j));
 
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            randNum = rand() % NREGISTROS + 0;
 
-            j = regist[randNum].find_last_of("\"") + 1;
-            registro[i].setText(regist[randNum].substr(0, j));
+            arqBin.seekg(tamanhoRegistro * randNum, ios::beg); //chegar no registro
 
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            arqBin.read(id_buffer, sizeof(char) * 86);
+            registro[i].setID(id_buffer);
 
-            j = regist[randNum].find(",");
-            registro[i].setVotes(atoi(regist[randNum].substr(0, j).c_str()));
+            arqBin.read((char *)(&votos), sizeof(int));
+            registro[i].setVotes(votos);
 
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            arqBin.read((char *)(&tamTexto), sizeof(int));
+            arqBin.read((char *)(&posTexto), sizeof(int));
 
-            j = regist[randNum].find(",");
-            registro[i].setVersion(regist[randNum].substr(0, j));
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            textBin.seekg(posTexto, ios::beg);
 
-            registro[i].setDate(regist[randNum].substr(0, regist[randNum].length()));
+            textBin.read(str, sizeof(char) * tamTexto);
+            str[tamTexto] = '\0';
+            registro[i].setText(str);
+
+            arqBin.read(versaoApp_buffer, sizeof(char) * 10);
+            registro[i].setVersion(versaoApp_buffer);
+
+            arqBin.read(data_buffer, sizeof(char) * 19);
+
+            registro[i].setDate(data_buffer);
+
+            arqBin.seekg(0, ios::beg);
         }
         delete[] regist;
+        delete[] id_buffer;
+        delete[] data_buffer;
+        delete[] versaoApp_buffer;
+        delete[] str;
         arqBin.close();
+        textBin.close();
         std::cout << N << " registros foram importados\n";
     }
 
@@ -272,8 +286,12 @@ void menu()
 
     if (resp == 1)
     {
-        ordenacao();
-
+        // ordenacao();
+        Registro *registro = new Registro[10];
+        leBinario(registro, 10);
+        for (int i = 0; i < 10; i++)
+            std::cout << registro[i].imprimeRegistros() << std::endl
+                      << std::endl;
         menu();
     }
     else if (resp == 2)
@@ -398,6 +416,7 @@ void analiseEstruturas()
 
             start = std::chrono::high_resolution_clock::now();
             //buscar B registros aleatorios
+            //fazer tip um for
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
 
@@ -600,25 +619,23 @@ int main(int argc, char const *argv[])
         }
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
-
         delete listaReview;
     }
 
     // Teste nova leitura/escrita binário
-    exibeRegistro(retornaRegistro(125840));
-    exibeRegistro(retornaRegistro(138450));
-    exibeRegistro(retornaRegistro(123840));
-    exibeRegistro(retornaRegistro(125340));
-    exibeRegistro(retornaRegistro(125830));
-    exibeRegistro(retornaRegistro(225840));
-    exibeRegistro(retornaRegistro(325840));
-    exibeRegistro(retornaRegistro(1125840));
-    exibeRegistro(retornaRegistro(2125840));
-    exibeRegistro(retornaRegistro(5896));
-    exibeRegistro(retornaRegistro(1));
+    // exibeRegistro(retornaRegistro(125840));
+    // exibeRegistro(retornaRegistro(138450));
+    // exibeRegistro(retornaRegistro(123840));
+    // exibeRegistro(retornaRegistro(125340));
+    // exibeRegistro(retornaRegistro(125830));
+    // exibeRegistro(retornaRegistro(225840));
+    // exibeRegistro(retornaRegistro(325840));
+    // exibeRegistro(retornaRegistro(1125840));
+    // exibeRegistro(retornaRegistro(2125840));
+    // exibeRegistro(retornaRegistro(5896));
+    // exibeRegistro(retornaRegistro(1));
 
     menu();
 

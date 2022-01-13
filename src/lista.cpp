@@ -180,14 +180,17 @@ bool Lista::criarArquivoBinario()
 {
     std::ofstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
+    std::ofstream textBin;
+    textBin.open("./data/textBin.bin", std::ios::binary); //binario dos textos
+
+    if (arqBin.is_open() && textBin.is_open())
     {
         if (this->obterRaiz() == nullptr)
             return false;
 
         Review *No = this->obterRaiz();
 
-        char *id = new char[86];
+        char *id = new char[87]; //trocar no reviews
         int votos = 0;
         int versao = 0;
         char *data = new char[19];
@@ -195,11 +198,6 @@ bool Lista::criarArquivoBinario()
 
         //Grava o número total de registros
         // int numRegistros = this->obterTotal();
-        int numRegistros = 3646475;
-        arqBin.write((char *)&numRegistros, sizeof(int));
-
-        std::ofstream textBin;
-        textBin.open("./data/textBin.bin", std::ios::binary); //binario dos textos
 
         int i = 0;
         while (No != nullptr)
@@ -207,28 +205,25 @@ bool Lista::criarArquivoBinario()
             // id, votos,tamanho texto, pos texto,versao, data
             id = No->obterID();
             arqBin.write(No->obterID(), sizeof(char) * 86);
+            std::cout<<No->obterID()<<std::endl;
             votos = No->obterVotos();
-            arqBin.write((char *)&votos, sizeof(int));
+            arqBin.write((char *)(&votos), sizeof(int));
 
             //passar o texto para outro arquivo binario com o tamanho dele e pos dele
             tamTexto = No->obterTexto().length();
+            arqBin.write((char *)(&tamTexto), sizeof(int));
+            arqBin.write((char *)(&posTexto), sizeof(int));
+            textBin.write(No->obterTexto().c_str(), sizeof(char) * tamTexto);
             posTexto += tamTexto;
-            arqBin.write((char *)&tamTexto, sizeof(int));
-            arqBin.write((char *)&posTexto, sizeof(int));
-            textBin.write(No->obterTexto().c_str(), sizeof(char) * No->obterTexto().length());
-
-            // std::string texto = No->obterTexto();
-            // unsigned short tamanhoReviewText = sizeof(char) * texto.size();
-            // arqBin.write((char *)&tamanhoReviewText, sizeof(tamanhoReviewText));
-            // arqBin.write(texto.c_str(), sizeof(char) * texto.size());
 
             versao = versaoToInt(No->obterVersao());
-            arqBin.write(No->obterVersao(), sizeof(int));
+            arqBin.write(No->obterVersao(), sizeof(char) * 10);
 
             arqBin.write(No->obterData(), sizeof(char) * 19);
 
             No = No->obterProximo();
             i++;
+            if(i == 10) break;
         }
 
         arqBin.close();
