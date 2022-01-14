@@ -11,6 +11,7 @@
 #include "../inc/lista.h"
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
+#include "../inc/vermelhaPreta.h"
 
 #define NREGISTROS 3646475
 
@@ -25,7 +26,7 @@ void criaTabelaHash(Registro *reg, int n);
 int retiraPontos(std::string versao);
 // Nova leitura/escrita binário
 int retornaRegistro(int);
-void exibeRegistro(int);
+std::string exibeRegistro(int);
 
 void testeImportacao(Registro *lista)
 {
@@ -390,30 +391,41 @@ int main(int argc, char const *argv[])
         {
             caminhoArquivo = argv[1];
         }
+
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
-
+        
         delete listaReview;
     }
 
     // Teste nova leitura/escrita binário
-    exibeRegistro(retornaRegistro(125840));
-    exibeRegistro(retornaRegistro(138450));
-    exibeRegistro(retornaRegistro(123840));
-    exibeRegistro(retornaRegistro(125340));
-    exibeRegistro(retornaRegistro(125830));
-    exibeRegistro(retornaRegistro(225840));
-    exibeRegistro(retornaRegistro(325840));
-    exibeRegistro(retornaRegistro(1125840));
-    exibeRegistro(retornaRegistro(2125840));
-    exibeRegistro(retornaRegistro(20));
-    exibeRegistro(retornaRegistro(5896));
+    
+    // menu();
+ 
+    vermelhaPreta* AVP = new vermelhaPreta();
+    // int aux[] = {125840, 138450, 123840, 125340, 125830, 225840, 325840, 1125840, 2125840, 20, 5896};
 
-    menu();
+/*     int aux[] = {30,21,55,75,80,78};
+    int tam = sizeof(aux)/sizeof(int);
 
+    for(int i=0; i<tam; i++)
+    {
+        // int num = rand() % NREGISTROS;
+        // std::string id = exibeRegistro(retornaRegistro(num));
+    } */
+    int num;
+    do
+    {
+       std::cin >> num;
+        AVP->inserir("", num);
+        AVP->prettyPrint();
+
+    } while (num != -100);
+    
+    // AVP->imprimirArvore();
+    delete AVP;
     return 0;
 }
 
@@ -567,12 +579,12 @@ int retornaRegistro(int k)
         unsigned short tamanhoRegistro=0;
         unsigned short tamanhoReviewText = 0; // tamanho de cada texto
 
-        posProximo += sizeof(int);
+        posProximo += sizeof(double);
 
         do
         {
             arqBin.seekg(posProximo+86);
-            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short) );
+            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short));
 
             tamanhoRegistro = (86+2*sizeof(int)+19+sizeof(short)+tamanhoReviewText);
             posProximo += tamanhoRegistro;
@@ -583,7 +595,6 @@ int retornaRegistro(int k)
 
         arqBin.seekg(posProximo);
         
-
         arqBin.close();
         return posProximo;
     }
@@ -594,7 +605,7 @@ int retornaRegistro(int k)
 
 }
 
-void exibeRegistro(int posicao)
+std::string exibeRegistro(int posicao)
 {
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
@@ -605,7 +616,9 @@ void exibeRegistro(int posicao)
         char * buffer = new char[86];
         arqBin.read(buffer, sizeof(char)*86);
         std::string reviewID(buffer);
-        std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
+        // std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
         delete [] buffer;
+
+        return reviewID;
     }
 }

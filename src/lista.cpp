@@ -101,7 +101,7 @@ bool Lista::obterReviews()
             pos = linha.find_last_of(",");
             std::string versao = linha.substr(pos + 1); // Obter a versão
             if (versao.length() == 0)
-                versao = "NaN";
+                versao = "00.0.0";
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
@@ -182,12 +182,16 @@ bool Lista::criarArquivoBinario()
         
         //Grava o número total de registros
         // int numRegistros = this->obterTotal();
-        int numRegistros = 3646475;
-        arqBin.write((char*) &numRegistros , sizeof(int));
+        double numRegistros = 3646475;
+        arqBin.write((char*) &numRegistros , sizeof(double));
 
-        
+        int k = 1;
         while(No != nullptr)
-        {            
+        {
+            k++;
+            if(k==22396)
+                std::cout << k << std::endl;
+                
             std::string id = No->obterID();
             arqBin.write(id.c_str() , sizeof(char)*id.size());
             
