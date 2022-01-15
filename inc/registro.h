@@ -1,5 +1,6 @@
 #include <iostream>
-
+#ifndef TRABALHO_ED2
+#define TRABALHO_ED2
 class Registro
 {
 
@@ -46,3 +47,5 @@ private:
     std::string posted_date;
     int N;
 };
+
+#endif

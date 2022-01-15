@@ -286,12 +286,12 @@ void menu()
 
     if (resp == 1)
     {
-        // ordenacao();
-        Registro *registro = new Registro[10];
-        leBinario(registro, 10);
-        for (int i = 0; i < 10; i++)
-            std::cout << registro[i].imprimeRegistros() << std::endl
-                      << std::endl;
+        ordenacao();
+        // Registro *registro = new Registro[10];
+        // leBinario(registro, 10);
+        // for (int i = 0; i < 10; i++)
+        //     std::cout << registro[i].imprimeRegistros() << std::endl
+        //               << std::endl;
         menu();
     }
     else if (resp == 2)
