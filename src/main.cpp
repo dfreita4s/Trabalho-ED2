@@ -264,7 +264,7 @@ void ordenacao()
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Sair\nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Parte 3\n[5] Sair \nFunção: ";
     int resp = 0;
     cin >> resp;
 
@@ -293,11 +293,80 @@ void menu()
         menu();
     }
     else if (resp == 4)
+    {
+        menuParteTres();
+    }
+    else if (resp == 5)
+    {
         exit(0);
+    }
     else
     {
         cout << "Por favor digite uma resposta válida!" << endl;
         menu();
+    }
+}
+
+void menuParteTres()
+{
+    int resp;
+    cout << "Digite o valor da opcao que deseja acessar: \n [1] Arvore Vermelho Preto \n [2] Arvore B \n [3] Sair \n" << endl;
+    cin >> resp;
+    if (resp == 1)
+    {
+        int resp2;
+        cout << "Pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n" << endl;
+        cin >> resp2;
+        if (resp2 == 1)
+        {
+            // chama função que gera relatório
+        }
+        else if (resp2 == 2)
+        {
+            int resp3;
+            cout << "Informe agora o valor da ID que deseja procurar: \n" << endl;
+            cin >> resp3;
+            // chama função que procura ID na árvore vermelho e preto
+        }
+        else
+        {
+            cout << "Favor informar uma opcao valida \n" << endl;
+            menuParteTres();
+        }
+    }
+    else if (resp == 2)
+    {
+        int resp3;
+        cout << "Informe a ordem que a arvore B tera: \n" << endl;
+        cin >> resp3;
+        // chama função para criar árvore B de ordem indicada pelo teclado
+        int resp4;
+        cout << "Perfeito, agora digite [1] se deseja gerar um relatorio ou [2] se deseja buscar uma ID: \n" << endl;
+        if (resp4 == 1)
+        {
+            // chama função para gerar relatório da árvore B
+        }
+        else if (resp4 == 2)
+        {
+            int resp5;
+            cout << "Informe a ID do review que deseja buscar na arvore: \n" << endl;
+            cin >> resp5;
+            // chama função para fazer a busca da ID digitada
+        }
+        else
+        {
+            cout << "Favor informar uma opcao valida \n" << endl;
+            menuParteTres();
+        }
+    }
+    else if (resp == 3)
+    {
+        menu();
+    } 
+    else
+    {
+        cout << "Favor informar uma opcao valida" << endl;
+        menuParteTres(); 
     }
 }
 
