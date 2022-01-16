@@ -28,8 +28,12 @@ int retiraPontos(std::string );
 // Nova leitura/escrita binário
 int retornaRegistro(int);
 std::string exibeRegistro(int);
-void testeArvoreVP(int);
+
+
+arvoreVP* testeArvoreVP(int);
 void menuParteTres();
+void testaExec();
+void buscaNoAVP(arvoreVP *, string);
 
 
 void testeImportacao(Registro *lista)
@@ -316,18 +320,25 @@ void menuParteTres()
     if (resp == 1)
     {
         int resp2;
-        cout << "Pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n" << endl;
+        cout << "Informe o numero de reviews que serao importados para a arvore vermelho preto: \n" << endl;
         cin >> resp2;
-        if (resp2 == 1)
+        arvoreVP *AVP = new arvoreVP;
+        AVP = testeArvoreVP(resp2);
+
+        int resp3;
+        cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n" << endl;
+        cin >> resp3;
+        if (resp3 == 1)
         {
             // chama função que gera relatório
         }
-        else if (resp2 == 2)
+        else if (resp3 == 2)
         {
-            int resp3;
+            string resp4;
             cout << "Informe agora o valor da ID que deseja procurar: \n" << endl;
-            cin >> resp3;
-            // chama função que procura ID na árvore vermelho e preto
+            cin >> resp4;
+            AVP->buscaNo(AVP,resp4);
+            //menu();
         }
         else
         {
@@ -450,6 +461,11 @@ int retiraPontos(std::string versao)
     }
 }
 
+void testaExec()
+{
+    std::cout << "Testado! \n" << endl;
+}
+
 int main(int argc, char const *argv[])
 {
     if (!checaArqBin())
@@ -474,9 +490,9 @@ int main(int argc, char const *argv[])
     }
 
     
-    // menu();
+    menu();
  
-    testeArvoreVP(20);
+    //testeArvoreVP(20);
 
     /*
     arvoreB* ABB = new arvoreB(3);
@@ -491,7 +507,7 @@ int main(int argc, char const *argv[])
     */
 }
 
-void testeArvoreVP(int numRegistros)
+arvoreVP* testeArvoreVP(int numRegistros)
 {
     arvoreVP* AVP = new arvoreVP();
 
@@ -504,19 +520,11 @@ void testeArvoreVP(int numRegistros)
     }
 
     AVP->prettyPrint();
+    return AVP;
 
-    /*
-    int c = 1;
-    while(c != 0)
-    {
-        cin >> c;
-        AVP->inserir("", c);
-        AVP->prettyPrint();
-    }
-    */
-
-    delete AVP;
+    //delete AVP;
 }
+
 
 void exportaHashingOrdenacao()
 {
