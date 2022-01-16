@@ -1,4 +1,8 @@
 #include "../inc/review.h"
+#include <fstream>
+#include <iostream>
+
+
 
 Review::Review(std::string id, std::string texto, int upvotes, std::string versao, std::string data)
 {
@@ -58,17 +62,4 @@ Review *Review::obterProximo()
 void Review::setarProximo(Review *No)
 {
     this->proxReview = No;
-}
-
-void testeImportacao(int resp){
-    
-    string caminhoArqBin = ""
-    if(resp == 1){
-        
-    }
-    else if (resp == 2){
-        // fazer
-    }
-    else
-    std::cout << "Entrada Inválida";
 }

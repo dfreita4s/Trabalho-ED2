@@ -1,8 +1,11 @@
+#include <iostream>
 #include "../inc/lista.h"
 #include <string>
-#include <iostream>
 #include <fstream>
-
+#include <sstream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
 Lista::Lista(const std::string &caminhoArquivo)
 {
     this->raiz = nullptr;
@@ -11,7 +14,7 @@ Lista::Lista(const std::string &caminhoArquivo)
 
 Lista::~Lista()
 {
-    while(this->raiz != nullptr)
+    while (this->raiz != nullptr)
     {
         Review *novaRaiz = raiz->obterProximo();
         delete this->raiz;
@@ -20,7 +23,6 @@ Lista::~Lista()
     this->arquivo.close();
 }
 
-
 bool Lista::abrirArquivo(const std::string &caminhoArquivo)
 {
     try
@@ -28,28 +30,31 @@ bool Lista::abrirArquivo(const std::string &caminhoArquivo)
         this->arquivo.open(caminhoArquivo, std::ios::in);
         return true;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
-        std::cerr << "Houve um erro ao abrir o arquivo!" << std::endl << e.what() << '\n';
+        std::cerr << "Houve um erro ao abrir o arquivo!" << std::endl
+                  << e.what() << '\n';
     }
     return false;
 }
 
-int Lista::obterTam(){
-    int size=0;
-    if(this->arquivo.is_open())
+int Lista::obterTam()
+{
+    int size = 0;
+    if (this->arquivo.is_open())
     {
-        if(this->obterRaiz() != nullptr)
+        if (this->obterRaiz() != nullptr)
         {
             Review *No = this->raiz;
-            while(No->obterProximo() != nullptr)
+            while (No->obterProximo() != nullptr)
             {
                 size++;
                 No = No->obterProximo();
             }
             return size;
         }
-        else{
+        else
+        {
             return 0;
         }
     }
@@ -58,78 +63,67 @@ int Lista::obterTam(){
 
 bool Lista::obterReviews()
 {
-    if(this->arquivo.is_open())
+    if (this->arquivo.is_open())
     {
         std::string linha;
-
         getline(this->arquivo, linha); //Le cabecalho do arquivo
-
         Review *ultimo = nullptr;
-        
+
         getline(this->arquivo, linha);
 
-        int k=0; // contar registros
+        int k = 0; // contar registros
 
-        while(!arquivo.eof() && linha != "")
+        while (!arquivo.eof() && linha != "")
         {
             /* Trata os registros que estão com '\n'
                Verifica se a última informação é do tipo ':SS' */
-            
-            while(!(isdigit(linha[linha.length()-1]) && (isdigit(linha[linha.length()-2])) && (linha[linha.length()-3]==':')))
+
+            while (!(isdigit(linha[linha.length() - 1]) && (isdigit(linha[linha.length() - 2])) && (linha[linha.length() - 3] == ':')))
             {
                 std::string aux = linha;
                 getline(this->arquivo, linha);
                 aux.append(linha);
                 linha = aux;
             }
-            
+
             k++;
 
             int pos;
             pos = linha.find(",");
-            std::string id = linha.substr(3, pos-3); // Inicio em 3 para retirar 'gp:'
-            linha = linha.substr(pos+1, linha.length());
-            
+            std::string id = linha.substr(3, pos - 3); // Inicio em 3 para retirar 'gp:'
+
+            linha = linha.substr(pos + 1, linha.length());
+
             pos = linha.find_last_of(",");
-            std::string data = linha.substr(pos+1); // Obter a Data
+            std::string data = linha.substr(pos + 1); // Obter a Data
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
-            std::string versao = linha.substr(pos+1); // Obter a versão
-            if(versao.length() == 0)
-                versao = "NaN";
+            std::string versao = linha.substr(pos + 1); // Obter a versão
+            if (versao.length() == 0)
+                versao = "00.0.0";
             linha = linha.substr(0, pos);
 
             pos = linha.find_last_of(",");
-            int upvotes = stod(linha.substr(pos+1)); // Obter upvotes
+            int upvotes = stod(linha.substr(pos + 1)); // Obter upvotes
             linha = linha.substr(0, pos);
 
             std::string texto = linha; // Obter o comentário
-            if(texto.find("\"") != -1)
-                texto = texto.substr(1, texto.length()-2); // Caso comece com esteja entre "", retirá-los
+            if (texto.find("\"") != -1)
+                texto = texto.substr(1, texto.length() - 2); // Caso comece com esteja entre "", retirá-los
 
             Review *review = new Review(id, texto, upvotes, versao, data); // Cria o Review
-            this->inserirReview(review, ultimo); // Insere na lista
-            ultimo = review; // Atualiza ponteiro do último Review para o atual.
-            
+            this->inserirReview(review, ultimo);                           // Insere na lista
+            ultimo = review;                                               // Atualiza ponteiro do último Review para o atual.
+
             getline(this->arquivo, linha);
         }
+        std::cout << k - 1 << " de registros foram importados com sucesso." << std::endl;
         criarArquivoBinario();
-        std::cout << k-1 << " de registros foram importados com sucesso." << std::endl;
         return true;
     }
     std::cout << "Ocorreu um erro ao ler os dados." << std::endl;
     return false;
-}
-
-bool Lista::criarArquivoBinario(){
-    std::ofstream tiktok_app_reviews;
-    Review * raiz = obterRaiz();
-    int k = obterTam();
-    if(this->arquivo.is_open())
-    {   
-        tiktok_app_reviews.write((char *)raiz, (k *sizeof(Review)));
-    } 
 }
 
 void Lista::inserirReview(Review *rev, Review *ultimo)
@@ -142,7 +136,7 @@ void Lista::inserirReview(Review *rev, Review *ultimo)
 
 Review *Lista::obterRaiz()
 {
-    if(!(this->raiz == nullptr))
+    if (!(this->raiz == nullptr))
         return this->raiz;
     else
     {
@@ -154,12 +148,12 @@ Review *Lista::obterRaiz()
 // Listar todos Reviews presentes na Lista.
 void Lista::listarTodas()
 {
-    if(this->arquivo.is_open())
+    if (this->arquivo.is_open())
     {
-        if(this->obterRaiz() != nullptr)
+        if (this->obterRaiz() != nullptr)
         {
             Review *No = this->raiz;
-            while(No->obterProximo() != nullptr)
+            while (No->obterProximo() != nullptr)
             {
                 std::cout << std::endl;
                 No->exibeRegistro();
@@ -173,48 +167,69 @@ void Lista::listarTodas()
         std::cout << "Impossível listar. O arquivo não existe." << std::endl;
 }
 
-// Esboço da função para acessar o k-ésimo registro
-bool Lista::acessaRegistro(int k)
+bool Lista::criarArquivoBinario()
 {
-    if(this->obterRaiz() != nullptr)
+    std::ofstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if(arqBin.is_open())
     {
-        Review *No = this->raiz;
-        for(int i=0; ((No != nullptr) && (i<=k)); i++)
+        if(this->obterRaiz() == nullptr)
+            return false;
+
+        Review *No = this->obterRaiz();
+
+        std::string linha = "";
+        
+        //Grava o número total de registros
+        // int numRegistros = this->obterTotal();
+        double numRegistros = 3646475;
+        arqBin.write((char*) &numRegistros , sizeof(double));
+
+        int k = 1;
+        while(No != nullptr)
         {
-            if(i==k)
-            {
-                No->exibeRegistro();
-                return true;
-            }
-            else
-                No = No->obterProximo();
+            k++;
+            if(k==22396)
+                std::cout << k << std::endl;
+                
+            std::string id = No->obterID();
+            arqBin.write(id.c_str() , sizeof(char)*id.size());
+            
+            std::string texto = No->obterTexto();
+            unsigned short tamanhoReviewText = sizeof(char)*texto.size();
+            arqBin.write( (char*) &tamanhoReviewText , sizeof(tamanhoReviewText));
+            arqBin.write(texto.c_str() , sizeof(char)*texto.size());
+
+            int votos = No->obterVotos();
+            arqBin.write((char*) &votos , sizeof(int));
+
+            int versao = versaoToInt(No->obterVersao());
+            arqBin.write((char*) &versao , sizeof(int));
+
+            std::string data = No->obterData();
+            arqBin.write(data.c_str() , sizeof(char)*data.size());
+
+            No = No->obterProximo();  
         }
-        std::cout << std::endl << "Registro não encontrado." << std::endl;
-        return false;
+        
+        arqBin.close();
+        std::cout << "O arquivo binário foi criado." << std::endl;    
+        return true;
     }
-    else
-    {
-        std::cout << "Nenhum registro encontrado." << std::endl;
-        return false;
-    }
+    std::cout << "Erro ao criar arquivo binário." << std::endl;
+    return false;
 }
 
-void Lista::testeImportacao(){
-    int resp, N = 0;
-    std::cout<<"Deseja exibir a saída no console ou salvá-la em um arquivo texto? 1 para no console 2 para salvar. "<<std::endl;
-    std::cin>>resp;
-    if(resp == 1){
-        //escolha saida em console N = 10
-        N = 10;
-        for(int i = N; i>=0; i--){
-         acessaRegistro(rand() % 3646475 + 0);
-        }
-    }else if(resp == 2){
-        //escolha salvar em um arquivo texto
-        N = 100;
-        //
-    }else {
-        std::cout<<"Por favor digite uma resposta válida!"<<std::endl;
-        testeImportacao();
-    }
+int Lista::versaoToInt(std::string sversao)
+{
+    std::string aux;
+
+    for(int i=0; i<sversao.length(); i++)
+        if(sversao[i] != '.' && sversao[i] != 'v')
+            aux += sversao[i];
+    
+    if(aux == "")
+        aux = '0';
+    
+    return stoi(aux);
 }
