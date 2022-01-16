@@ -4,12 +4,6 @@
 #include <chrono>
 #include "../inc/registro.h"
 
-// Registro::Registro(const std::string &caminhoArquivo, int N)
-// {
-//     this->registros = new std::string[N]; //chama o array para salvar na memoria principal os N registros
-//     setN(N);
-//     setRegistro(importaRegistros(N));
-// }
 
 Registro::Registro()
 {
@@ -19,7 +13,6 @@ Registro::Registro()
 Registro::~Registro()
 {
     //Destructor
-    //delete [] registros;
 }
 
 std::string Registro::imprimeRegistros()
@@ -78,12 +71,3 @@ int Registro::getN()
     return this->N;
 }
 
-std::string *Registro::getRegistro()
-{
-    return this->registros;
-}
-
-void Registro::setRegistro(std::string *regist)
-{
-    this->registros = regist;
-}
