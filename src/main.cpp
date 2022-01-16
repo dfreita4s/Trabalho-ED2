@@ -475,7 +475,9 @@ int main(int argc, char const *argv[])
     
     // menu();
  
-    // testeArvoreVP(20);
+    testeArvoreVP(20);
+
+    /*
     arvoreB* ABB = new arvoreB(3);
     
     ABB->inserir("Aab", 5);
@@ -485,6 +487,7 @@ int main(int argc, char const *argv[])
     delete ABB;
 
     return 0;
+    */
 }
 
 void testeArvoreVP(int numRegistros)
@@ -493,13 +496,15 @@ void testeArvoreVP(int numRegistros)
 
     for(int i=0; i<numRegistros; i++)
     {
-        int posicao = rand() % NREGISTROS;
+        //int posicao = rand() % NREGISTROS;
+        int posicao = rand () % 100;
         std::string id = exibeRegistro(retornaRegistro(posicao));
         AVP->inserir(id, posicao);
     }
 
     AVP->prettyPrint();
 
+    /*
     int c = 1;
     while(c != 0)
     {
@@ -507,6 +512,7 @@ void testeArvoreVP(int numRegistros)
         AVP->inserir("", c);
         AVP->prettyPrint();
     }
+    */
 
     delete AVP;
 }
