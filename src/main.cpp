@@ -419,11 +419,23 @@ void analiseEstruturas()
             saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAVP << std::endl
                   << std::endl;
 
-            mediaTempoBuscaAVP += tempoBuscaAVP / 3;
-            mediaTempoInserirAVP += tempoInserirAVP / 3;
+            mediaTempoBuscaAVP += tempoBuscaAVP;
+            mediaTempoInserirAVP += tempoInserirAVP;
+
+            mediaComparacoesInserirAVP += comparacoesInserirAVP;
+            mediaComparacoesBuscaAVP += comparacoesBuscaAVP;
 
             std::cout << "///";
         }
+
+        mediaTempoBuscaAVP = mediaTempoBuscaAVP/3;
+        mediaTempoInserirAVP = mediaTempoInserirAVP/3;
+
+        mediaComparacoesInserirAVP = comparacoesInserirAVP/3;
+        mediaComparacoesBuscaAVP = comparacoesBuscaAVP/3;
+
+
+
         std::cout << "]" << std::endl;
 
         //para Arvore B m = 20
@@ -451,11 +463,24 @@ void analiseEstruturas()
             saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB20 << std::endl
                   << std::endl;
 
-            mediaTempoBuscaAB20 += tempoBuscaAB20 / 3;
-            mediaTempoInserirAB20 += tempoInserirAB20 / 3;
+            mediaTempoBuscaAB20 += tempoBuscaAB20;
+            mediaTempoInserirAB20 += tempoInserirAB20;
+
+            mediaComparacoesInserirAB20 += comparacoesInserirAB20;
+            mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
+
 
             std::cout << "///";
         }
+
+        mediaTempoBuscaAB20 = tempoBuscaAB20/3;
+        mediaTempoInserirAB20 = tempoInserirAB20/3;
+
+        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20/3;
+        mediaComparacoesInserirAB20 = comparacoesInserirAB20/3;
+
+
+
         std::cout << "]" << std::endl;
 
         //para Arvore B m = 200
@@ -482,11 +507,21 @@ void analiseEstruturas()
             saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB200 << std::endl
                   << std::endl;
 
-            mediaTempoBuscaAB200 += tempoBuscaAB200 / 3;
-            mediaTempoInserirAB200 += tempoInserirAB200 / 3;
+            mediaTempoBuscaAB200 += tempoBuscaAB200;
+            mediaTempoInserirAB200 += tempoInserirAB200;
+
+            mediaComparacoesInserirAB200 += comparacoesInserirAB200;
+            mediaComparacoesBuscaAB200 += comparacoesBuscaAB200;
 
             std::cout << "///";
         }
+
+        mediaTempoBuscaAB200 = tempoBuscaAB200/3;
+        mediaTempoInserirAB200 = tempoInserirAB200/3;
+
+        mediaComparacoesBuscaAB200 = comparacoesBuscaAB200/3;
+        mediaComparacoesInserirAB200 = comparacoesInserirAB200/3;
+
         std::cout << "]" << std::endl;
 
         saida << "======Estatisticas de Desempenho======" << std::endl
