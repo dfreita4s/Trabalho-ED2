@@ -29,6 +29,7 @@ public:
     void prettyPrint();
     void imprimirArvore();
     void imprimirNo(NoVP* no, bool);
+    void buscaNo(arvoreVP *, std::string);
 
 };
 

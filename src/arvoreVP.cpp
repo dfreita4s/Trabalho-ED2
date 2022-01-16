@@ -307,3 +307,46 @@ void arvoreVP::imprimirArvore()
 {
     imprimirNo(raiz, 0);
 }
+
+void arvoreVP::buscaNo(arvoreVP *VP, std::string id)
+{
+    int aux_id = stoi(id);
+    NoVP *no = new NoVP("", aux_id);
+
+    NoVP *p;
+    NoVP *q;
+    NoVP *result;
+    result = nullptr;
+    p = nullptr;
+    q = raiz;
+
+    if (raiz == nullptr)
+    {
+        std::cout << "ID procurada nao encontrada, arvore vazia! " << std::endl;
+    }
+    else
+    {
+        while (q != nil)
+        {
+            p = q;
+            if (aux_id > p->getValor())
+            {
+                q = p->getNoDir();
+            }
+            else if (aux_id < p->getValor())
+            {
+                q = p->getNoEsq();
+            }
+            else
+            {
+                result = p;
+                std::cout << "ID" << " " << aux_id << " " << "encontrada com sucesso na posicao" << " " << p->getValor() << " " << "da arvore VP" << std::endl;
+                break;
+            }
+        }
+        if (result == nullptr)
+        {
+            std::cout << "ID nao foi encontrada na arvore VP" << std::endl;
+        }
+    }
+}
