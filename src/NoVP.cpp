@@ -17,6 +17,7 @@ NoVP::NoVP(std::string id, int posicao)
 
 NoVP::~NoVP()
 {
+    std::cout << "Destruindo no " << Valor << std::endl;
 }
 
 // Review do Nó

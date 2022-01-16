@@ -1,22 +1,37 @@
 #include<iostream>
-#include "../inc/vermelhaPreta.h"
+#include "../inc/arvoreVP.h"
 
-vermelhaPreta::vermelhaPreta()
+
+
+arvoreVP::arvoreVP()
 {
     raiz = nullptr;
     nil = new NoVP("nil", -1000);
     nil->setColor(Preto);
 }
 
-vermelhaPreta::~vermelhaPreta()
+arvoreVP::~arvoreVP()
 {
-    delete raiz;
-    delete nil;
     std::cout << "Destruindo Árvore.." << std::endl;
+    auxDeleteNos(raiz);
+    delete nil;
+    std::cout << "Árvore destruída" << std::endl;
+}
+
+void arvoreVP::auxDeleteNos(NoVP* p)
+{
+
+    if (p == nil)
+        return;
+
+    auxDeleteNos(p->getNoEsq());
+    auxDeleteNos(p->getNoDir());
+
+    delete p;    
 }
 
 // Rotações
-void vermelhaPreta::rotacaoEsquerda(NoVP *no)
+void arvoreVP::rotacaoEsquerda(NoVP *no)
 {
     NoVP* q;
 
@@ -34,7 +49,7 @@ void vermelhaPreta::rotacaoEsquerda(NoVP *no)
         q->getNoPai()->setNoDir(q); // Se não for raiz, aponta nó direito para o novo nó
 }
 
-void vermelhaPreta::rotacaoDireita(NoVP *no)
+void arvoreVP::rotacaoDireita(NoVP *no)
 {
     NoVP* q;
 
@@ -49,11 +64,11 @@ void vermelhaPreta::rotacaoDireita(NoVP *no)
     if (q->getNoPai() == nullptr) // q virou raiz
         raiz = q;
     else
-        q->getNoPai()->setNoDir(q); // Se não for raiz, aponta nó direito para o novo nó
+        q->getNoPai()->setNoEsq(q); // Se não for raiz, aponta nó direito para o novo nó
 
 }
 
-void vermelhaPreta::rotacaoDuplaEsquerda(NoVP *no)
+void arvoreVP::rotacaoDuplaEsquerda(NoVP *no)
 {
     NoVP* q;
     NoVP* r;
@@ -81,7 +96,7 @@ void vermelhaPreta::rotacaoDuplaEsquerda(NoVP *no)
 
 }
 
-void vermelhaPreta::rotacaoDuplaDireita(NoVP *no)
+void arvoreVP::rotacaoDuplaDireita(NoVP *no)
 {
     NoVP* q;
     NoVP* r;
@@ -110,14 +125,14 @@ void vermelhaPreta::rotacaoDuplaDireita(NoVP *no)
 
 }
 
-bool vermelhaPreta::arvoreVazia()
+bool arvoreVP::arvoreVazia()
 {
     if(raiz == nullptr)
         return true;
     return false;
 }
 
-void vermelhaPreta::inserir(std::string id, int val)
+void arvoreVP::inserir(std::string id, int val)
 {  
     NoVP* novoNo = new NoVP(id, val);
     novoNo->setNoEsq(nil);
@@ -129,7 +144,7 @@ void vermelhaPreta::inserir(std::string id, int val)
     // TO-DO: deletar esses nós no destrutor;
 }
 
-void vermelhaPreta::inserirNo(NoVP* no)
+void arvoreVP::inserirNo(NoVP* no)
 {
     // CASO 1: Nó é raiz
     if(raiz == nullptr)
@@ -169,7 +184,7 @@ void vermelhaPreta::inserirNo(NoVP* no)
         return;
 }
 
-void vermelhaPreta::arrumaArvore(NoVP * no)
+void arvoreVP::arrumaArvore(NoVP * no)
 {
     // CASO 1: Colori nó para preto
     if ( no == raiz ) {
@@ -177,7 +192,10 @@ void vermelhaPreta::arrumaArvore(NoVP * no)
         return;
     }
 
+    
+
     while (getColor(no->getNoPai()) == Vermelho) {
+
 
         if(no->getNoPai()->getNoPai()->getNoDir() == no->getNoPai()){
         // PAI NO DIREITA            
@@ -197,7 +215,6 @@ void vermelhaPreta::arrumaArvore(NoVP * no)
                     no->getNoPai()->setColor(Preto);
                     no->setColor(Vermelho);
                     rotacaoEsquerda(no->getNoPai()->getNoPai());
-                    no = no->getNoPai()->getNoPai();
                 } else {
                     // SUBCASO 3.2:
                     no->getNoPai()->getNoPai()->setColor(Vermelho);
@@ -222,7 +239,6 @@ void vermelhaPreta::arrumaArvore(NoVP * no)
                     no->getNoPai()->setColor(Preto);
                     no->setColor(Vermelho);
                     rotacaoDireita(no->getNoPai()->getNoPai());
-                    no = no->getNoPai()->getNoPai();
                 } else {
                     // SUBCASO 3.2:
                     no->getNoPai()->getNoPai()->setColor(Vermelho);
@@ -232,13 +248,15 @@ void vermelhaPreta::arrumaArvore(NoVP * no)
             }
         }
 
-        if(no == nullptr)
+        if(no->getNoPai() == nullptr)
             break;
-        arrumaArvore(no);
+
+        if(no->getNoPai() != raiz)
+            no = no->getNoPai()->getNoPai();
     }
 }
 
-Color vermelhaPreta::getColor(NoVP * no)
+Color arvoreVP::getColor(NoVP * no)
 {
     if (no == nullptr || no == nil)
         return Preto;
@@ -246,7 +264,7 @@ Color vermelhaPreta::getColor(NoVP * no)
         return no->getColor();
 }
 
-void vermelhaPreta::printHelper(NoVP* no, std::string indent, bool last) {
+void arvoreVP::printHelper(NoVP* no, std::string indent, bool last) {
 		// print the tree structure on the screen
 	   	if (no != nil) {
 		   std::cout<<indent;
@@ -268,13 +286,13 @@ void vermelhaPreta::printHelper(NoVP* no, std::string indent, bool last) {
 		}
 	}
 
-void vermelhaPreta::prettyPrint() {
+void arvoreVP::prettyPrint() {
     if (raiz) {
         printHelper(raiz, "", true);
     }
 }
 
-void vermelhaPreta::imprimirNo(NoVP* no, bool esq)
+void arvoreVP::imprimirNo(NoVP* no, bool esq)
 {
     if(no == nil)
         return;
@@ -285,7 +303,7 @@ void vermelhaPreta::imprimirNo(NoVP* no, bool esq)
     imprimirNo(no->getNoDir(), false);
 }
 
-void vermelhaPreta::imprimirArvore()
+void arvoreVP::imprimirArvore()
 {
     imprimirNo(raiz, 0);
 }

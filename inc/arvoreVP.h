@@ -3,16 +3,17 @@
 
 #include "NoVP.h"
 
-class vermelhaPreta
+class arvoreVP
 {
 private:
     NoVP* raiz;
     NoVP* nil;
 
 public:
-    vermelhaPreta(/* args */);
-    ~vermelhaPreta();
+    arvoreVP(/* args */);
+    ~arvoreVP();
 
+    void auxDeleteNos(NoVP*);
     //Rotações
     void rotacaoEsquerda(NoVP *);
     void rotacaoDireita(NoVP *);

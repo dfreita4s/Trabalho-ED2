@@ -11,7 +11,8 @@
 #include "../inc/lista.h"
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
-#include "../inc/vermelhaPreta.h"
+#include "../inc/arvoreVP.h"
+#include "../inc/arvoreB.h"
 
 #define NREGISTROS 3646475
 
@@ -22,11 +23,13 @@ void exportaHashingOrdenacao();
 int obterReview();
 bool checaArqBin();
 void criaTabelaHash(tabelaHash *, Registro *, int );
-void criaTabelaHash(Registro *reg, int n);
-int retiraPontos(std::string versao);
+void criaTabelaHash(Registro *, int );
+int retiraPontos(std::string );
 // Nova leitura/escrita binário
 int retornaRegistro(int);
 std::string exibeRegistro(int);
+void testeArvoreVP(int);
+
 
 void testeImportacao(Registro *lista)
 {
@@ -400,33 +403,43 @@ int main(int argc, char const *argv[])
         delete listaReview;
     }
 
-    // Teste nova leitura/escrita binário
     
     // menu();
  
-    vermelhaPreta* AVP = new vermelhaPreta();
-    // int aux[] = {125840, 138450, 123840, 125340, 125830, 225840, 325840, 1125840, 2125840, 20, 5896};
-
-/*     int aux[] = {30,21,55,75,80,78};
-    int tam = sizeof(aux)/sizeof(int);
-
-    for(int i=0; i<tam; i++)
-    {
-        // int num = rand() % NREGISTROS;
-        // std::string id = exibeRegistro(retornaRegistro(num));
-    } */
-    int num;
-    do
-    {
-       std::cin >> num;
-        AVP->inserir("", num);
-        AVP->prettyPrint();
-
-    } while (num != -100);
+    // testeArvoreVP(20);
+    arvoreB* ABB = new arvoreB(3);
     
-    // AVP->imprimirArvore();
-    delete AVP;
+    ABB->inserir("Aab", 5);
+    ABB->inserir("Abc", 15);
+    ABB->inserir("Acb", 10);
+    
+    delete ABB;
+
     return 0;
+}
+
+void testeArvoreVP(int numRegistros)
+{
+    arvoreVP* AVP = new arvoreVP();
+
+    for(int i=0; i<numRegistros; i++)
+    {
+        int posicao = rand() % NREGISTROS;
+        std::string id = exibeRegistro(retornaRegistro(posicao));
+        AVP->inserir(id, posicao);
+    }
+
+    AVP->prettyPrint();
+
+    int c = 1;
+    while(c != 0)
+    {
+        cin >> c;
+        AVP->inserir("", c);
+        AVP->prettyPrint();
+    }
+
+    delete AVP;
 }
 
 void exportaHashingOrdenacao()
