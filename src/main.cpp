@@ -29,6 +29,7 @@ int retiraPontos(std::string );
 int retornaRegistro(int);
 std::string exibeRegistro(int);
 void testeArvoreVP(int);
+void menuParteTres();
 
 
 void testeImportacao(Registro *lista)
