@@ -139,7 +139,7 @@ void arvoreVP::inserir(std::string id, int posicao)
     novoNo->setNoDir(nil);
     novoNo->setColor(Vermelho);
     inserirNo(novoNo);
-    arrumaArvore(novoNo);
+    insere_caso1(novoNo);
     // prettyPrint(); // Ver passo-a-passo
     // TO-DO: deletar esses nós no destrutor;
 }
@@ -168,12 +168,19 @@ void arvoreVP::inserirNo(NoVP* no)
     no->setNoPai(p);
 
     if (p == nullptr)
+    {
         raiz = no;
+    }
     else if (no->getID() < p->getID())
-            p->setNoEsq(no);
-        else
-            p->setNoDir(no);
+    {
+        p->setNoEsq(no);
+    }
+    else
+    {
+        p->setNoDir(no);
+    }
 
+    /*
     if (no->getNoPai() == nullptr)
     {
         no->setColor(Preto);
@@ -182,6 +189,7 @@ void arvoreVP::inserirNo(NoVP* no)
 
     if (no->getNoPai()->getNoPai() == nullptr)
         return;
+    */
 }
 
 void arvoreVP::arrumaArvore(NoVP * no)
@@ -346,5 +354,290 @@ void arvoreVP::buscaNo(arvoreVP *VP, std::string id)
         {
             std::cout << "ID nao foi encontrada na arvore VP" << std::endl;
         }
+    }
+}
+
+void arvoreVP::insere_caso1(NoVP *no)
+{
+    if (no->getNoPai() == nullptr)
+    {
+        no->setColor(Preto);
+    }
+    else
+    {
+        insere_caso2(no);       
+    }
+}
+
+void arvoreVP::insere_caso2(NoVP *no)
+{
+    if (no->getNoPai()->getColor() == Preto)
+    {
+        return;
+    }
+    else
+    {
+        insere_caso3(no);       
+    }
+}
+
+void arvoreVP::insere_caso3(NoVP *no)
+{
+    // checa se o pai do "no" está do lado direito do avô, caso sim, o tio estará do lado esquerdo do avô
+    if (no->getNoPai()->getNoPai()->getNoDir() == no->getNoPai())
+    {
+        // checa se o tio é vermelho assim como o pai, em caso positivo, deve-se colorir pai, tio e avô
+        if (no->getNoPai()->getNoPai()->getNoEsq()->getColor() == Vermelho)
+        {
+            no->getNoPai()->setColor(Preto);
+            no->getNoPai()->getNoPai()->getNoEsq()->setColor(Preto);
+            no->getNoPai()->getNoPai()->setColor(Vermelho);
+            insere_caso1(no->getNoPai()->getNoPai());
+        }
+        else
+        {
+            insere_caso4(no);
+        }
+    }
+    else
+    {
+        if (no->getNoPai()->getNoPai()->getNoDir()->getColor() == Vermelho)
+        {
+            no->getNoPai()->setColor(Preto);
+            no->getNoPai()->getNoPai()->getNoDir()->setColor(Preto);
+            no->getNoPai()->getNoPai()->setColor(Vermelho);
+            insere_caso1(no->getNoPai()->getNoPai());                       
+        }
+        else
+        {
+            insere_caso4(no);
+        }
+    }    
+}
+
+void arvoreVP::insere_caso4(NoVP *no)
+{
+    // nesse caso o pai (vermelho) está à direita do avô, e o tio (preto), à esquerda do avô
+    if (no->getNoPai()->getNoPai()->getNoDir() == no->getNoPai())
+    {
+        // nesse caso temos uma rotação simples para a esquerda
+        if(no->getNoPai()->getNoDir() == no)
+        {
+            no->getNoPai()->setColor(Preto);
+            no->getNoPai()->getNoPai()->setColor(Vermelho);
+            novoRotacionaEsq(no->getNoPai()->getNoPai());
+        }
+        //nesse caso temos uma rotação dupla para a esquerda
+        else
+        {
+            no->setColor(Preto);
+            no->getNoPai()->getNoPai()->setColor(Vermelho);
+            novoRotDuplaEsq(no->getNoPai()->getNoPai());
+        }
+
+    }
+
+    // nesse caso o pai (vermelho) está à esquerda do avô, e o tio (preto), à direita do avô
+    else
+    {
+        // nesse caso temos uma rotação simples para direita
+        if (no->getNoPai()->getNoEsq() == no)
+        {
+            no->getNoPai()->setColor(Preto);
+            no->getNoPai()->getNoPai()->setColor(Vermelho);
+            novoRotacionaDir(no->getNoPai()->getNoPai());
+        }
+        //nesse caso temos uma rotação dupla para direita
+        else
+        {
+            no->setColor(Preto);
+            no->getNoPai()->getNoPai()->setColor(Vermelho);
+            novoRotDuplaDir(no->getNoPai()->getNoPai());
+        }
+    }
+}
+
+void arvoreVP::novoRotacionaDir(NoVP *no)
+{
+    // se avô era raiz
+    if(no->getNoPai() == nullptr)
+    {
+        //atualiza pai
+        NoVP *aux = no->getNoEsq()->getNoDir();
+        NoVP *aux2 = no->getNoEsq();
+        no->getNoEsq()->setNoDir(no);
+        no->setNoPai(nullptr);
+        raiz = no->getNoEsq();
+
+        //atualiza avô
+        no->setNoEsq(aux);
+        aux->setNoPai(no);
+        no->setNoPai(aux2);
+
+    }
+    // se avô não era raiz
+    else
+    {
+        NoVP *aux = no->getNoEsq()->getNoDir();
+        NoVP *aux2 = no->getNoEsq();
+
+        //atualiza pai
+        no->getNoEsq()->setNoDir(no);
+        no->getNoEsq()->setNoPai(no->getNoPai());
+        if(no == no->getNoPai()->getNoEsq())
+        {
+            no->getNoPai()->setNoEsq(no->getNoEsq());
+        }
+        else
+        {
+            no->getNoPai()->setNoDir(no->getNoEsq());
+        }
+        //atualiza avô
+        no->setNoEsq(aux);
+        aux->setNoPai(no);
+        no->setNoPai(aux2);
+    }
+}
+
+void arvoreVP::novoRotacionaEsq(NoVP *no)
+{
+    if(no->getNoPai() == nullptr)
+    {
+        NoVP *aux = no->getNoDir()->getNoEsq();
+        NoVP *aux2 = no->getNoDir();
+        // atualiza pai
+        no->getNoDir()->setNoEsq(no);
+        no->getNoDir()->setNoPai(nullptr);
+        raiz = no->getNoDir();
+
+        //atualiza avô
+        no->setNoDir(aux);
+        aux->setNoPai(no);
+        no->setNoPai(aux2);
+    }
+    else
+    {
+        NoVP *aux = no->getNoDir()->getNoEsq();
+        NoVP *aux2 = no->getNoDir();
+        //atualiza pai
+        no->getNoDir()->setNoEsq(no);
+        no->getNoDir()->setNoPai(no->getNoPai());
+        if(no == no->getNoPai()->getNoEsq())
+        {
+            no->getNoPai()->setNoEsq(no->getNoDir());
+        }
+        else
+        {
+            no->getNoPai()->setNoDir(no->getNoDir());
+        }
+        //atualiza avô
+        no->setNoDir(aux);
+        aux->setNoPai(no);
+        no->setNoPai(aux2);
+    }
+}
+
+void arvoreVP::novoRotDuplaDir(NoVP *no)
+{
+    if (no->getNoPai() == nullptr)
+    {
+        NoVP *aux = no->getNoEsq()->getNoDir()->getNoEsq();
+        NoVP *aux2 = no->getNoEsq()->getNoDir();
+        NoVP *aux3 = no->getNoEsq()->getNoDir()->getNoDir();
+        //atualiza no filho
+        no->getNoEsq()->getNoDir()->setNoDir(no);
+        no->getNoEsq()->getNoDir()->setNoEsq(no->getNoEsq());
+        no->getNoEsq()->getNoDir()->setNoPai(nullptr);
+        raiz = no->getNoEsq()->getNoDir();
+
+        //atualiza no pai
+        no->getNoEsq()->setNoDir(aux);
+        aux->setNoPai(no->getNoEsq());
+        no->getNoEsq()->setNoPai(aux2);
+
+        //atualiza no avo
+        no->setNoEsq(aux3);
+        aux3->setNoPai(no);
+        no->setNoPai(aux2);
+    }
+    else
+    {
+        NoVP *aux = no->getNoEsq()->getNoDir()->getNoEsq();
+        NoVP *aux2 = no->getNoEsq()->getNoDir();
+        NoVP *aux3 = no->getNoEsq()->getNoDir()->getNoDir();
+        //atualiza no filho
+        no->getNoEsq()->getNoDir()->setNoDir(no);
+        no->getNoEsq()->getNoDir()->setNoEsq(no->getNoEsq());
+        no->getNoEsq()->getNoDir()->setNoPai(no->getNoPai());
+        if (no == no->getNoPai()->getNoDir())
+        {
+            no->getNoPai()->setNoDir(no->getNoEsq()->getNoDir());
+        }       
+        else
+        {
+            no->getNoPai()->setNoEsq(no->getNoEsq()->getNoDir());
+        }
+        //atualiza no pai
+        no->getNoEsq()->setNoDir(aux);
+        aux->setNoPai(no->getNoEsq());
+        no->getNoEsq()->setNoPai(aux2);
+
+        //atualiza no avo
+        no->setNoEsq(aux3);
+        aux3->setNoPai(no);
+        no->setNoPai(aux2);
+    }
+}
+
+void arvoreVP::novoRotDuplaEsq(NoVP *no)
+{
+    if (no->getNoPai() == nullptr)
+    {
+        NoVP *aux = no->getNoDir()->getNoEsq()->getNoDir();
+        NoVP *aux2 = no->getNoDir()->getNoEsq();
+        NoVP *aux3 = no->getNoDir()->getNoEsq()->getNoEsq();
+        //atualiza no filho
+        no->getNoDir()->getNoEsq()->setNoDir(no->getNoDir());
+        no->getNoDir()->getNoEsq()->setNoEsq(no);
+        no->getNoDir()->getNoEsq()->setNoPai(nullptr);
+        raiz = no->getNoDir()->getNoEsq();
+
+        //atualiza no pai
+        no->getNoDir()->setNoEsq(aux);
+        aux->setNoPai(no->getNoDir());
+        no->getNoDir()->setNoPai(aux2);
+
+        //atualiza avo
+        no->setNoDir(aux3);
+        aux3->setNoPai(no);
+        no->setNoPai(aux2);
+    }
+    else
+    {
+        NoVP *aux = no->getNoDir()->getNoEsq()->getNoDir();
+        NoVP *aux2 = no->getNoDir()->getNoEsq();
+        NoVP *aux3 = no->getNoDir()->getNoEsq()->getNoEsq();
+        //atualiza no filho
+        no->getNoDir()->getNoEsq()->setNoDir(no->getNoDir());
+        no->getNoDir()->getNoEsq()->setNoEsq(no);
+        no->getNoDir()->getNoEsq()->setNoPai(no->getNoPai());
+        if (no == no->getNoPai()->getNoDir())
+        {
+            no->getNoPai()->setNoDir(no->getNoDir()->getNoEsq());
+        }
+        else
+        {
+            no->getNoPai()->setNoEsq(no->getNoDir()->getNoEsq());
+        }
+
+        //atualiza no pai
+        no->getNoDir()->setNoEsq(aux);
+        aux->setNoPai(no->getNoDir());
+        no->getNoDir()->setNoPai(aux2);
+
+        //atualiza avo
+        no->setNoDir(aux3);
+        aux3->setNoPai(no);
+        no->setNoPai(aux2);
     }
 }

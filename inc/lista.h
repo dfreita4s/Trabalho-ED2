@@ -1,4 +1,3 @@
-
 #include "registro.h"
 #include <fstream>
 #include <vector>

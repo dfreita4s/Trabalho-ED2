@@ -78,5 +78,9 @@ void Registro::setN(int N)
 int Registro::getN()
 {
     return this->N;
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> origin/Trabalho-ED2-Aloizio
