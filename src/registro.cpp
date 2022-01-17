@@ -20,6 +20,10 @@ std::string Registro::imprimeRegistros()
     return ("ID: " + getID() + "\nMensagem: " + getText() + "\nVotos: " + std::to_string(getVotes()) + "\nVersão: " + getVersion() + "\nData/Hora: " + getDate());
 }
 
+void Registro::setPos(int pos){
+    this->posBinario = pos;
+}
+
 void Registro::setID(std::string id)
 {
     this->review_id = id;
@@ -40,6 +44,11 @@ void Registro::setVotes(int votes)
 {
     this->upvotes = votes;
 }
+
+int Registro::getPos(){
+    return this->posBinario;
+}
+
 std::string Registro::getID()
 {
     return this->review_id;

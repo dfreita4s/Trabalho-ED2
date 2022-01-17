@@ -18,7 +18,6 @@
 
 using namespace std;
 
-
 void criaTabelaHash(tabelaHash *, Registro *, int);
 void criaTabelaHash(Registro *, int);
 int retiraPontos(std::string);
@@ -66,7 +65,7 @@ void leBinario(Registro *registro, int N)
         {
 
             randNum = rand() % NREGISTROS + 0;
-
+            registro[i].setPos(randNum * tamanhoRegistro);
             arqBin.seekg(tamanhoRegistro * randNum, ios::beg); //chegar no registro
 
             arqBin.read(id_buffer, sizeof(char) * 86);
@@ -259,6 +258,7 @@ void criaTabelaHash(Registro *reg, int n)
 void analiseEstruturas()
 {
     srand(time(NULL));
+    
     int comparacoesAVP = 0;
     int comparacoesAB20 = 0;
     int comparacoesAB200 = 0; //acho que nao precisa dessas variaveis, pode colocar so uma para AB
@@ -306,6 +306,7 @@ void analiseEstruturas()
     float mediaTempoBuscaAB200 = 0.0000f;
 
     int N = 1000000;
+    int B = 100;
 
     std::fstream saida;
     saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
@@ -314,22 +315,24 @@ void analiseEstruturas()
 
         std::chrono::high_resolution_clock::time_point start;
         std::chrono::high_resolution_clock::time_point end;
+        arvoreVP *AVP = new arvoreVP;
         Registro *regEstrutura = new Registro[N];
         leBinario(regEstrutura, N); //importa N registros aleatorios
 
         //para AVP
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
         for (int i = 0; i < 3; i++)
-        // Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
         {
             start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
+            for (int i = 0; i < N; i++) //inserir registros na estrutura
+                AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos());
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
-            //buscar B registros aleatorios
-            //fazer tip um for
+            for (int i = 0; i < B; i++) //buscar B registros aleatorios
+                AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID());
+
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
 
@@ -350,6 +353,8 @@ void analiseEstruturas()
 
             std::cout << "///";
         }
+        delete[] AVP; //delete arvore VP
+        
 
         mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
         mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
@@ -469,9 +474,28 @@ void analiseEstruturas()
               << std::endl;
 
         //escrever no txt
+        delete[] regEstrutura;
     }
     else
         std::cout << "Não foi possivel abrir o arquivo!" << std::endl;
+}
+
+arvoreVP *testeArvoreVP(int numRegistros)
+{
+    arvoreVP *AVP = new arvoreVP();
+
+    for (int i = 0; i < numRegistros; i++)
+    {
+        int posicao = rand() % NREGISTROS;
+        //int posicao = rand () % 100;
+        std::string id = exibeRegistro(retornaRegistro(posicao));
+        AVP->inserir(id, posicao);
+    }
+
+    AVP->prettyPrint();
+    return AVP;
+
+    //delete AVP;
 }
 
 void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
@@ -526,7 +550,6 @@ void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
     std::cout << aux.imprimeFrequentes(tab, n) << std::endl;
 }
 
-
 void testeImportacao(Registro *lista)
 {
     int resp, N = 0;
@@ -565,7 +588,6 @@ void testeImportacao(Registro *lista)
     }
 }
 
-
 bool checaArqBin()
 {
     ifstream arqBin;
@@ -581,14 +603,14 @@ bool checaArqBin()
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Parte 3\n[5] Sair \nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Analise Estruturas\n[2] Hash\n[3] Modulo de Teste\n[4] Parte 3\n[5] Sair \nFunção: ";
     int resp = 0;
     cin >> resp;
 
     if (resp == 1)
     {
-        ordenacao();
-
+        
+        analiseEstruturas();
         menu();
     }
     else if (resp == 2)
@@ -636,6 +658,7 @@ void menuParteTres()
         cout << "Informe o numero de reviews que serao importados para a arvore vermelho preto: \n"
              << endl;
         cin >> resp2;
+
         arvoreVP *AVP = new arvoreVP;
         AVP = testeArvoreVP(resp2);
 
@@ -703,7 +726,6 @@ void menuParteTres()
     }
 }
 
-
 int retiraPontos(std::string versao)
 {
     char removePonto[] = ".";
@@ -767,24 +789,6 @@ int main(int argc, char const *argv[])
 
     return 0;
     */
-}
-
-arvoreVP *testeArvoreVP(int numRegistros)
-{
-    arvoreVP *AVP = new arvoreVP();
-
-    for (int i = 0; i < numRegistros; i++)
-    {
-        int posicao = rand() % NREGISTROS;
-        //int posicao = rand () % 100;
-        std::string id = exibeRegistro(retornaRegistro(posicao));
-        AVP->inserir(id, posicao);
-    }
-
-    AVP->prettyPrint();
-    return AVP;
-
-    //delete AVP;
 }
 
 void exportaHashingOrdenacao()
@@ -976,9 +980,10 @@ std::string exibeRegistro(int posicao)
         delete[] buffer;
 
         return reviewID;
-    }else{
-        std::cout<<"Não foi possivel abrir o arquivo";
+    }
+    else
+    {
+        std::cout << "Não foi possivel abrir o arquivo";
         return "";
     }
-    
 }
