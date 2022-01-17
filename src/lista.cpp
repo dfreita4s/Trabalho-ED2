@@ -117,11 +117,7 @@ bool Lista::criarArquivoBinario(Registro *registro)
 
     if (arqBin.is_open() && textBin.is_open())
     {
-        // if (this->obterRaiz() == nullptr)
-        //     return false;
-
-        // Review *No = this->obterRaiz();
-
+        
         char *id = new char[87]; //trocar no reviews
         int votos = 0;
         int versao = 0;

@@ -27,6 +27,8 @@ public:
     void combSort_ordena(Registro *list, int tam, int *, int *);
     float combSort_time(Registro *list, int tam, int *, int *);
 
-private:
-    // Registro *registro;
+
+    private:
+        // Registro *registro;
+
 };

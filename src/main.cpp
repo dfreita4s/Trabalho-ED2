@@ -11,59 +11,33 @@
 #include "../inc/lista.h"
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
+#include "../inc/arvoreVP.h"
+#include "../inc/arvoreB.h"
 
 #define NREGISTROS 3646475
 
 using namespace std;
 
+
+void criaTabelaHash(tabelaHash *, Registro *, int);
+void criaTabelaHash(Registro *, int);
+int retiraPontos(std::string);
+// Nova leitura/escrita binário
+int retornaRegistro(int);
+std::string exibeRegistro(int);
+
+arvoreVP *testeArvoreVP(int);
+void menuParteTres();
+void testaExec();
+void buscaNoAVP(arvoreVP *, string);
 void exportaHashing();
 void exportaHashingOrdenacao();
 int obterReview();
 bool checaArqBin();
 void criaTabelaHash(tabelaHash *, Registro *, int);
 void criaTabelaHash(Registro *reg, int n);
-int retiraPontos(std::string versao);
 // Nova leitura/escrita binário
 int retornaRegistro(int);
-void exibeRegistro(int);
-
-void testeImportacao(Registro *lista)
-{
-    int resp, N = 0;
-    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
-    std::cin >> resp;
-    if (resp == 1)
-    {
-        // Printar no terminal N = 10 registros aleatorios
-        N = 10;
-        for (int i = 0; i < N; i++)
-            std::cout << "[" << i << "]" << lista[i].imprimeRegistros() << std::endl
-                      << std::endl;
-    }
-    else if (resp == 2)
-    {
-        //Salvar em um txt N = 100 registros aleatorios
-        std::fstream saidaTxt;
-        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
-        if (saidaTxt.is_open())
-        {
-            N = 100;
-            std::string linha = "";
-            for (int i = 0; i < N; i++)
-            {
-                // (rand() % 3646475 + 0)
-                linha = lista[i].imprimeRegistros() + "\n";
-                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
-            }
-            std::cout << "O arquivo de texto foi criado!" << std::endl;
-        }
-        saidaTxt.close();
-    }
-    else
-    {
-        std::cout << "Por favor, digite um valor válido!" << std::endl;
-    }
-}
 
 void leBinario(Registro *registro, int N)
 {
@@ -143,18 +117,6 @@ void copiaRegistro(Registro *registro, Registro *registro2, int N)
         registro[i].setVersion(registro2[i].getVersion());
         registro[i].setDate(registro2[i].getDate());
     }
-}
-
-bool checaArqBin()
-{
-    ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        std::cout << "O arquivo binário existe." << std::endl;
-        return true;
-    }
-    return false;
 }
 
 void ordenacao()
@@ -270,45 +232,6 @@ void ordenacao()
     else
         std::cout << "Nao foi possivel abrir o arquivo" << std::endl;
     saida.close();
-}
-
-void menu()
-{
-
-    std::cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Sair\nFunção: ";
-    int resp = 0;
-    cin >> resp;
-
-    if (resp == 1)
-    {
-        ordenacao();
-        menu();
-    }
-    else if (resp == 2)
-    {
-        int n = 99;
-        int resp;
-        Registro *reg = new Registro[n];
-        leBinario(reg, n);
-        criaTabelaHash(reg, n);
-        std::cout << "Tabela Hash gerada com sucesso..." << std::endl;
-
-        delete[] reg;
-        menu();
-    }
-    else if (resp == 3)
-    {
-
-        exportaHashingOrdenacao();
-        menu();
-    }
-    else if (resp == 4)
-        exit(0);
-    else
-    {
-        std::cout << "Por favor digite uma resposta válida!" << std::endl;
-        menu();
-    }
 }
 
 void criaTabelaHash(Registro *reg, int n)
@@ -428,13 +351,11 @@ void analiseEstruturas()
             std::cout << "///";
         }
 
-        mediaTempoBuscaAVP = mediaTempoBuscaAVP/3;
-        mediaTempoInserirAVP = mediaTempoInserirAVP/3;
+        mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
+        mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
 
-        mediaComparacoesInserirAVP = comparacoesInserirAVP/3;
-        mediaComparacoesBuscaAVP = comparacoesBuscaAVP/3;
-
-
+        mediaComparacoesInserirAVP = comparacoesInserirAVP / 3;
+        mediaComparacoesBuscaAVP = comparacoesBuscaAVP / 3;
 
         std::cout << "]" << std::endl;
 
@@ -469,17 +390,14 @@ void analiseEstruturas()
             mediaComparacoesInserirAB20 += comparacoesInserirAB20;
             mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
 
-
             std::cout << "///";
         }
 
-        mediaTempoBuscaAB20 = tempoBuscaAB20/3;
-        mediaTempoInserirAB20 = tempoInserirAB20/3;
+        mediaTempoBuscaAB20 = tempoBuscaAB20 / 3;
+        mediaTempoInserirAB20 = tempoInserirAB20 / 3;
 
-        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20/3;
-        mediaComparacoesInserirAB20 = comparacoesInserirAB20/3;
-
-
+        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20 / 3;
+        mediaComparacoesInserirAB20 = comparacoesInserirAB20 / 3;
 
         std::cout << "]" << std::endl;
 
@@ -516,11 +434,11 @@ void analiseEstruturas()
             std::cout << "///";
         }
 
-        mediaTempoBuscaAB200 = tempoBuscaAB200/3;
-        mediaTempoInserirAB200 = tempoInserirAB200/3;
+        mediaTempoBuscaAB200 = tempoBuscaAB200 / 3;
+        mediaTempoInserirAB200 = tempoInserirAB200 / 3;
 
-        mediaComparacoesBuscaAB200 = comparacoesBuscaAB200/3;
-        mediaComparacoesInserirAB200 = comparacoesInserirAB200/3;
+        mediaComparacoesBuscaAB200 = comparacoesBuscaAB200 / 3;
+        mediaComparacoesInserirAB200 = comparacoesInserirAB200 / 3;
 
         std::cout << "]" << std::endl;
 
@@ -608,6 +526,184 @@ void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
     std::cout << aux.imprimeFrequentes(tab, n) << std::endl;
 }
 
+
+void testeImportacao(Registro *lista)
+{
+    int resp, N = 0;
+    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
+    std::cin >> resp;
+    if (resp == 1)
+    {
+        // Printar no terminal N = 10 registros aleatorios
+        N = 10;
+        for (int i = 0; i < N; i++)
+            std::cout << "[" << i << "]" << lista[i].imprimeRegistros() << std::endl
+                      << std::endl;
+    }
+    else if (resp == 2)
+    {
+        //Salvar em um txt N = 100 registros aleatorios
+        std::fstream saidaTxt;
+        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
+        if (saidaTxt.is_open())
+        {
+            N = 100;
+            std::string linha = "";
+            for (int i = 0; i < N; i++)
+            {
+                // (rand() % 3646475 + 0)
+                linha = lista[i].imprimeRegistros() + "\n";
+                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
+            }
+            cout << "O arquivo de texto foi criado!" << endl;
+        }
+        saidaTxt.close();
+    }
+    else
+    {
+        std::cout << "Por favor, digite um valor válido!" << std::endl;
+    }
+}
+
+
+bool checaArqBin()
+{
+    ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        std::cout << "O arquivo binário existe." << std::endl;
+        return true;
+    }
+    return false;
+}
+
+void menu()
+{
+
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Parte 3\n[5] Sair \nFunção: ";
+    int resp = 0;
+    cin >> resp;
+
+    if (resp == 1)
+    {
+        ordenacao();
+
+        menu();
+    }
+    else if (resp == 2)
+    {
+        int n = 99;
+        int resp;
+        Registro *reg = new Registro[n];
+        leBinario(reg, n);
+        criaTabelaHash(reg, n);
+        cout << "Tabela Hash gerada com sucesso..." << endl;
+
+        delete[] reg;
+        menu();
+    }
+    else if (resp == 3)
+    {
+
+        exportaHashingOrdenacao();
+        menu();
+    }
+    else if (resp == 4)
+    {
+        menuParteTres();
+    }
+    else if (resp == 5)
+    {
+        exit(0);
+    }
+    else
+    {
+        cout << "Por favor digite uma resposta válida!" << endl;
+        menu();
+    }
+}
+
+void menuParteTres()
+{
+    int resp;
+    cout << "Digite o valor da opcao que deseja acessar: \n [1] Arvore Vermelho Preto \n [2] Arvore B \n [3] Sair \n"
+         << endl;
+    cin >> resp;
+    if (resp == 1)
+    {
+        int resp2;
+        cout << "Informe o numero de reviews que serao importados para a arvore vermelho preto: \n"
+             << endl;
+        cin >> resp2;
+        arvoreVP *AVP = new arvoreVP;
+        AVP = testeArvoreVP(resp2);
+
+        int resp3;
+        cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n"
+             << endl;
+        cin >> resp3;
+        if (resp3 == 1)
+        {
+            // chama função que gera relatório
+        }
+        else if (resp3 == 2)
+        {
+            string resp4;
+            cout << "Informe agora o valor da ID que deseja procurar: \n"
+                 << endl;
+            cin >> resp4;
+            AVP->buscaNo(AVP, resp4);
+            //menu();
+        }
+        else
+        {
+            cout << "Favor informar uma opcao valida \n"
+                 << endl;
+            menuParteTres();
+        }
+    }
+    else if (resp == 2)
+    {
+        int resp3;
+        cout << "Informe a ordem que a arvore B tera: \n"
+             << endl;
+        cin >> resp3;
+        // chama função para criar árvore B de ordem indicada pelo teclado
+        int resp4;
+        cout << "Perfeito, agora digite [1] se deseja gerar um relatorio ou [2] se deseja buscar uma ID: \n"
+             << endl;
+        if (resp4 == 1)
+        {
+            // chama função para gerar relatório da árvore B
+        }
+        else if (resp4 == 2)
+        {
+            int resp5;
+            cout << "Informe a ID do review que deseja buscar na arvore: \n"
+                 << endl;
+            cin >> resp5;
+            // chama função para fazer a busca da ID digitada
+        }
+        else
+        {
+            cout << "Favor informar uma opcao valida \n"
+                 << endl;
+            menuParteTres();
+        }
+    }
+    else if (resp == 3)
+    {
+        menu();
+    }
+    else
+    {
+        cout << "Favor informar uma opcao valida" << endl;
+        menuParteTres();
+    }
+}
+
+
 int retiraPontos(std::string versao)
 {
     char removePonto[] = ".";
@@ -628,6 +724,12 @@ int retiraPontos(std::string versao)
     }
 }
 
+void testaExec()
+{
+    std::cout << "Testado! \n"
+              << endl;
+}
+
 int main(int argc, char const *argv[])
 {
     if (!checaArqBin())
@@ -646,25 +748,43 @@ int main(int argc, char const *argv[])
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
+
         delete listaReview;
     }
 
-    // Teste nova leitura/escrita binário
-    // exibeRegistro(retornaRegistro(125840));
-    // exibeRegistro(retornaRegistro(138450));
-    // exibeRegistro(retornaRegistro(123840));
-    // exibeRegistro(retornaRegistro(125340));
-    // exibeRegistro(retornaRegistro(125830));
-    // exibeRegistro(retornaRegistro(225840));
-    // exibeRegistro(retornaRegistro(325840));
-    // exibeRegistro(retornaRegistro(1125840));
-    // exibeRegistro(retornaRegistro(2125840));
-    // exibeRegistro(retornaRegistro(5896));
-    // exibeRegistro(retornaRegistro(1));
-
     menu();
 
+    //testeArvoreVP(20);
+
+    /*
+    arvoreB* ABB = new arvoreB(3);
+    
+    ABB->inserir("Aab", 5);
+    ABB->inserir("Abc", 15);
+    ABB->inserir("Acb", 10);
+    
+    delete ABB;
+
     return 0;
+    */
+}
+
+arvoreVP *testeArvoreVP(int numRegistros)
+{
+    arvoreVP *AVP = new arvoreVP();
+
+    for (int i = 0; i < numRegistros; i++)
+    {
+        int posicao = rand() % NREGISTROS;
+        //int posicao = rand () % 100;
+        std::string id = exibeRegistro(retornaRegistro(posicao));
+        AVP->inserir(id, posicao);
+    }
+
+    AVP->prettyPrint();
+    return AVP;
+
+    //delete AVP;
 }
 
 void exportaHashingOrdenacao()
@@ -728,3 +848,137 @@ void exportaHashingOrdenacao()
 }
 
 // Modificações Leitura/Escrita Binário
+
+void acessaRegistro(int k)
+{
+    std::cout << "Acessando registro " << k << std::endl;
+
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(0, arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0, arqBin.beg);
+
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0;
+
+        int totalReview = 0;
+        arqBin.read((char *)&totalReview, sizeof(int));
+
+        std::cout << "Total de Registros:" << totalReview << std::endl;
+
+        do
+        {
+            //Lê ID (86 bytes)
+            char *buffer = new char[86];
+            arqBin.read(buffer, sizeof(char) * 86);
+            std::string id(buffer);
+            delete[] buffer;
+            std::cout << arqBin.tellg() << std::endl;
+
+            // Lê tamanho do review e o review
+            unsigned short tamanhoReviewText = 0; // tamanho de cada texto
+            arqBin.read((char *)&tamanhoReviewText, sizeof(unsigned short));
+            buffer = new char[tamanhoReviewText];
+            arqBin.read(buffer, sizeof(char) * tamanhoReviewText);
+            std::string reviewText(buffer);
+            delete[] buffer;
+
+            //Lê votos favoráveis (sizeof(int))
+            int votesup = 0; // tamanho de cada texto
+            arqBin.read((char *)&votesup, sizeof(int));
+
+            //Lê versão do app (sizeof(int))
+            int versao = 0;
+            arqBin.read((char *)&versao, sizeof(int));
+
+            //Lê data
+            buffer = new char[19];
+            arqBin.read(buffer, sizeof(char) * 19);
+            std::string dateReview(buffer);
+            delete[] buffer;
+
+            std::cout << std::endl;
+
+            posInicial = arqBin.tellg();
+
+            // id(86)+2*size(int)+data(19)+reviewText(?)
+            tamanhoRegistro = (86 + 2 * sizeof(int) + sizeof(short) + 19 + tamanhoReviewText);
+            posProximo = posInicial;
+            arqBin.seekg(posProximo);
+            i++;
+
+        } while (i <= k && posProximo <= tamTotal);
+
+        // Calcula o tamanho do registro
+        arqBin.seekg(posInicial);
+
+        arqBin.close();
+    }
+    else
+        std::cout << "Erro ao obter registro." << std::endl;
+}
+
+int retornaRegistro(int k)
+{
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(0, arqBin.end);
+        int tamTotal = arqBin.tellg();
+        arqBin.seekg(0, arqBin.beg);
+
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0;
+        unsigned short tamanhoReviewText = 0; // tamanho de cada texto
+
+        posProximo += sizeof(double);
+
+        do
+        {
+            arqBin.seekg(posProximo + 86);
+            arqBin.read((char *)&tamanhoReviewText, sizeof(unsigned short));
+
+            tamanhoRegistro = (86 + 2 * sizeof(int) + 19 + sizeof(short) + tamanhoReviewText);
+            posProximo += tamanhoRegistro;
+            i++;
+
+        } while (i <= k);
+
+        arqBin.seekg(posProximo);
+
+        arqBin.close();
+        return posProximo;
+    }
+    else
+        std::cout << "Erro ao ler arquivo." << std::endl;
+
+    return -1;
+}
+
+std::string exibeRegistro(int posicao)
+{
+    std::ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+
+    if (arqBin.is_open())
+    {
+        arqBin.seekg(posicao);
+        char *buffer = new char[86];
+        arqBin.read(buffer, sizeof(char) * 86);
+        std::string reviewID(buffer);
+        // std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
+        delete[] buffer;
+
+        return reviewID;
+    }else{
+        std::cout<<"Não foi possivel abrir o arquivo";
+        return "";
+    }
+    
+}
