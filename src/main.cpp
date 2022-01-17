@@ -513,8 +513,8 @@ arvoreVP* testeArvoreVP(int numRegistros)
 
     for(int i=0; i<numRegistros; i++)
     {
-        //int posicao = rand() % NREGISTROS;
-        int posicao = rand () % 100;
+        int posicao = rand() % NREGISTROS;
+        //int posicao = rand () % 100;
         std::string id = exibeRegistro(retornaRegistro(posicao));
         AVP->inserir(id, posicao);
     }

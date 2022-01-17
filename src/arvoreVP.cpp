@@ -132,9 +132,9 @@ bool arvoreVP::arvoreVazia()
     return false;
 }
 
-void arvoreVP::inserir(std::string id, int val)
+void arvoreVP::inserir(std::string id, int posicao)
 {  
-    NoVP* novoNo = new NoVP(id, val);
+    NoVP* novoNo = new NoVP(id, posicao);
     novoNo->setNoEsq(nil);
     novoNo->setNoDir(nil);
     novoNo->setColor(Vermelho);
@@ -159,7 +159,7 @@ void arvoreVP::inserirNo(NoVP* no)
     while(q != nil)
     {
         p = q;
-        if (no->getValor() < q->getValor())
+        if (no->getID() < q->getID())
             q = q->getNoEsq();
         else
             q = q->getNoDir();
@@ -169,7 +169,7 @@ void arvoreVP::inserirNo(NoVP* no)
 
     if (p == nullptr)
         raiz = no;
-    else if (no->getValor() < p->getValor())
+    else if (no->getID() < p->getID())
             p->setNoEsq(no);
         else
             p->setNoDir(no);
@@ -280,7 +280,7 @@ void arvoreVP::printHelper(NoVP* no, std::string indent, bool last) {
 		   }
             
            std::string sColor = getColor(no) ? "BLACK" : "RED";
-		   std::cout<<no->getValor()<<"("<<sColor<<")"<<std::endl;
+		   std::cout<<no->getID()<<"("<<sColor<<")"<<std::endl;
 		   printHelper(no->getNoEsq(), indent, false);
 		   printHelper(no->getNoDir(), indent, true);
 		}
@@ -310,9 +310,7 @@ void arvoreVP::imprimirArvore()
 
 void arvoreVP::buscaNo(arvoreVP *VP, std::string id)
 {
-    int aux_id = stoi(id);
-    NoVP *no = new NoVP("", aux_id);
-
+    //int aux_id = stoi(id);
     NoVP *p;
     NoVP *q;
     NoVP *result;
@@ -329,18 +327,18 @@ void arvoreVP::buscaNo(arvoreVP *VP, std::string id)
         while (q != nil)
         {
             p = q;
-            if (aux_id > p->getValor())
+            if (id > p->getID())
             {
                 q = p->getNoDir();
             }
-            else if (aux_id < p->getValor())
+            else if (id < p->getID())
             {
                 q = p->getNoEsq();
             }
             else
             {
                 result = p;
-                std::cout << "ID" << " " << aux_id << " " << "encontrada com sucesso na posicao" << " " << p->getValor() << " " << "da arvore VP" << std::endl;
+                std::cout << "ID" << " " << p->getID() << " " << "encontrada com sucesso, se encontra na posicao" << " " << p->getPosicao() << " " << "do arquivo binario" << std::endl;
                 break;
             }
         }

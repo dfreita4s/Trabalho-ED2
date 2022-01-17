@@ -12,7 +12,7 @@ class NoVP
 {
 private:
     std::string ID;
-    int Valor;
+    int pos;
     Color Cor;
     NoVP *NoPai;
     NoVP *NoEsq;
@@ -26,13 +26,13 @@ public:
     void setNoEsq(NoVP *);
     void setNoDir(NoVP *);
     void setColor(Color);
-    void setValor(int);
+    void setPosicao(int);
     NoVP* getNoPai();
     NoVP* getNoEsq();
     NoVP* getNoDir();
     std::string getID();
     Color getColor();
-    int getValor();
+    int getPosicao();
     void info();
 };
 
