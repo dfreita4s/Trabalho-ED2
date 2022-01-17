@@ -452,7 +452,7 @@ void arvoreVP::insere_caso4(NoVP *no)
         {
             no->setColor(Preto);
             no->getNoPai()->getNoPai()->setColor(Vermelho);
-            novoRotacionaEsq(no->getNoPai()->getNoPai());
+            novoRotDuplaDir(no->getNoPai()->getNoPai());
         }
     }
 }
@@ -539,7 +539,6 @@ void arvoreVP::novoRotacionaEsq(NoVP *no)
 
 void arvoreVP::novoRotDuplaDir(NoVP *no)
 {
-
     if (no->getNoPai() == nullptr)
     {
         NoVP *aux = no->getNoEsq()->getNoDir()->getNoEsq();
