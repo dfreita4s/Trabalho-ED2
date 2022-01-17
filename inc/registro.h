@@ -1,27 +1,22 @@
 #include <iostream>
-
+#ifndef TRABALHO_ED2
+#define TRABALHO_ED2
 class Registro
 {
 
 public:
-    std::string leBinario(int);
-    void testeImportacao();
-    void acessaRegistro(int);
-    void ordenaRegistros();
-
     Registro();
     ~Registro();
 
-    std::string getTerms(int, std::string); //pega um termo do array de registros(id, text...)
-
-    void setRegistro(std::string *registro); //setar o array registros
-    std::string *getRegistro();              //pegar o registro
+    //setters
     void setN(int);
     void setID(std::string);
     void setText(std::string);
     void setVersion(std::string);
     void setDate(std::string);
     void setVotes(int);
+
+    //getters
     std::string getID();
     std::string getText();
     std::string getVersion();
@@ -31,14 +26,9 @@ public:
 
     std::string imprimeRegistros();
 
-    std::string pivoMediano(std::string *, int, int);
-    void trocaNo(std::string &r1, std::string &r2);
-    int quickSort_particionaLista(std::string *list, int i, int j);
-    void quickSort_ordena(std::string *list, int i, int k);
-    void quickSort_time(std::string *list, int n);
-
 private:
-    std::string *registros; //array de registros para a memoria principal
+
+
     std::string review_id;
     std::string review_text;
     int upvotes;
@@ -46,3 +36,5 @@ private:
     std::string posted_date;
     int N;
 };
+
+#endif
