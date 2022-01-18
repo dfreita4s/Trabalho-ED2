@@ -13,7 +13,7 @@ public:
     arvoreVP(/* args */);
     ~arvoreVP();
 
-    void auxDeleteNos(NoVP*);
+    NoVP* auxDeleteNos(NoVP*);
     //Rotações
     void rotacaoEsquerda(NoVP *);
     void rotacaoDireita(NoVP *);

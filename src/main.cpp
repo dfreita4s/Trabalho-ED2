@@ -326,12 +326,15 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
         {
             start = std::chrono::high_resolution_clock::now();
+
             for (int i = 0; i < N; i++) //inserir registros na estrutura
                 AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
+
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
+
             for (int i = 0; i < B; i++) //buscar B registros aleatorios
                 AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID(), &comparacoesBuscaAVP);
 
@@ -355,6 +358,8 @@ void analiseEstruturas()
 
             std::cout << "///";
         }
+
+
         delete[] AVP; //delete arvore VP
 
         mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
