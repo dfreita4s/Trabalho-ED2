@@ -65,8 +65,8 @@ void leBinario(Registro *registro, int N)
         {
 
             randNum = rand() % NREGISTROS + 0;
-            registro[i].setPos(randNum * tamanhoRegistro);
             arqBin.seekg(tamanhoRegistro * randNum, ios::beg); //chegar no registro
+            registro[i].setPos(tamanhoRegistro * randNum);
 
             arqBin.read(id_buffer, sizeof(char) * 86);
             registro[i].setID(id_buffer);
@@ -258,7 +258,7 @@ void criaTabelaHash(Registro *reg, int n)
 void analiseEstruturas()
 {
     srand(time(NULL));
-    
+
     int comparacoesAVP = 0;
     int comparacoesAB20 = 0;
     int comparacoesAB200 = 0; //acho que nao precisa dessas variaveis, pode colocar so uma para AB
@@ -315,10 +315,12 @@ void analiseEstruturas()
 
         std::chrono::high_resolution_clock::time_point start;
         std::chrono::high_resolution_clock::time_point end;
-        arvoreVP *AVP = new arvoreVP;
-        Registro *regEstrutura = new Registro[N];
-        leBinario(regEstrutura, N); //importa N registros aleatorios
 
+        arvoreVP *AVP = new arvoreVP();
+
+        Registro *regEstrutura = new Registro[N];
+
+        leBinario(regEstrutura, N); //importa N registros aleatorios
         //para AVP
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
         for (int i = 0; i < 3; i++)
@@ -354,7 +356,6 @@ void analiseEstruturas()
             std::cout << "///";
         }
         delete[] AVP; //delete arvore VP
-        
 
         mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
         mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
@@ -362,8 +363,8 @@ void analiseEstruturas()
         mediaComparacoesInserirAVP = comparacoesInserirAVP / 3;
         mediaComparacoesBuscaAVP = comparacoesBuscaAVP / 3;
 
-        std::cout << "]" << std::endl;
-
+        std::cout << "] " << std::endl;
+        exit(0);
         //para Arvore B m = 20
         std::cout << "Arvore B (m = 20)\nTeste:[";
         for (int i = 0; i < 3; i++)
@@ -480,247 +481,6 @@ void analiseEstruturas()
         std::cout << "Não foi possivel abrir o arquivo!" << std::endl;
 }
 
-arvoreVP *testeArvoreVP(int numRegistros)
-{
-    arvoreVP *AVP = new arvoreVP();
-
-    for (int i = 0; i < numRegistros; i++)
-    {
-        int posicao = rand() % NREGISTROS;
-        //int posicao = rand () % 100;
-        std::string id = exibeRegistro(retornaRegistro(posicao));
-        AVP->inserir(id, posicao);
-    }
-
-    AVP->prettyPrint();
-    return AVP;
-
-    //delete AVP;
-}
-
-void analiseEstruturas()
-{
-    srand(time(NULL));
-    int comparacoesAVP = 0;
-    int comparacoesAB20 = 0;
-    int comparacoesAB200 = 0; //acho que nao precisa dessas variaveis, pode colocar so uma para AB
-
-    int comparacoesBuscaAVP = 0;
-    int comparacoesBuscaAB20 = 0;
-    int comparacoesBuscaAB200 = 0;
-
-    int comparacoesInserirAVP = 0;
-    int comparacoesInserirAB20 = 0;
-    int comparacoesInserirAB200 = 0;
-
-    float tempoExecAVP = 0.0000f;
-    float tempoExecAB20 = 0.0000f;
-    float tempoExecAB200 = 0.0000f;
-
-    float tempoBuscaAVP = 0.0000f;
-    float tempoBuscaAB20 = 0.0000f;
-    float tempoBuscaAB200 = 0.0000f;
-
-    float tempoInserirAVP = 0.0000f;
-    float tempoInserirAB20 = 0.0000f;
-    float tempoInserirAB200 = 0.0000f;
-
-    float mediaComparacoesAVP = 0.0000f;
-    float mediaComparacoesAB20 = 0.0000f;
-    float mediaComparacoesAB200 = 0.0000f;
-    float mediaTempoExecAVP = 0.0000f;
-    float mediaTempoExecAB20 = 0.0000f;
-    float mediaTempoExecAB200 = 0.0000f;
-
-    float mediaComparacoesInserirAVP = 0.0000f;
-    float mediaComparacoesInserirAB20 = 0.0000f;
-    float mediaComparacoesInserirAB200 = 0.0000f;
-
-    float mediaComparacoesBuscaAVP = 0.0000f;
-    float mediaComparacoesBuscaAB20 = 0.0000f;
-    float mediaComparacoesBuscaAB200 = 0.0000f;
-
-    float mediaTempoInserirAVP = 0.0000f;
-    float mediaTempoInserirAB20 = 0.0000f;
-    float mediaTempoInserirAB200 = 0.0000f;
-    float mediaTempoBuscaAVP = 0.0000f;
-    float mediaTempoBuscaAB20 = 0.0000f;
-    float mediaTempoBuscaAB200 = 0.0000f;
-
-    int N = 1000000;
-
-    std::fstream saida;
-    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
-    if (saida.is_open())
-    {
-
-        std::chrono::high_resolution_clock::time_point start;
-        std::chrono::high_resolution_clock::time_point end;
-        Registro *regEstrutura = new Registro[N];
-        leBinario(regEstrutura, N); //importa N registros aleatorios
-
-        //para AVP
-        std::cout << "Arvore Vermelho-Preto\nTeste:[";
-        for (int i = 0; i < 3; i++)
-        // Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
-        {
-            start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
-            end = std::chrono::high_resolution_clock::now();
-            tempoInserirAVP = std::chrono::duration<float>(end - start).count();
-
-            start = std::chrono::high_resolution_clock::now();
-            //buscar B registros aleatorios
-            //fazer tip um for
-            end = std::chrono::high_resolution_clock::now();
-            tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
-
-            //escrever no txt os valores encontrados
-            saida << "===========ARVORE VERMELHO-PRETO===========" << std::endl;
-            saida << "Teste: " << (i + 1) << std::endl;
-            saida << "Tempo de inserção: " << tempoInserirAVP << std::endl;
-            saida << "Comparações inseção: " << comparacoesInserirAVP << std::endl;
-            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAVP << std::endl;
-            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAVP << std::endl
-                  << std::endl;
-
-            mediaTempoBuscaAVP += tempoBuscaAVP;
-            mediaTempoInserirAVP += tempoInserirAVP;
-
-            mediaComparacoesInserirAVP += comparacoesInserirAVP;
-            mediaComparacoesBuscaAVP += comparacoesBuscaAVP;
-
-            std::cout << "///";
-        }
-
-        mediaTempoBuscaAVP = mediaTempoBuscaAVP/3;
-        mediaTempoInserirAVP = mediaTempoInserirAVP/3;
-
-        mediaComparacoesInserirAVP = comparacoesInserirAVP/3;
-        mediaComparacoesBuscaAVP = comparacoesBuscaAVP/3;
-
-
-
-        std::cout << "]" << std::endl;
-
-        //para Arvore B m = 20
-        std::cout << "Arvore B (m = 20)\nTeste:[";
-        for (int i = 0; i < 3; i++)
-
-        {
-
-            start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
-            end = std::chrono::high_resolution_clock::now();
-            tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
-
-            start = std::chrono::high_resolution_clock::now();
-            //buscar B registros aleatorios
-            end = std::chrono::high_resolution_clock::now();
-            tempoBuscaAB20 = std::chrono::duration<float>(end - start).count();
-
-            //escrever no txt os valores encontrados
-            saida << "===========ARVORE B (m = 20)===========" << std::endl;
-            saida << "Teste: " << (i + 1) << std::endl;
-            saida << "Tempo de inserção: " << tempoInserirAB20 << std::endl;
-            saida << "Comparações inseção: " << comparacoesInserirAB20 << std::endl;
-            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAB20 << std::endl;
-            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB20 << std::endl
-                  << std::endl;
-
-            mediaTempoBuscaAB20 += tempoBuscaAB20;
-            mediaTempoInserirAB20 += tempoInserirAB20;
-
-            mediaComparacoesInserirAB20 += comparacoesInserirAB20;
-            mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
-
-
-            std::cout << "///";
-        }
-
-        mediaTempoBuscaAB20 = tempoBuscaAB20/3;
-        mediaTempoInserirAB20 = tempoInserirAB20/3;
-
-        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20/3;
-        mediaComparacoesInserirAB20 = comparacoesInserirAB20/3;
-
-
-
-        std::cout << "]" << std::endl;
-
-        //para Arvore B m = 200
-        std::cout << "Arvore B (m = 200)\nTeste:[";
-        for (int i = 0; i < 3; i++)
-
-        {
-            start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
-            end = std::chrono::high_resolution_clock::now();
-            tempoInserirAB200 = std::chrono::duration<float>(end - start).count();
-
-            start = std::chrono::high_resolution_clock::now();
-            //buscar B registros aleatorios
-            end = std::chrono::high_resolution_clock::now();
-            tempoBuscaAB200 = std::chrono::duration<float>(end - start).count();
-
-            //escrever no txt os valores encontrados
-            saida << "===========ARVORE B (m = 200)===========" << std::endl;
-            saida << "Teste: " << (i + 1) << std::endl;
-            saida << "Tempo de inserção: " << tempoInserirAB200 << std::endl;
-            saida << "Comparações inseção: " << comparacoesInserirAB200 << std::endl;
-            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAB200 << std::endl;
-            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB200 << std::endl
-                  << std::endl;
-
-            mediaTempoBuscaAB200 += tempoBuscaAB200;
-            mediaTempoInserirAB200 += tempoInserirAB200;
-
-            mediaComparacoesInserirAB200 += comparacoesInserirAB200;
-            mediaComparacoesBuscaAB200 += comparacoesBuscaAB200;
-
-            std::cout << "///";
-        }
-
-        mediaTempoBuscaAB200 = tempoBuscaAB200/3;
-        mediaTempoInserirAB200 = tempoInserirAB200/3;
-
-        mediaComparacoesBuscaAB200 = comparacoesBuscaAB200/3;
-        mediaComparacoesInserirAB200 = comparacoesInserirAB200/3;
-
-        std::cout << "]" << std::endl;
-
-        saida << "======Estatisticas de Desempenho======" << std::endl
-              << std::endl;
-        saida << "====Arvore Vermelho-Preto====" << std::endl
-              << std::endl;
-        saida << "Media tempo inserção: " << mediaTempoInserirAVP << std::endl;
-        saida << "Media comparacoes inserção: " << mediaComparacoesInserirAVP << std::endl;
-        saida << "Media tempo busca: " << mediaTempoExecAVP << std::endl;
-        saida << "Media comparacoes busca: " << mediaComparacoesBuscaAVP << std::endl
-              << std::endl;
-
-        saida << "====Arvore B(m = 20)====" << std::endl
-              << std::endl;
-        saida << "Media tempo inserção: " << mediaTempoInserirAB20 << std::endl;
-        saida << "Media comparacoes inserção: " << mediaComparacoesInserirAB20 << std::endl;
-        saida << "Media tempo busca: " << mediaTempoExecAB20 << std::endl;
-        saida << "Media comparacoes busca: " << mediaComparacoesBuscaAB20 << std::endl
-              << std::endl;
-
-        saida << "====Arvore B(m = 200)====" << std::endl
-              << std::endl;
-        saida << "Media tempo inserção: " << mediaTempoInserirAB200 << std::endl;
-        saida << "Media comparacoes inserção: " << mediaComparacoesInserirAB200 << std::endl;
-        saida << "Media tempo busca: " << mediaTempoExecAB200 << std::endl;
-        saida << "Media comparacoes busca: " << mediaComparacoesBuscaAB200 << std::endl
-              << std::endl;
-
-        //escrever no txt
-    }
-    else
-        std::cout << "Não foi possivel abrir o arquivo!" << std::endl;
-}
-
 void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
 {
     tabelaHash aux;
@@ -832,7 +592,7 @@ void menu()
 
     if (resp == 1)
     {
-        
+
         analiseEstruturas();
         menu();
     }
@@ -991,9 +751,7 @@ int main(int argc, char const *argv[])
         delete listaReview;
     }
 
-
     menu();
- 
 
     /*
     arvoreB* ABB = new arvoreB(3);
@@ -1008,23 +766,21 @@ int main(int argc, char const *argv[])
     */
 }
 
-arvoreVP* testeArvoreVP(int numRegistros)
+arvoreVP *testeArvoreVP(int numRegistros)
 {
-    arvoreVP* AVP = new arvoreVP();
+    arvoreVP *AVP = new arvoreVP();
 
-    
-    for(int i=0; i<numRegistros; i++)
+    for (int i = 0; i < numRegistros; i++)
     {
         //int posicao = rand() % NREGISTROS;
-        int posicao = rand () % 1000000;
+        int posicao = rand() % 1000000;
         //std::string id = exibeRegistro(retornaRegistro(posicao));
-        std::string id (std::to_string(posicao));
+        std::string id(std::to_string(posicao));
         AVP->inserir(id, posicao);
     }
 
     AVP->prettyPrint();
     return AVP;
-    
 
     /*
     int c = 1;
@@ -1039,7 +795,6 @@ arvoreVP* testeArvoreVP(int numRegistros)
 
     //delete AVP;
 }
-
 
 void exportaHashingOrdenacao()
 {
@@ -1102,7 +857,6 @@ void exportaHashingOrdenacao()
 }
 
 // Modificações Leitura/Escrita Binário
-
 
 int retornaRegistro(int k)
 {
