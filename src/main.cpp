@@ -751,8 +751,6 @@ arvoreVP* testeArvoreVP(int numRegistros)
         AVP->prettyPrint();
     }
     */
-
-    //delete AVP;
 }
 
 
