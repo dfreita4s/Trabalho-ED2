@@ -132,19 +132,19 @@ bool arvoreVP::arvoreVazia()
     return false;
 }
 
-void arvoreVP::inserir(std::string id, int posicao)
+void arvoreVP::inserir(std::string id, int posicao, int *comparacoes)
 {  
     NoVP* novoNo = new NoVP(id, posicao);
     novoNo->setNoEsq(nil);
     novoNo->setNoDir(nil);
     novoNo->setColor(Vermelho);
-    inserirNo(novoNo);
+    inserirNo(novoNo, comparacoes);
     insere_caso1(novoNo);
     // prettyPrint(); // Ver passo-a-passo
     // TO-DO: deletar esses nós no destrutor;
 }
 
-void arvoreVP::inserirNo(NoVP* no)
+void arvoreVP::inserirNo(NoVP* no, int *comparacoes)
 {
     // CASO 1: Nó é raiz
     if(raiz == nullptr)
@@ -159,10 +159,15 @@ void arvoreVP::inserirNo(NoVP* no)
     while(q != nil)
     {
         p = q;
-        if (no->getID() < q->getID())
+        if (no->getID() < q->getID()){
             q = q->getNoEsq();
-        else
+        (* comparacoes)++;
+
+        }
+        else{
+            (* comparacoes)++;
             q = q->getNoDir();
+        }
     }
 
     no->setNoPai(p);
@@ -173,10 +178,12 @@ void arvoreVP::inserirNo(NoVP* no)
     }
     else if (no->getID() < p->getID())
     {
+        (* comparacoes)++;
         p->setNoEsq(no);
     }
     else
     {
+        (* comparacoes)++;
         p->setNoDir(no);
     }
 
@@ -316,7 +323,7 @@ void arvoreVP::imprimirArvore()
     imprimirNo(raiz, 0);
 }
 
-void arvoreVP::buscaNo(arvoreVP *VP, std::string id)
+void arvoreVP::buscaNo(arvoreVP *VP, std::string id, int *comparacoes)
 {
     //int aux_id = stoi(id);
     NoVP *p;
@@ -337,10 +344,12 @@ void arvoreVP::buscaNo(arvoreVP *VP, std::string id)
             p = q;
             if (id > p->getID())
             {
+                (*comparacoes)++;
                 q = p->getNoDir();
             }
             else if (id < p->getID())
             {
+                (*comparacoes)++;
                 q = p->getNoEsq();
             }
             else

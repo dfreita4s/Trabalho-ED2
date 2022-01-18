@@ -327,13 +327,13 @@ void analiseEstruturas()
         {
             start = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < N; i++) //inserir registros na estrutura
-                AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos());
+                AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < B; i++) //buscar B registros aleatorios
-                AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID());
+                AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID(), &comparacoesBuscaAVP);
 
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
@@ -364,7 +364,7 @@ void analiseEstruturas()
         mediaComparacoesBuscaAVP = comparacoesBuscaAVP / 3;
 
         std::cout << "] " << std::endl;
-        exit(0);
+        // exit(0);
         //para Arvore B m = 20
         std::cout << "Arvore B (m = 20)\nTeste:[";
         for (int i = 0; i < 3; i++)
@@ -427,8 +427,8 @@ void analiseEstruturas()
             saida << "Teste: " << (i + 1) << std::endl;
             saida << "Tempo de inserção: " << tempoInserirAB200 << std::endl;
             saida << "Comparações inseção: " << comparacoesInserirAB200 << std::endl;
-            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAB200 << std::endl;
-            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB200 << std::endl
+            saida << "Tempo busca 100 registro aleatórios: " << tempoBuscaAB200 << std::endl;
+            saida << "Comparacoes busca 100 registro aleatórios: " << comparacoesBuscaAB200 << std::endl
                   << std::endl;
 
             mediaTempoBuscaAB200 += tempoBuscaAB200;
@@ -642,8 +642,8 @@ void menuParteTres()
              << endl;
         cin >> resp2;
 
-        arvoreVP *AVP = new arvoreVP;
-        AVP = testeArvoreVP(resp2);
+        // arvoreVP *AVP = new arvoreVP;
+        // AVP = testeArvoreVP(resp2);
 
         int resp3;
         cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n"
@@ -659,7 +659,7 @@ void menuParteTres()
             cout << "Informe agora o valor da ID que deseja procurar: \n"
                  << endl;
             cin >> resp4;
-            AVP->buscaNo(AVP, resp4);
+            // AVP->buscaNo(AVP, resp4);
             //menu();
         }
         else
@@ -766,35 +766,6 @@ int main(int argc, char const *argv[])
     */
 }
 
-arvoreVP *testeArvoreVP(int numRegistros)
-{
-    arvoreVP *AVP = new arvoreVP();
-
-    for (int i = 0; i < numRegistros; i++)
-    {
-        //int posicao = rand() % NREGISTROS;
-        int posicao = rand() % 1000000;
-        //std::string id = exibeRegistro(retornaRegistro(posicao));
-        std::string id(std::to_string(posicao));
-        AVP->inserir(id, posicao);
-    }
-
-    AVP->prettyPrint();
-    return AVP;
-
-    /*
-    int c = 1;
-    while(c != 0)
-    {
-        cin >> c;
-        std::string id (std::to_string(c));
-        AVP->inserir(id, c);
-        AVP->prettyPrint();
-    }
-    */
-
-    //delete AVP;
-}
 
 void exportaHashingOrdenacao()
 {
