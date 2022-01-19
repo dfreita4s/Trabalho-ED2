@@ -136,7 +136,7 @@ bool arvoreVP::arvoreVazia()
 
 void arvoreVP::inserir(std::string id, int posicao, int *comparacoes)
 {  
-    NoVP* novoNo = new NoVP(id, posicao);
+    NoVP* novoNo = new NoVP(id, posicao * 127);
     novoNo->setNoEsq(nil);
     novoNo->setNoDir(nil);
     novoNo->setColor(Vermelho);

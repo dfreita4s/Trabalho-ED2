@@ -231,7 +231,7 @@ void ordenacao()
     }
     else
         std::cout << "Nao foi possivel abrir o arquivo" << std::endl;
-    delete [] dat;
+    delete[] dat;
     saida.close();
 }
 
@@ -318,7 +318,6 @@ void analiseEstruturas()
         std::chrono::high_resolution_clock::time_point start;
         std::chrono::high_resolution_clock::time_point end;
 
-
         Registro *regEstrutura = new Registro[N];
 
         leBinario(regEstrutura, N); //importa N registros aleatorios
@@ -326,11 +325,14 @@ void analiseEstruturas()
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
         for (int i = 0; i < 3; i++)
         {
-            arvoreVP *AVP = new arvoreVP();
+            arvoreVP *AVP = new arvoreVP;
             start = std::chrono::high_resolution_clock::now();
 
             for (int i = 0; i < N; i++) //inserir registros na estrutura
+            {
                 AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
+               
+            }
 
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
@@ -361,7 +363,6 @@ void analiseEstruturas()
             std::cout << "///";
             delete AVP; //delete arvore VP
         }
-
 
         mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
         mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
@@ -481,7 +482,7 @@ void analiseEstruturas()
               << std::endl;
 
         //escrever no txt
-        std::cout<<"Estatisticas de desempenho geradas!!"<<std::endl;
+        std::cout << "Estatisticas de desempenho geradas!!" << std::endl;
         delete[] regEstrutura;
     }
     else
@@ -772,7 +773,6 @@ int main(int argc, char const *argv[])
     return 0;
     */
 }
-
 
 void exportaHashingOrdenacao()
 {
