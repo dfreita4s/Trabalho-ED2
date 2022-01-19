@@ -1,12 +1,11 @@
-#include "review.h"
-//#include "tabelaHash.h"
+#include "registro.h"
 #include <fstream>
 #include <vector>
 
 class Lista
 {
 public:
-    Review *raiz;
+    // Review *raiz;
     std::ifstream arquivo;
 
     Lista();
@@ -15,14 +14,14 @@ public:
 
     int obterTam();
     bool obterReviews();
-    Review *obterRaiz();
+    // Review *obterRaiz();
     void listarTodas();
     int versaoToInt(std::string);
 
-    void inserirReview(Review *, Review *);
+    // void inserirReview(Review *, Review *);
    
 
-    bool criarArquivoBinario();
+    bool criarArquivoBinario(Registro *);
     void usaListaImportacao();
 
 protected:

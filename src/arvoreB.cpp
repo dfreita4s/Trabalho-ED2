@@ -1,5 +1,6 @@
 #include "../inc/arvoreB.h"
 
+/*
 arvoreB::arvoreB(int m)
 {
     this->raiz = nullptr;
@@ -39,3 +40,5 @@ void arvoreB::exibeArvore()
 {
 
 }
+
+*/

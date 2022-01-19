@@ -1,13 +1,13 @@
 #include <iostream>
 #include "registro.h"
 
-class Ordenacao{
-    public:
-
+class Ordenacao
+{
+public:
     Ordenacao();
-    ~Ordenacao(); 
+    ~Ordenacao();
     void trocaNo(Registro *, int, int, int *comparacoes, int *movimentacoes);
-    // QUICK SORT 
+    // QUICK SORT
 
     Registro pivoMediano(Registro *l, int inicio, int fim, int *comparacoes, int *movimentacoes);
     int quickSort_particionaLista(Registro *list, int i, int j, int *comparacoes, int *movimentacoes);
@@ -21,15 +21,12 @@ class Ordenacao{
     void heapSort_ordena(Registro *list, int tam, int *, int *);
     float heapSort_time(Registro *list, int tam, int *, int *);
 
-
     //COMB SORT
 
     int find_next(int gap);
     void combSort_ordena(Registro *list, int tam, int *, int *);
     float combSort_time(Registro *list, int tam, int *, int *);
 
-
-    private:
-        // Registro *registro;
-
+private:
+    // Registro *registro;
 };

@@ -19,8 +19,8 @@ public:
     void rotacaoDireita(NoVP *);
     void rotacaoDuplaEsquerda(NoVP *);
     void rotacaoDuplaDireita(NoVP *);
-    void inserirNo(NoVP *);
-    void inserir(std::string, int);
+    void inserirNo(NoVP *, int *);
+    void inserir(std::string, int, int *);
     void arrumaArvore(NoVP *);
     Color getColor(NoVP *);
     bool arvoreVazia();
@@ -29,7 +29,17 @@ public:
     void prettyPrint();
     void imprimirArvore();
     void imprimirNo(NoVP* no, bool);
+    void buscaNo(arvoreVP *, std::string, int *);
 
+    //novas funções recursivas para a árvore vermelho e preta
+    void insere_caso1(NoVP *);
+    void insere_caso2(NoVP *);
+    void insere_caso3(NoVP *);
+    void insere_caso4(NoVP *);
+    void novoRotacionaDir(NoVP *);
+    void novoRotacionaEsq(NoVP *);
+    void novoRotDuplaEsq(NoVP *);
+    void novoRotDuplaDir(NoVP *);
 };
 
 #endif

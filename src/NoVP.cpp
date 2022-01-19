@@ -8,7 +8,7 @@ NoVP::NoVP()
 NoVP::NoVP(std::string id, int posicao)
 {
     ID = id;
-    Valor = posicao;
+    pos = posicao;
     Cor = Vermelho;
     NoPai = nullptr;
     NoEsq = nullptr;
@@ -17,19 +17,19 @@ NoVP::NoVP(std::string id, int posicao)
 
 NoVP::~NoVP()
 {
-    std::cout << "Destruindo no " << Valor << std::endl;
+    // std::cout << "Destruindo no " << getID() << std::endl;
 }
 
 // Review do Nó
 
-void NoVP::setValor(int novoValor)
+void NoVP::setPosicao(int novaPosicao)
 {
-    Valor = novoValor;
+    pos = novaPosicao;
 }
 
-int NoVP::getValor()
+int NoVP::getPosicao()
 {
-    return Valor;
+    return pos;
 }
 
 void NoVP::setNoPai(NoVP *no)
@@ -80,7 +80,7 @@ Color NoVP::getColor()
 void NoVP::info()
 {
     Color estacor = getColor();
-    std::cout <<"[Posição("<< getID() <<"),Posição("<< getValor() <<"),Cor(";
+    std::cout <<"[Posição("<< getID() <<"),Posição("<< getPosicao() <<"),Cor(";
     estacor == Vermelho ? std::cout <<  "Vermelho" : std::cout << "Preto";
     std::cout << ")]" << std::endl;
 }
