@@ -18,111 +18,91 @@
 
 using namespace std;
 
+void criaTabelaHash(tabelaHash *, Registro *, int);
+void criaTabelaHash(Registro *, int);
+int retiraPontos(std::string);
+// Nova leitura/escrita binário
+
+void menuParteTres();
+void testaExec();
+void buscaNoAVP(arvoreVP *, string);
 void exportaHashing();
 void exportaHashingOrdenacao();
 int obterReview();
 bool checaArqBin();
-void criaTabelaHash(tabelaHash *, Registro *, int );
-void criaTabelaHash(Registro *, int );
-int retiraPontos(std::string );
+void criaTabelaHash(tabelaHash *, Registro *, int);
+void criaTabelaHash(Registro *reg, int n);
 // Nova leitura/escrita binário
 int retornaRegistro(int);
 std::string exibeRegistro(int);
-
-
 arvoreVP* testeArvoreVP(int);
-void menuParteTres();
-void analiseEstruturas();
 
-
-void testeImportacao(Registro *lista)
-{
-    int resp, N = 0;
-    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
-    std::cin >> resp;
-    if (resp == 1)
-    {
-        // Printar no terminal N = 10 registros aleatorios
-        N = 10;
-        for (int i = 0; i < N; i++)
-            std::cout << "[" << i << "]" << lista[i].imprimeRegistros() << std::endl
-                      << std::endl;
-    }
-    else if (resp == 2)
-    {
-        //Salvar em um txt N = 100 registros aleatorios
-        std::fstream saidaTxt;
-        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
-        if (saidaTxt.is_open())
-        {
-            N = 100;
-            std::string linha = "";
-            for (int i = 0; i < N; i++)
-            {
-                // (rand() % 3646475 + 0)
-                linha = lista[i].imprimeRegistros() + "\n";
-                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
-            }
-            cout << "O arquivo de texto foi criado!" << endl;
-        }
-        saidaTxt.close();
-    }
-    else
-    {
-        std::cout << "Por favor, digite um valor válido!" << std::endl;
-    }
-}
 
 void leBinario(Registro *registro, int N)
 {
 
     //pensei pra ler o review_text e saber o tamanho um for em cada catactere da linha e ir ate o caracter ser == \n
     std::ifstream arqBin;
+    std::ifstream textBin;
+    textBin.open("./data/textBin.bin", std::ios::binary);
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    srand(time(NULL));
-    if (arqBin.is_open())
+    if (arqBin.is_open() && textBin.is_open())
     {
-        int j = 0;
         int randNum = 0;
-        std::string str = "";
-        std::string *regist = new std::string[NREGISTROS];
-        while (getline(arqBin, str)) //aloca todas a linhas no vetor regist
-        {
-            regist[j] = str + "\n";
-            j++;
-        }
+        int tamanhoRegistro = 127;
+        int posTexto = 0;
+        char *id_buffer = new char[87];
+        char *data_buffer = new char[20];
+        char *versaoApp_buffer = new char[11];
+        char *str = new char[1000000];
+        int tamTexto = 0;
+        int votos = 0;
+        srand(time(NULL));
 
+        arqBin.seekg(0, ios::beg);
+        textBin.seekg(0, ios::beg);
         for (int i = 0; i < N; i++) //pega alguma linha aleatoria do regist e passa para o registro.cpp
         {
-            randNum = rand() % NREGISTROS + 1;
-            j = regist[randNum].find(",");
-            registro[i].setID(regist[randNum].substr(0, j));
 
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            randNum = rand() % NREGISTROS + 0;
+            arqBin.seekg(tamanhoRegistro * randNum, ios::beg); //chegar no registro
+            registro[i].setPos(tamanhoRegistro * randNum);
 
-            j = regist[randNum].find_last_of("\"") + 1;
-            registro[i].setText(regist[randNum].substr(0, j));
+            arqBin.read(id_buffer, sizeof(char) * 86);
+            registro[i].setID(id_buffer);
 
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            arqBin.read((char *)(&votos), sizeof(int));
+            registro[i].setVotes(votos);
 
-            j = regist[randNum].find(",");
-            registro[i].setVotes(atoi(regist[randNum].substr(0, j).c_str()));
+            arqBin.read((char *)(&tamTexto), sizeof(int));
+            arqBin.read((char *)(&posTexto), sizeof(int));
 
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            textBin.seekg(posTexto, ios::beg);
 
-            j = regist[randNum].find(",");
-            registro[i].setVersion(regist[randNum].substr(0, j));
-            regist[randNum] = regist[randNum].substr(j + 1, regist[randNum].length());
+            textBin.read(str, sizeof(char) * tamTexto);
+            str[tamTexto] = '\0';
+            registro[i].setText(str);
 
-            registro[i].setDate(regist[randNum].substr(0, regist[randNum].length()));
+            arqBin.read(versaoApp_buffer, sizeof(char) * 10);
+            registro[i].setVersion(versaoApp_buffer);
+
+            arqBin.read(data_buffer, sizeof(char) * 19);
+
+            registro[i].setDate(data_buffer);
+
+            arqBin.seekg(0, ios::beg);
         }
-        delete[] regist;
+        delete[] id_buffer;
+        delete[] data_buffer;
+        delete[] versaoApp_buffer;
+        delete[] str;
         arqBin.close();
-        cout << N << " registros foram importados\n";
+        textBin.close();
+        std::cout << N << " registros foram importados\n";
     }
 
     else
-        cout << "Não foi possível abrir o arquivo!" << endl;
+        std::cout << "Não foi possível abrir o arquivo!" << std::endl;
 }
 
 // Faz cópia dos registros para usar nos testes
@@ -138,24 +118,12 @@ void copiaRegistro(Registro *registro, Registro *registro2, int N)
     }
 }
 
-bool checaArqBin()
-{
-    ifstream arqBin;
-    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
-    if (arqBin.is_open())
-    {
-        std::cout << "O arquivo binário existe." << std::endl;
-        return true;
-    }
-    return false;
-}
-
 void ordenacao()
 {
     Ordenacao sort;
     srand(time(NULL));
-    
-    int *dat = new int[5]; //vetor com os valores de N 
+
+    int *dat = new int[5]; //vetor com os valores de N
     dat[0] = 10000;
     dat[1] = 50000;
     dat[2] = 100000;
@@ -204,12 +172,12 @@ void ordenacao()
             Registro *registro3 = new Registro[tam];
             copiaRegistro(registro3, registro, tam);
 
-            cout << "Fazendo teste para " << tam << " números de registros" << endl;
+            std::cout << "Fazendo teste para " << tam << " números de registros" << std::endl;
 
             tempoQuicksort = sort.quickSort_time(registro2, tam, &comparacoesQuicksort, &movimentacoesQuicksort);
-            delete [] registro2;
+            delete[] registro2;
             tempoHeapsort = sort.heapSort_time(registro3, tam, &comparacoesHeapsort, &movimentacoesHeapsort);
-            delete [] registro3;
+            delete[] registro3;
             tempoCombsort = sort.combSort_time(registro, tam, &comparacoesCombsort, &movimentacoesCombsort);
             delete[] registro;
 
@@ -225,39 +193,39 @@ void ordenacao()
             movimentacoesMediaHeapsort += movimentacoesHeapsort / 3;
             movimentacoesMediaCombsort += movimentacoesCombsort / 3;
 
-            saida << "\n====Quicksort====" << endl;
-            saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoQuicksort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesQuicksort << endl;
-            saida << "Número de movimentações: " << movimentacoesQuicksort << endl;
+            saida << "\n====Quicksort====" << std::endl;
+            saida << "Estatisticas para " << tam << " números de registros" << std::endl;
+            saida << "Tempo de execução: " << tempoQuicksort << " segundos" << std::endl;
+            saida << "Número de comparações: " << comparacoesQuicksort << std::endl;
+            saida << "Número de movimentações: " << movimentacoesQuicksort << std::endl;
 
-            saida << "\n====Heapsort====" << endl;
-            saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoHeapsort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesHeapsort << endl;
-            saida << "Número de movimentações: " << movimentacoesHeapsort << endl;
+            saida << "\n====Heapsort====" << std::endl;
+            saida << "Estatisticas para " << tam << " números de registros" << std::endl;
+            saida << "Tempo de execução: " << tempoHeapsort << " segundos" << std::endl;
+            saida << "Número de comparações: " << comparacoesHeapsort << std::endl;
+            saida << "Número de movimentações: " << movimentacoesHeapsort << std::endl;
 
-            saida << "\n====Combsort====" << endl;
-            saida << "Estatisticas para " << tam << " números de registros" << endl;
-            saida << "Tempo de execução: " << tempoCombsort << " segundos" << endl;
-            saida << "Número de comparações: " << comparacoesCombsort << endl;
-            saida << "Número de movimentações: " << movimentacoesCombsort << endl;
+            saida << "\n====Combsort====" << std::endl;
+            saida << "Estatisticas para " << tam << " números de registros" << std::endl;
+            saida << "Tempo de execução: " << tempoCombsort << " segundos" << std::endl;
+            saida << "Número de comparações: " << comparacoesCombsort << std::endl;
+            saida << "Número de movimentações: " << movimentacoesCombsort << std::endl;
         }
-        saida << "======Média final das execuções======" << endl;
-        saida << "====Quicksort====" << endl;
-        saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort << endl;
+        saida << "======Média final das execuções======" << std::endl;
+        saida << "====Quicksort====" << std::endl;
+        saida << "Média tempo de execução: " << tempoMediaQuicksort << " segundos" << std::endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaQuicksort << std::endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaQuicksort << std::endl;
 
-        saida << "====Heapsort====" << endl;
-        saida << "Média tempo de execução: " << tempoMediaHeapsort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort << endl;
+        saida << "====Heapsort====" << std::endl;
+        saida << "Média tempo de execução: " << tempoMediaHeapsort << " segundos" << std::endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaHeapsort << std::endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaHeapsort << std::endl;
 
-        saida << "====Combsort====" << endl;
-        saida << "Média tempo de execução: " << tempoMediaCombsort << " segundos" << endl;
-        saida << "Média túmero de comparações: " << comparacoesMediaCombsort << endl;
-        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort << endl;
+        saida << "====Combsort====" << std::endl;
+        saida << "Média tempo de execução: " << tempoMediaCombsort << " segundos" << std::endl;
+        saida << "Média túmero de comparações: " << comparacoesMediaCombsort << std::endl;
+        saida << "Média túmero de movimentações: " << movimentacoesMediaCombsort << std::endl;
         std::cout << "O arquivo de texto foi criado!" << std::endl;
     }
     else
@@ -265,132 +233,32 @@ void ordenacao()
     saida.close();
 }
 
-void menu()
-{
-
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Ordenacao\n[2] Hash\n[3] Modulo de Teste\n[4] Parte 3\n[5] Sair \nFunção: ";
-    int resp = 0;
-    cin >> resp;
-
-    if (resp == 1)
-    {
-        ordenacao();
-
-        menu();
-    }
-    else if (resp == 2)
-    {
-        int n = 99;
-        int resp;
-        Registro *reg = new Registro[n];
-        leBinario(reg, n);
-        criaTabelaHash(reg, n);
-        cout << "Tabela Hash gerada com sucesso..." << endl;
-
-        delete[] reg;
-        menu();
-    }
-    else if (resp == 3)
-    {
-
-        exportaHashingOrdenacao();
-        menu();
-    }
-    else if (resp == 4)
-    {
-        menuParteTres();
-    }
-    else if (resp == 5)
-    {
-        exit(0);
-    }
-    else
-    {
-        cout << "Por favor digite uma resposta válida!" << endl;
-        menu();
-    }
-}
-
-void menuParteTres()
-{
-    int resp;
-    cout << "Digite o valor da opcao que deseja acessar: \n [1] Arvore Vermelho Preto \n [2] Arvore B \n [3] Sair \n" << endl;
-    cin >> resp;
-    if (resp == 1)
-    {
-        int resp2;
-        cout << "Informe o numero de reviews que serao importados para a arvore vermelho preto: \n" << endl;
-        cin >> resp2;
-        arvoreVP *AVP = new arvoreVP;
-        AVP = testeArvoreVP(resp2);
-
-        int resp3;
-        cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n" << endl;
-        cin >> resp3;
-        if (resp3 == 1)
-        {
-            // chama função que gera relatório
-        }
-        else if (resp3 == 2)
-        {
-            string resp4;
-            cout << "Informe agora o valor da ID que deseja procurar: \n" << endl;
-            cin >> resp4;
-            AVP->buscaNo(AVP,resp4);
-            //menu();
-        }
-        else
-        {
-            cout << "Favor informar uma opcao valida \n" << endl;
-            menuParteTres();
-        }
-    }
-    else if (resp == 2)
-    {
-        int resp3;
-        cout << "Informe a ordem que a arvore B tera: \n" << endl;
-        cin >> resp3;
-        // chama função para criar árvore B de ordem indicada pelo teclado
-        int resp4;
-        cout << "Perfeito, agora digite [1] se deseja gerar um relatorio ou [2] se deseja buscar uma ID: \n" << endl;
-        if (resp4 == 1)
-        {
-            // chama função para gerar relatório da árvore B
-        }
-        else if (resp4 == 2)
-        {
-            int resp5;
-            cout << "Informe a ID do review que deseja buscar na arvore: \n" << endl;
-            cin >> resp5;
-            // chama função para fazer a busca da ID digitada
-        }
-        else
-        {
-            cout << "Favor informar uma opcao valida \n" << endl;
-            menuParteTres();
-        }
-    }
-    else if (resp == 3)
-    {
-        menu();
-    } 
-    else
-    {
-        cout << "Favor informar uma opcao valida" << endl;
-        menuParteTres(); 
-    }
-}
-
 void criaTabelaHash(Registro *reg, int n)
 {
     tabelaHash *tab = new tabelaHash[n];
     criaTabelaHash(tab, reg, n);
-    delete [] tab;
+    delete[] tab;
 }
+
+/*
+    Importar N registros aleatorios do arquivo binario gerado pelo pre processamento e coloca-los na estrutura
+    Computar o total de comparações de chaves e o tempo de execucao
+    Realizar a busca de B registros aleatorios na estrutura deverao ser computados o tempo e o total de comparacoes
+
+
+    M = 3
+    N = 1000000
+    B = 100
+
+    Ao final, compute as médias de cada uma das métricas (comparações e tempo) obtidas para as M execuções. 
+    Salve todos os resultados obtidos em um arquivo saida.txt, contendo tanto os resultados individuais quanto a média final.
+
+*/
 
 void analiseEstruturas()
 {
     srand(time(NULL));
+
     int comparacoesAVP = 0;
     int comparacoesAB20 = 0;
     int comparacoesAB200 = 0; //acho que nao precisa dessas variaveis, pode colocar so uma para AB
@@ -437,31 +305,38 @@ void analiseEstruturas()
     float mediaTempoBuscaAB20 = 0.0000f;
     float mediaTempoBuscaAB200 = 0.0000f;
 
-    int N = 1000000;
+    // int N = 1000000;
+    int N = 1000;
+    int B = 100;
 
     std::fstream saida;
     saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
     if (saida.is_open())
     {
-
         std::chrono::high_resolution_clock::time_point start;
         std::chrono::high_resolution_clock::time_point end;
-        Registro *regEstrutura = new Registro[N];
-        leBinario(regEstrutura, N); //importa N registros aleatorios
 
+        Registro *regEstrutura = new Registro[N];
+
+        leBinario(regEstrutura, N); //importa N registros aleatorios
         //para AVP
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
         for (int i = 0; i < 3; i++)
-        // Analise::processAVP(3, 2, regEstrutura); //passar comparacoes
         {
+            arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
+
+            for (int i = 0; i < N; i++) //inserir registros na estrutura
+                AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
+
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
-            //buscar B registros aleatorios
-            //fazer tip um for
+
+            for (int i = 0; i < B; i++) //buscar B registros aleatorios
+                AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID(), &comparacoesBuscaAVP, 1);
+
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
 
@@ -481,18 +356,20 @@ void analiseEstruturas()
             mediaComparacoesBuscaAVP += comparacoesBuscaAVP;
 
             std::cout << "///";
+
+            delete AVP; //delete arvore VP
         }
 
-        mediaTempoBuscaAVP = mediaTempoBuscaAVP/3;
-        mediaTempoInserirAVP = mediaTempoInserirAVP/3;
-
-        mediaComparacoesInserirAVP = comparacoesInserirAVP/3;
-        mediaComparacoesBuscaAVP = comparacoesBuscaAVP/3;
 
 
+        mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
+        mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
 
-        std::cout << "]" << std::endl;
+        mediaComparacoesInserirAVP = comparacoesInserirAVP / 3;
+        mediaComparacoesBuscaAVP = comparacoesBuscaAVP / 3;
 
+        std::cout << "] " << std::endl;
+        // exit(0);
         //para Arvore B m = 20
         std::cout << "Arvore B (m = 20)\nTeste:[";
         for (int i = 0; i < 3; i++)
@@ -524,17 +401,14 @@ void analiseEstruturas()
             mediaComparacoesInserirAB20 += comparacoesInserirAB20;
             mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
 
-
             std::cout << "///";
         }
 
-        mediaTempoBuscaAB20 = tempoBuscaAB20/3;
-        mediaTempoInserirAB20 = tempoInserirAB20/3;
+        mediaTempoBuscaAB20 = tempoBuscaAB20 / 3;
+        mediaTempoInserirAB20 = tempoInserirAB20 / 3;
 
-        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20/3;
-        mediaComparacoesInserirAB20 = comparacoesInserirAB20/3;
-
-
+        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20 / 3;
+        mediaComparacoesInserirAB20 = comparacoesInserirAB20 / 3;
 
         std::cout << "]" << std::endl;
 
@@ -558,8 +432,8 @@ void analiseEstruturas()
             saida << "Teste: " << (i + 1) << std::endl;
             saida << "Tempo de inserção: " << tempoInserirAB200 << std::endl;
             saida << "Comparações inseção: " << comparacoesInserirAB200 << std::endl;
-            saida << "Tempo busca 100 registro aleatórios" << tempoBuscaAB200 << std::endl;
-            saida << "Comparacoes busca 100 registro aleatórios" << comparacoesBuscaAB200 << std::endl
+            saida << "Tempo busca 100 registro aleatórios: " << tempoBuscaAB200 << std::endl;
+            saida << "Comparacoes busca 100 registro aleatórios: " << comparacoesBuscaAB200 << std::endl
                   << std::endl;
 
             mediaTempoBuscaAB200 += tempoBuscaAB200;
@@ -571,11 +445,11 @@ void analiseEstruturas()
             std::cout << "///";
         }
 
-        mediaTempoBuscaAB200 = tempoBuscaAB200/3;
-        mediaTempoInserirAB200 = tempoInserirAB200/3;
+        mediaTempoBuscaAB200 = tempoBuscaAB200 / 3;
+        mediaTempoInserirAB200 = tempoInserirAB200 / 3;
 
-        mediaComparacoesBuscaAB200 = comparacoesBuscaAB200/3;
-        mediaComparacoesInserirAB200 = comparacoesInserirAB200/3;
+        mediaComparacoesBuscaAB200 = comparacoesBuscaAB200 / 3;
+        mediaComparacoesInserirAB200 = comparacoesInserirAB200 / 3;
 
         std::cout << "]" << std::endl;
 
@@ -606,6 +480,7 @@ void analiseEstruturas()
               << std::endl;
 
         //escrever no txt
+        delete[] regEstrutura;
     }
     else
         std::cout << "Não foi possivel abrir o arquivo!" << std::endl;
@@ -658,9 +533,243 @@ void criaTabelaHash(tabelaHash *tab, Registro *reg, int n)
     }
     int qualquer;
     aux.quickSort_time(tab, n, &qualquer, &qualquer);
-    
-    cout << "Tabela Hash criada com sucesso" << endl;
+
+    std::cout << "Tabela Hash criada com sucesso" << std::endl;
     std::cout << aux.imprimeFrequentes(tab, n) << std::endl;
+}
+
+void testeImportacao(Registro *lista)
+{
+    int resp, N = 0;
+    std::cout << "Deseja exibir a saida no console ou salva-la em um arquivo texto? 1 para no console 2 para salvar.:";
+    std::cin >> resp;
+    if (resp == 1)
+    {
+        // Printar no terminal N = 10 registros aleatorios
+        N = 10;
+        for (int i = 0; i < N; i++)
+            std::cout << "[" << i << "]" << lista[i].imprimeRegistros() << std::endl
+                      << std::endl;
+    }
+    else if (resp == 2)
+    {
+        //Salvar em um txt N = 100 registros aleatorios
+        std::fstream saidaTxt;
+        saidaTxt.open("./data/saidaTxt.txt", std::ios_base::out | std::ios_base::app);
+        if (saidaTxt.is_open())
+        {
+            N = 100;
+            std::string linha = "";
+            for (int i = 0; i < N; i++)
+            {
+                // (rand() % 3646475 + 0)
+                linha = lista[i].imprimeRegistros() + "\n";
+                saidaTxt.write(linha.c_str(), sizeof(char) * linha.size());
+            }
+            cout << "O arquivo de texto foi criado!" << endl;
+        }
+        saidaTxt.close();
+    }
+    else
+    {
+        std::cout << "Por favor, digite um valor válido!" << std::endl;
+    }
+}
+
+bool checaArqBin()
+{
+    ifstream arqBin;
+    arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
+    if (arqBin.is_open())
+    {
+        std::cout << "O arquivo binário existe." << std::endl;
+        return true;
+    }
+    return false;
+}
+
+void menu()
+{
+
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Analise Estruturas\n[2] Hash\n[3] Modulo de Teste\n[4] Parte 3\n[5] Sair \nFunção: ";
+    int resp = 0;
+    cin >> resp;
+
+    if (resp == 1)
+    {
+        analiseEstruturas();
+        menu();
+    }
+    else if (resp == 2)
+    {
+        int n = 99;
+        int resp;
+        Registro *reg = new Registro[n];
+        leBinario(reg, n);
+        criaTabelaHash(reg, n);
+        cout << "Tabela Hash gerada com sucesso..." << endl;
+
+        delete[] reg;
+        menu();
+    }
+    else if (resp == 3)
+    {
+
+        exportaHashingOrdenacao();
+        menu();
+    }
+    else if (resp == 4)
+    {
+        menuParteTres();
+    }
+    else if (resp == 5)
+    {
+        exit(0);
+    }
+    else
+    {
+        cout << "Por favor digite uma resposta válida!" << endl;
+        menu();
+    }
+}
+
+void menuParteTres()
+{
+    int resp;
+    cout << "Digite a opcao que deseja acessar: \n [1] Arvore Vermelho Preto \n [2] Arvore B \n [3] Sair \n"
+         << endl;
+    cin >> resp;
+
+    //menu para gerar árvore vermelho e preto, além de seu relatório em txt
+    if (resp == 1)
+    {
+        int resp2;
+        cout << "Informe o numero de reviews que a arvore vermelho preto deve importar: \n" << endl;
+        cout << "OBS: De 500 para baixo, sera exibido no console, acima disso so e acessado no relatorio txt" << endl;
+        cin >> resp2;
+        int aux = 0;
+        float tempoExecucao;
+
+        // inicializa variáveis 
+        arvoreVP *arVP = new arvoreVP();
+        Registro *reg = new Registro[resp2];
+        std::chrono::high_resolution_clock::time_point start;
+        std::chrono::high_resolution_clock::time_point end;
+
+        leBinario(reg, resp2); //importa N registros aleatorios
+
+        //realiza contagem de tempo de execução para gerar a árvore
+        start = std::chrono::high_resolution_clock::now();
+        for( int i = 0; i <resp2; i++)
+        {
+            arVP->inserir(reg[i].getID(), reg[i].getPos(), &aux);
+        }
+        end = std::chrono::high_resolution_clock::now();
+        tempoExecucao = std::chrono::duration<float>(end - start).count();
+
+        // printa no console caso a árvore tenha menos de 500 reviews
+        if (resp2 <= 500)
+        {
+            arVP->prettyPrint();
+        }
+
+        int resp3;
+        cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n" << endl;
+        cin >> resp3;
+
+        // gera relatório em txt com a árvore de tamanho n, digitada no console 
+        if (resp3 == 1)
+        {
+            std::fstream saida;
+            saida.open("./data/relatorio_etapa3.txt", std::ios_base::out | std::ios_base::app);
+            if (saida.is_open())
+            {
+                saida << "------------- RELATORIO ETAPA 3 - ARVORE VERMELHO PRETO -------------" << std::endl;
+                saida << "Numero de reviews que usuario importou para a arvore: " << " " << resp2 << std::endl;
+                saida << "Numero de comparacoes realizadas durante as insercoes na arvore: " << " " << aux << std::endl;
+                saida << "Tempo gasto para gerar a arvore: " << " " << tempoExecucao << "s" << std::endl;
+                saida << "Numero de rotacoes realizadas pela arvore: " << " " << arVP->contaRotacoes() << std::endl;
+                saida << "A arvore gerada foi: " << std::endl;
+                arVP->geraTxt();
+                cout << "Relatorio ('relatorio_etapa3') txt salvo na pasta 'data' do projeto " << endl;
+            }
+            else
+            {
+                cout << "Nao foi possivel abrir o arquivo txt" << endl;
+            }
+            menuParteTres();
+        }
+
+        // usuário informa ID que deseja procurar na árvore 
+        else if (resp3 == 2)
+        {
+            string resp4;
+            cout << "Informe agora o valor da ID que deseja procurar: \n"
+                 << endl;
+            cin >> resp4;
+            arVP->buscaNo(arVP, resp4, &aux, 2);
+            cout << "\n";
+            menuParteTres();
+        }
+
+        // trata uso errado na navegação do menu
+        else
+        {
+            cout << "Favor informar uma opcao valida \n"
+                 << endl;
+            menuParteTres();
+        }
+
+        delete arVP;
+        delete []reg;
+    }
+
+    //menu para gerar árvore B, além de seu relatório em txt
+    else if (resp == 2)
+    {
+        int resp2;
+        cout << "Informe a quantidade de reviews que serao importados: " << endl;
+        cin >> resp2;
+        int resp3;
+        cout << "Agora, informe a ordem que a arvore B tera: \n"
+             << endl;
+        cin >> resp3;
+        // chama função para criar árvore B de ordem indicada pelo teclado
+        int resp4;
+        cout << "Perfeito, agora digite [1] se deseja gerar um relatorio ou [2] se deseja buscar uma ID: \n"
+             << endl;
+        if (resp4 == 1)
+        {
+            // chama função para gerar relatório da árvore B
+        }
+        else if (resp4 == 2)
+        {
+            int resp5;
+            cout << "Informe a ID do review que deseja buscar na arvore: \n"
+                 << endl;
+            cin >> resp5;
+            // chama função para fazer a busca da ID digitada
+        }
+        else
+        {
+            cout << "Favor informar uma opcao valida \n"
+                 << endl;
+            menuParteTres();
+        }
+    }
+
+
+    else if (resp == 3)
+    {
+        menu();
+    }
+
+
+    else
+    {
+        cout << "Favor informar uma opcao valida" << endl;
+        menuParteTres();
+    }
 }
 
 int retiraPontos(std::string versao)
@@ -697,60 +806,15 @@ int main(int argc, char const *argv[])
         {
             caminhoArquivo = argv[1];
         }
-
         Lista *listaReview = new Lista(caminhoArquivo);
         listaReview->obterReviews(); // Leitura e armazenamento dos dados.
         //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
         //listaReview->criaTabelaHash();
-        
+
         delete listaReview;
     }
 
-
     menu();
- 
-
-    /*
-    arvoreB* ABB = new arvoreB(3);
-    
-    ABB->inserir("Aab", 5);
-    ABB->inserir("Abc", 15);
-    ABB->inserir("Acb", 10);
-    
-    delete ABB;
-
-    return 0;
-    */
-}
-
-arvoreVP* testeArvoreVP(int numRegistros)
-{
-    arvoreVP* AVP = new arvoreVP();
-
-    
-    for(int i=0; i<numRegistros; i++)
-    {
-        //int posicao = rand() % NREGISTROS;
-        int posicao = rand () % 1000000;
-        //std::string id = exibeRegistro(retornaRegistro(posicao));
-        std::string id (std::to_string(posicao));
-        AVP->inserir(id, posicao);
-    }
-
-    AVP->prettyPrint();
-    return AVP;
-    
-
-    /*
-    int c = 1;
-    while(c != 0)
-    {
-        cin >> c;
-        std::string id (std::to_string(c));
-        AVP->inserir(id, c);
-        AVP->prettyPrint();
-    }
-    */
 }
 
 
@@ -768,7 +832,7 @@ void exportaHashingOrdenacao()
         arquivoSaida << " === " << N << " registro importados. === " << std::endl;
         for (int i = 0; i < N; i++)
             arquivoSaida << reg[i].imprimeRegistros() << std::endl;
-        
+
         arquivoSaida << std::endl;
 
         tabelaHash *tab = new tabelaHash[n];
@@ -779,83 +843,80 @@ void exportaHashingOrdenacao()
         int qualquer;
         aux.quickSort_time(tab, n, &qualquer, &qualquer);
         arquivoSaida << aux.imprimeFrequentes(tab, n) << std::endl;
-        
+
         Ordenacao ordenacao;
         Registro *regQS = new Registro[N];
         Registro *regHS = new Registro[N];
 
         copiaRegistro(regQS, reg, N);
         copiaRegistro(regHS, reg, N);
-        
-        int movimentacoes=0, comparacoes=0;
+
+        int movimentacoes = 0, comparacoes = 0;
 
         arquivoSaida << std::endl;
         arquivoSaida << " === Ordenação QuickSort === " << std::endl;
         float tempoQuicksort = ordenacao.quickSort_time(regQS, N, &comparacoes, &movimentacoes);
-        for(int i=0; i<N; i++)       
+        for (int i = 0; i < N; i++)
             arquivoSaida << regQS[i].imprimeRegistros() << std::endl;
-        delete [] regQS;
+        delete[] regQS;
 
         arquivoSaida << std::endl;
         arquivoSaida << " === Ordenação HeapSort === " << std::endl;
         float tempoHeapsort = ordenacao.heapSort_time(regHS, N, &comparacoes, &movimentacoes);
-        for(int i=0; i<N; i++)       
+        for (int i = 0; i < N; i++)
             arquivoSaida << regHS[i].imprimeRegistros() << std::endl;
-        delete [] regHS;
+        delete[] regHS;
 
         arquivoSaida << std::endl;
         arquivoSaida << " === Ordenação CombSort === " << std::endl;
         float tempoCombsort = ordenacao.combSort_time(reg, N, &comparacoes, &movimentacoes);
-        for(int i=0; i<N; i++)       
+        for (int i = 0; i < N; i++)
             arquivoSaida << reg[i].imprimeRegistros() << std::endl;
-        delete [] reg;
+        delete[] reg;
 
-        delete [] tab;
+        delete[] tab;
     }
 }
 
 // Modificações Leitura/Escrita Binário
 
-
 int retornaRegistro(int k)
-{    
+{
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
     if (arqBin.is_open())
     {
-        arqBin.seekg(0,arqBin.end);
+        arqBin.seekg(0, arqBin.end);
         int tamTotal = arqBin.tellg();
-        arqBin.seekg(0,arqBin.beg);
+        arqBin.seekg(0, arqBin.beg);
 
-        int posInicial=0, posProximo=0; // Ponteiro no arquivo
-        int i = 0; // Contador de linhas
-        unsigned short tamanhoRegistro=0;
+        int posInicial = 0, posProximo = 0; // Ponteiro no arquivo
+        int i = 0;                          // Contador de linhas
+        unsigned short tamanhoRegistro = 0;
         unsigned short tamanhoReviewText = 0; // tamanho de cada texto
 
         posProximo += sizeof(double);
 
         do
         {
-            arqBin.seekg(posProximo+86);
-            arqBin.read((char*)& tamanhoReviewText, sizeof(unsigned short));
+            arqBin.seekg(posProximo + 86);
+            arqBin.read((char *)&tamanhoReviewText, sizeof(unsigned short));
 
-            tamanhoRegistro = (86+2*sizeof(int)+19+sizeof(short)+tamanhoReviewText);
+            tamanhoRegistro = (86 + 2 * sizeof(int) + 19 + sizeof(short) + tamanhoReviewText);
             posProximo += tamanhoRegistro;
             i++;
-            
-        } while (i<=k);
 
+        } while (i <= k);
 
         arqBin.seekg(posProximo);
-        
+
         arqBin.close();
         return posProximo;
     }
     else
         std::cout << "Erro ao ler arquivo." << std::endl;
-    
-    return -1;
 
+    return -1;
 }
 
 std::string exibeRegistro(int posicao)
@@ -863,15 +924,20 @@ std::string exibeRegistro(int posicao)
     std::ifstream arqBin;
     arqBin.open("./data/tiktok_app_reviews.bin", std::ios::binary);
 
-    if(arqBin.is_open())
+    if (arqBin.is_open())
     {
         arqBin.seekg(posicao);
-        char * buffer = new char[86];
-        arqBin.read(buffer, sizeof(char)*86);
+        char *buffer = new char[86];
+        arqBin.read(buffer, sizeof(char) * 86);
         std::string reviewID(buffer);
         // std::cout << arqBin.tellg() << ": " << reviewID << std::endl;
-        delete [] buffer;
+        delete[] buffer;
 
         return reviewID;
+    }
+    else
+    {
+        std::cout << "Não foi possivel abrir o arquivo";
+        return "";
     }
 }

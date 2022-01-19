@@ -9,6 +9,7 @@ public:
     ~Registro();
 
     //setters
+    void setPos(int);
     void setN(int);
     void setID(std::string);
     void setText(std::string);
@@ -23,12 +24,13 @@ public:
     std::string getDate();
     int getVotes();
     int getN();
+    int getPos();
 
     std::string imprimeRegistros();
 
 private:
 
-
+    int posBinario;
     std::string review_id;
     std::string review_text;
     int upvotes;
