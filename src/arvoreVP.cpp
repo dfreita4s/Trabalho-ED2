@@ -467,6 +467,9 @@ void arvoreVP::insere_caso4(NoVP *no)
 
 void arvoreVP::novoRotacionaDir(NoVP *no)
 {
+    if(no->getNoPai() == nullptr)
+        return;
+        
     NoVP *aux = no->getNoEsq()->getNoDir();
     NoVP *aux2 = no->getNoEsq();
     // se avô era raiz
@@ -506,6 +509,9 @@ void arvoreVP::novoRotacionaDir(NoVP *no)
 
 void arvoreVP::novoRotacionaEsq(NoVP *no)
 {
+    if(no->getNoPai() == nullptr)
+        return;
+    
     NoVP *aux = no->getNoDir()->getNoEsq();
     NoVP *aux2 = no->getNoDir();
 
