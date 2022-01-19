@@ -19,7 +19,7 @@ private:
 public:
     
     // NoB(std::string, int);
-    NoB(int);
+    NoB(int, bool);
     ~NoB();
 
     void setChave(T*);

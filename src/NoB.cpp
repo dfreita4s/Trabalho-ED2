@@ -1,11 +1,11 @@
 #include "../inc/NoB.h"
 
-NoB::NoB(int m)
+NoB::NoB(int m, bool folha)
 {
-    T* chaves = new T[m];
+    T* chaves = new T[m - 1];
     NoB** filhos = new NoB*[m];
-    this->n = 0;
-    this->folha = true;
+    this->n = 0; // numero de chaves no no
+    this->folha = folha;
 }
 
 NoB::~NoB()

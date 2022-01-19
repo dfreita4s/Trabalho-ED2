@@ -12,7 +12,7 @@
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
 #include "../inc/arvoreVP.h"
-#include "../inc/arvoreB.h"
+#include "../inc/ArvoreB.h"
 
 #define NREGISTROS 3646475
 
@@ -327,15 +327,15 @@ void analiseEstruturas()
             arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
 
-            for (int i = 0; i < N; i++) //inserir registros na estrutura
-                AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
+            for(int j = 0; j < N; j++) //inserir registros na estrutura
+                AVP->inserir(regEstrutura[j].getID(), regEstrutura[j].getPos(), &comparacoesInserirAVP);
 
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
 
-            for (int i = 0; i < B; i++) //buscar B registros aleatorios
+            for(int j = 0; j < N; j++) //buscar B registros aleatorios
                 AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID(), &comparacoesBuscaAVP);
 
             end = std::chrono::high_resolution_clock::now();
@@ -370,19 +370,24 @@ void analiseEstruturas()
         mediaComparacoesBuscaAVP = comparacoesBuscaAVP / 3;
 
         std::cout << "] " << std::endl;
-        // exit(0);
+        
         //para Arvore B m = 20
+
+
         std::cout << "Arvore B (m = 20)\nTeste:[";
         for (int i = 0; i < 3; i++)
 
         {
+            ArvoreB *arvoreB = new ArvoreB(20);
 
             start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
+            for(int j = 0; j < N; j++)
+             arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
+            for(int j = 0; j < N; j++)
             //buscar B registros aleatorios
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAB20 = std::chrono::duration<float>(end - start).count();
@@ -403,6 +408,7 @@ void analiseEstruturas()
             mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
 
             std::cout << "///";
+            delete arvoreB;
         }
 
         mediaTempoBuscaAB20 = tempoBuscaAB20 / 3;
@@ -418,8 +424,10 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
+            ArvoreB *arvoreB = new ArvoreB(200);
             start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
+            for(int j = 0; j < N; j++)
+             arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB200 = std::chrono::duration<float>(end - start).count();
 
@@ -444,6 +452,7 @@ void analiseEstruturas()
             mediaComparacoesBuscaAB200 += comparacoesBuscaAB200;
 
             std::cout << "///";
+            delete arvoreB;
         }
 
         mediaTempoBuscaAB200 = tempoBuscaAB200 / 3;

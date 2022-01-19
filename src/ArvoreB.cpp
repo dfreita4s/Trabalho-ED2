@@ -1,30 +1,30 @@
-#include "../inc/arvoreB.h"
+#include "../inc/ArvoreB.h"
 
-/*
-arvoreB::arvoreB(int m)
+
+ArvoreB::ArvoreB(int m)
 {
     this->raiz = nullptr;
-    this->nChaves = m;
+    this->nChaves = m -1;
 }
 
-arvoreB::~arvoreB()
+ArvoreB::~ArvoreB()
 {
 }
 
-void arvoreB::inserir(std::string ID, int pos)
+void ArvoreB::inserir(std::string ID, int pos, int *comparacoes)
 {
     T* novaChave = new T;
     novaChave->id = ID;
     novaChave->posicao = pos;
 
-    inserirChave(novaChave, raiz);
+    inserirChave(novaChave, raiz, comparacoes);
 }
 
-void arvoreB::inserirChave(T* chave, NoB* pagina)
+void ArvoreB::inserirChave(T* chave, NoB* pagina, int *comparacoes)
 {
 
     if ( this->raiz == nullptr) {
-        NoB* novoNoB = new NoB(this->nChaves);
+        NoB* novoNoB = new NoB(this->nChaves, true);
         raiz = novoNoB;
         novoNoB->insereChave(chave);
         return;
@@ -36,9 +36,8 @@ void arvoreB::inserirChave(T* chave, NoB* pagina)
 
 }
 
-void arvoreB::exibeArvore()
+void ArvoreB::exibeArvore()
 {
 
 }
 
-*/
