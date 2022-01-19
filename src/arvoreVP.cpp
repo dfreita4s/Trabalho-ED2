@@ -24,9 +24,7 @@ void arvoreVP::auxDeleteNos(NoVP* p)
     if (p == nil)
         return;
 
-    // std::cout<<"entrou delete "<<std::endl;
     auxDeleteNos(p->getNoEsq());
-
     auxDeleteNos(p->getNoDir());
 
     delete p;    
@@ -136,7 +134,7 @@ bool arvoreVP::arvoreVazia()
 
 void arvoreVP::inserir(std::string id, int posicao, int *comparacoes)
 {  
-    NoVP* novoNo = new NoVP(id, posicao * 127);
+    NoVP* novoNo = new NoVP(id, posicao);
     novoNo->setNoEsq(nil);
     novoNo->setNoDir(nil);
     novoNo->setColor(Vermelho);
@@ -207,12 +205,9 @@ void arvoreVP::arrumaArvore(NoVP * no)
     if ( no == raiz ) {
         no->setColor(Preto);
         return;
-    }
-
-    
+    }    
 
     while (getColor(no->getNoPai()) == Vermelho) {
-
 
         if(no->getNoPai()->getNoPai()->getNoDir() == no->getNoPai()){
         // PAI NO DIREITA            
@@ -388,7 +383,9 @@ void arvoreVP::insere_caso2(NoVP *no)
     }
     else
     {
-        insere_caso3(no);       
+        if(no->getNoPai()->getNoPai() == nullptr)
+            return;
+        insere_caso3(no);
     }
 }
 
@@ -469,15 +466,20 @@ void arvoreVP::insere_caso4(NoVP *no)
 }
 
 void arvoreVP::novoRotacionaDir(NoVP *no)
-{
+{      
+    NoVP *aux = no->getNoEsq()->getNoDir();
+    NoVP *aux2 = no->getNoEsq();
     // se avô era raiz
     if(no->getNoPai() == nullptr)
     {
+        //atualiza neto
+        no->getNoEsq()->getNoEsq()->setNoEsq(no->getNoEsq()->getNoEsq()->getNoEsq());
+        no->getNoEsq()->getNoEsq()->setNoDir(no->getNoEsq()->getNoEsq()->getNoDir());
+        no->getNoEsq()->getNoEsq()->setNoPai(no->getNoEsq());
+
         //atualiza pai
-        NoVP *aux = no->getNoEsq()->getNoDir();
-        NoVP *aux2 = no->getNoEsq();
         no->getNoEsq()->setNoDir(no);
-        no->setNoPai(nullptr);
+        no->getNoEsq()->setNoPai(nullptr);
         raiz = no->getNoEsq();
 
         //atualiza avô
@@ -489,8 +491,10 @@ void arvoreVP::novoRotacionaDir(NoVP *no)
     // se avô não era raiz
     else
     {
-        NoVP *aux = no->getNoEsq()->getNoDir();
-        NoVP *aux2 = no->getNoEsq();
+        //atualiza neto
+        no->getNoEsq()->getNoEsq()->setNoEsq(no->getNoEsq()->getNoEsq()->getNoEsq());
+        no->getNoEsq()->getNoEsq()->setNoDir(no->getNoEsq()->getNoEsq()->getNoDir());
+        no->getNoEsq()->getNoEsq()->setNoPai(no->getNoEsq());
 
         //atualiza pai
         no->getNoEsq()->setNoDir(no);
@@ -511,11 +515,17 @@ void arvoreVP::novoRotacionaDir(NoVP *no)
 }
 
 void arvoreVP::novoRotacionaEsq(NoVP *no)
-{
+{ 
+    NoVP *aux = no->getNoDir()->getNoEsq();
+    NoVP *aux2 = no->getNoDir();
+
     if(no->getNoPai() == nullptr)
     {
-        NoVP *aux = no->getNoDir()->getNoEsq();
-        NoVP *aux2 = no->getNoDir();
+        // atualiza neto
+        no->getNoDir()->getNoDir()->setNoDir(no->getNoDir()->getNoDir()->getNoDir());
+        no->getNoDir()->getNoDir()->setNoEsq(no->getNoDir()->getNoDir()->getNoEsq());
+        no->getNoDir()->getNoDir()->setNoPai(no->getNoDir());
+
         // atualiza pai
         no->getNoDir()->setNoEsq(no);
         no->getNoDir()->setNoPai(nullptr);
@@ -528,8 +538,11 @@ void arvoreVP::novoRotacionaEsq(NoVP *no)
     }
     else
     {
-        NoVP *aux = no->getNoDir()->getNoEsq();
-        NoVP *aux2 = no->getNoDir();
+        //atualiza neto
+        no->getNoDir()->getNoDir()->setNoDir(no->getNoDir()->getNoDir()->getNoDir());
+        no->getNoDir()->getNoDir()->setNoEsq(no->getNoDir()->getNoDir()->getNoEsq());
+        no->getNoDir()->getNoDir()->setNoPai(no->getNoDir());
+
         //atualiza pai
         no->getNoDir()->setNoEsq(no);
         no->getNoDir()->setNoPai(no->getNoPai());

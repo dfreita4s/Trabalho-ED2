@@ -90,7 +90,6 @@ void leBinario(Registro *registro, int N)
 
             registro[i].setDate(data_buffer);
 
-            textBin.seekg(0, ios::beg);
             arqBin.seekg(0, ios::beg);
         }
         delete[] id_buffer;
@@ -307,6 +306,7 @@ void analiseEstruturas()
     float mediaTempoBuscaAB20 = 0.0000f;
     float mediaTempoBuscaAB200 = 0.0000f;
 
+    // int N = 1000000;
     int N = 1000000;
     int B = 100;
 
@@ -314,7 +314,6 @@ void analiseEstruturas()
     saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
     if (saida.is_open())
     {
-
         std::chrono::high_resolution_clock::time_point start;
         std::chrono::high_resolution_clock::time_point end;
 
@@ -325,14 +324,11 @@ void analiseEstruturas()
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
         for (int i = 0; i < 3; i++)
         {
-            arvoreVP *AVP = new arvoreVP;
+            arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
 
             for (int i = 0; i < N; i++) //inserir registros na estrutura
-            {
                 AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
-               
-            }
 
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
@@ -361,8 +357,11 @@ void analiseEstruturas()
             mediaComparacoesBuscaAVP += comparacoesBuscaAVP;
 
             std::cout << "///";
+
             delete AVP; //delete arvore VP
         }
+
+
 
         mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
         mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
@@ -760,19 +759,8 @@ int main(int argc, char const *argv[])
     }
 
     menu();
-
-    /*
-    arvoreB* ABB = new arvoreB(3);
-    
-    ABB->inserir("Aab", 5);
-    ABB->inserir("Abc", 15);
-    ABB->inserir("Acb", 10);
-    
-    delete ABB;
-
-    return 0;
-    */
 }
+
 
 void exportaHashingOrdenacao()
 {
