@@ -90,6 +90,7 @@ void leBinario(Registro *registro, int N)
 
             registro[i].setDate(data_buffer);
 
+            textBin.seekg(0, ios::beg);
             arqBin.seekg(0, ios::beg);
         }
         delete[] id_buffer;
@@ -230,6 +231,7 @@ void ordenacao()
     }
     else
         std::cout << "Nao foi possivel abrir o arquivo" << std::endl;
+    delete [] dat;
     saida.close();
 }
 
@@ -316,7 +318,6 @@ void analiseEstruturas()
         std::chrono::high_resolution_clock::time_point start;
         std::chrono::high_resolution_clock::time_point end;
 
-        arvoreVP *AVP = new arvoreVP();
 
         Registro *regEstrutura = new Registro[N];
 
@@ -325,6 +326,7 @@ void analiseEstruturas()
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
         for (int i = 0; i < 3; i++)
         {
+            arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
 
             for (int i = 0; i < N; i++) //inserir registros na estrutura
@@ -357,10 +359,9 @@ void analiseEstruturas()
             mediaComparacoesBuscaAVP += comparacoesBuscaAVP;
 
             std::cout << "///";
+            delete AVP; //delete arvore VP
         }
 
-
-        delete[] AVP; //delete arvore VP
 
         mediaTempoBuscaAVP = mediaTempoBuscaAVP / 3;
         mediaTempoInserirAVP = mediaTempoInserirAVP / 3;
@@ -480,6 +481,7 @@ void analiseEstruturas()
               << std::endl;
 
         //escrever no txt
+        std::cout<<"Estatisticas de desempenho geradas!!"<<std::endl;
         delete[] regEstrutura;
     }
     else

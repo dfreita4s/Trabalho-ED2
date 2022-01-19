@@ -12,10 +12,10 @@ arvoreVP::arvoreVP()
 
 arvoreVP::~arvoreVP()
 {
-    std::cout << "Destruindo Árvore.." << std::endl;
+    // std::cout << "Destruindo Árvore.." << std::endl;
     auxDeleteNos(raiz);
     delete nil;
-    std::cout << "Árvore destruída" << std::endl;
+    // std::cout << "Árvore destruída" << std::endl;
 }
 
 void arvoreVP::auxDeleteNos(NoVP* p)
@@ -24,7 +24,9 @@ void arvoreVP::auxDeleteNos(NoVP* p)
     if (p == nil)
         return;
 
+    // std::cout<<"entrou delete "<<std::endl;
     auxDeleteNos(p->getNoEsq());
+
     auxDeleteNos(p->getNoDir());
 
     delete p;    
