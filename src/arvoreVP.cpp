@@ -1,4 +1,5 @@
 #include<iostream>
+#include <fstream>
 #include "../inc/arvoreVP.h"
 
 
@@ -28,101 +29,6 @@ void arvoreVP::auxDeleteNos(NoVP* p)
     auxDeleteNos(p->getNoDir());
 
     delete p;    
-}
-
-// Rotações
-void arvoreVP::rotacaoEsquerda(NoVP *no)
-{
-    NoVP* q;
-
-    q = no->getNoDir();
-    no->setNoDir(q->getNoEsq());
-    q->setNoEsq(no);
-
-    // Atualiza Pai
-    q->setNoPai(no->getNoPai());
-    no->setNoPai(q);
-
-    if (q->getNoPai() == nullptr) // q virou raiz
-        raiz = q;
-    else
-        q->getNoPai()->setNoDir(q); // Se não for raiz, aponta nó direito para o novo nó
-}
-
-void arvoreVP::rotacaoDireita(NoVP *no)
-{
-    NoVP* q;
-
-    q = no->getNoEsq();
-    no->setNoEsq(q->getNoDir());
-    q->setNoDir(no);
-
-    // Atualiza Pai
-    q->setNoPai(no->getNoPai());
-    no->setNoPai(q);
-
-    if (q->getNoPai() == nullptr) // q virou raiz
-        raiz = q;
-    else
-        q->getNoPai()->setNoEsq(q); // Se não for raiz, aponta nó direito para o novo nó
-
-}
-
-void arvoreVP::rotacaoDuplaEsquerda(NoVP *no)
-{
-    NoVP* q;
-    NoVP* r;
-
-    q = no->getNoDir();
-    r = q->getNoEsq();
-    no->setNoDir(r->getNoEsq());
-    q->setNoEsq(r->getNoDir());
-    r->setNoEsq(no);
-    r->setNoDir(q);
-
-    // Atualiza pais
-    r->setNoPai(no->getNoPai());
-    q->setNoPai(r);
-    no->setNoPai(r);
-
-    // Atualiza filhos
-    if (r->getNoPai() != nullptr) // Se for null é a raiz
-        if (r->getNoPai()->getNoEsq() == no)
-            r->getNoPai()->setNoEsq(r);
-        else
-            r->getNoPai()->setNoDir(r);
-    else
-        raiz = r; // Atualiza raiz
-
-}
-
-void arvoreVP::rotacaoDuplaDireita(NoVP *no)
-{
-    NoVP* q;
-    NoVP* r;
-
-    // Faz a rotação
-    q = no->getNoEsq();
-    r = q->getNoDir();
-    no->setNoEsq(r->getNoDir());
-    q->setNoDir(r->getNoEsq());
-    r->setNoDir(no);
-    r->setNoEsq(q);
-
-    // Atualiza pais
-    r->setNoPai(no->getNoPai());
-    q->setNoPai(r);
-    no->setNoPai(r);
-
-    // Atualiza filhos
-    if (r->getNoPai() != nullptr) // Se for null é a raiz
-        if (r->getNoPai()->getNoDir() == no)
-            r->getNoPai()->setNoDir(r);
-        else
-            r->getNoPai()->setNoEsq(r);
-    else
-        raiz = r; // Atualiza raiz
-
 }
 
 bool arvoreVP::arvoreVazia()
@@ -199,74 +105,6 @@ void arvoreVP::inserirNo(NoVP* no, int *comparacoes)
     */
 }
 
-void arvoreVP::arrumaArvore(NoVP * no)
-{
-    // CASO 1: Colori nó para preto
-    if ( no == raiz ) {
-        no->setColor(Preto);
-        return;
-    }    
-
-    while (getColor(no->getNoPai()) == Vermelho) {
-
-        if(no->getNoPai()->getNoPai()->getNoDir() == no->getNoPai()){
-        // PAI NO DIREITA            
-            NoVP* tio = no->getNoPai()->getNoPai()->getNoEsq();
-            if(getColor(tio) == Vermelho) {
-            // CASO 2: TIO VERMELHO
-                tio->setColor(Preto);
-                no->getNoPai()->setColor(Preto);
-                if(no->getNoPai()->getNoPai()->getNoPai() != nullptr) // Raiz
-                    no->getNoPai()->getNoPai()->setColor(Vermelho);
-            } else {
-                // CASO 3: PAI VERMELHO E TIO PRETO
-                // SUBCASO 3.1: TIO PRETO
-                if (no == no->getNoPai()->getNoDir()) {
-
-                    no->getNoPai()->getNoPai()->setColor(Vermelho);
-                    no->getNoPai()->setColor(Preto);
-                    no->setColor(Vermelho);
-                    rotacaoEsquerda(no->getNoPai()->getNoPai());
-                } else {
-                    // SUBCASO 3.2:
-                    no->getNoPai()->getNoPai()->setColor(Vermelho);
-                    no->setColor(Preto);
-                    rotacaoDuplaEsquerda(no->getNoPai()->getNoPai());
-                }
-            }
-        } else {
-        // PAI DO NO A ESQUERDA
-            NoVP* tio = no->getNoPai()->getNoPai()->getNoDir();
-            if(getColor(tio) == Vermelho) {
-            // CASO 2: TIO VERMELHO
-                tio->setColor(Preto);
-                no->getNoPai()->setColor(Preto);
-                if(no->getNoPai()->getNoPai()->getNoPai() != nullptr) // Raiz
-                    no->getNoPai()->getNoPai()->setColor(Vermelho);
-            } else {
-                // CASO 3: PAI VERMELHO E TIO PRETO
-                // SUBCASO 3.1: TIO PRETO
-                if (no == no->getNoPai()->getNoEsq()) {
-                    no->getNoPai()->getNoPai()->setColor(Vermelho);
-                    no->getNoPai()->setColor(Preto);
-                    no->setColor(Vermelho);
-                    rotacaoDireita(no->getNoPai()->getNoPai());
-                } else {
-                    // SUBCASO 3.2:
-                    no->getNoPai()->getNoPai()->setColor(Vermelho);
-                    no->setColor(Preto);
-                    rotacaoDuplaDireita(no->getNoPai()->getNoPai());
-                }
-            }
-        }
-
-        if(no->getNoPai() == nullptr)
-            break;
-
-        if(no->getNoPai() != raiz)
-            no = no->getNoPai()->getNoPai();
-    }
-}
 
 Color arvoreVP::getColor(NoVP * no)
 {
@@ -282,16 +120,16 @@ void arvoreVP::printHelper(NoVP* no, std::string indent, bool last) {
 		   std::cout<<indent;
 		   if (last) {
             if(no->getNoPai() == nullptr)
-		      std::cout<<"----";
-            else
 		      std::cout<<"R----";
+            else
+		      std::cout<<"D----";
 		      indent += "     ";
 		   } else {
-		      std::cout<<"L----";
+		      std::cout<<"E----";
 		      indent += "|    ";
 		   }
             
-           std::string sColor = getColor(no) ? "BLACK" : "RED";
+           std::string sColor = getColor(no) ? "Preta" : "Vermelha";
 		   std::cout<<no->getID()<<"("<<sColor<<")"<<std::endl;
 		   printHelper(no->getNoEsq(), indent, false);
 		   printHelper(no->getNoDir(), indent, true);
@@ -301,6 +139,52 @@ void arvoreVP::printHelper(NoVP* no, std::string indent, bool last) {
 void arvoreVP::prettyPrint() {
     if (raiz) {
         printHelper(raiz, "", true);
+    }
+}
+
+void arvoreVP::printaArvore(NoVP *no, std::string i, bool ult)
+{
+    std::fstream saida;
+    saida.open("./data/relatorio_etapa3.txt", std::ios_base::out | std::ios_base::app);
+    if (saida.is_open())
+    {
+        if (no != nil)
+        {
+            saida << i;
+            if (ult)
+            {
+                if (no->getNoPai() == nullptr)
+                {
+                    saida << "Raiz----";
+                }
+                else 
+                {
+                    saida << "Dir----";
+                    i += "      ";
+                }
+            }
+            else 
+            {
+                saida << "Esq----";
+                i += "|    ";
+            }
+           std::string cor = getColor(no) ? "Preto" : "Vermelho";
+		   saida << no->getID()<<"("<< cor <<")" << std::endl;
+		   printaArvore(no->getNoEsq(), i, false);
+		   printaArvore(no->getNoDir(), i, true);
+        }
+    }
+    else 
+    {
+        std::cout << "Arquivo ja esta aberto " << std::endl;
+    }
+}
+
+void arvoreVP::geraTxt()
+{
+    if(raiz) 
+    {
+        printaArvore(raiz, "", true);
     }
 }
 
@@ -320,7 +204,7 @@ void arvoreVP::imprimirArvore()
     imprimirNo(raiz, 0);
 }
 
-void arvoreVP::buscaNo(arvoreVP *VP, std::string id, int *comparacoes)
+void arvoreVP::buscaNo(arvoreVP *VP, std::string id, int *comparacoes, int funcao)
 {
     //int aux_id = stoi(id);
     NoVP *p;
@@ -352,8 +236,15 @@ void arvoreVP::buscaNo(arvoreVP *VP, std::string id, int *comparacoes)
             else
             {
                 result = p;
-                // std::cout << "ID" << " " << p->getID() << " " << "encontrada com sucesso, se encontra na posicao" << " " << p->getPosicao() << " " << "do arquivo binario" << std::endl;
-                break;
+                if (funcao == 1)
+                {
+                    break;
+                }
+                else if (funcao == 2)
+                {
+                    std::cout << "ID" << " " << p->getID() << " " << "encontrada com sucesso, se encontra na posicao" << " " << p->getPosicao() << " " << "do arquivo binario" << std::endl;
+                    break;
+                }
             }
         }
         if (result == nullptr)
@@ -512,6 +403,7 @@ void arvoreVP::novoRotacionaDir(NoVP *no)
         aux->setNoPai(no);
         no->setNoPai(aux2);
     }
+    rot++;
 }
 
 void arvoreVP::novoRotacionaEsq(NoVP *no)
@@ -559,6 +451,7 @@ void arvoreVP::novoRotacionaEsq(NoVP *no)
         aux->setNoPai(no);
         no->setNoPai(aux2);
     }
+    rot++;
 }
 
 void arvoreVP::novoRotDuplaDir(NoVP *no)
@@ -611,6 +504,7 @@ void arvoreVP::novoRotDuplaDir(NoVP *no)
         aux3->setNoPai(no);
         no->setNoPai(aux2);
     }
+    rot = rot + 2;
 }
 
 void arvoreVP::novoRotDuplaEsq(NoVP *no)
@@ -664,4 +558,10 @@ void arvoreVP::novoRotDuplaEsq(NoVP *no)
         aux3->setNoPai(no);
         no->setNoPai(aux2);
     }
+    rot = rot + 2;
+}
+
+int arvoreVP::contaRotacoes()
+{
+    return rot;
 }
