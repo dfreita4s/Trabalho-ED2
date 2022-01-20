@@ -22,10 +22,7 @@ void criaTabelaHash(tabelaHash *, Registro *, int);
 void criaTabelaHash(Registro *, int);
 int retiraPontos(std::string);
 // Nova leitura/escrita binário
-int retornaRegistro(int);
-std::string exibeRegistro(int);
 
-arvoreVP *testeArvoreVP(int);
 void menuParteTres();
 void testaExec();
 void buscaNoAVP(arvoreVP *, string);
@@ -37,6 +34,9 @@ void criaTabelaHash(tabelaHash *, Registro *, int);
 void criaTabelaHash(Registro *reg, int n);
 // Nova leitura/escrita binário
 int retornaRegistro(int);
+std::string exibeRegistro(int);
+arvoreVP* testeArvoreVP(int);
+
 
 void leBinario(Registro *registro, int N)
 {
@@ -230,6 +230,7 @@ void ordenacao()
     }
     else
         std::cout << "Nao foi possivel abrir o arquivo" << std::endl;
+    delete[] dat;
     saida.close();
 }
 
@@ -326,8 +327,8 @@ void analiseEstruturas()
             arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
 
-            for (int i = 0; i < N; i++) //inserir registros na estrutura
-                AVP->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAVP);
+            for(int j = 0; j < N; j++) //inserir registros na estrutura
+                AVP->inserir(regEstrutura[j].getID(), regEstrutura[j].getPos(), &comparacoesInserirAVP);
 
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAVP = std::chrono::duration<float>(end - start).count();
@@ -335,7 +336,7 @@ void analiseEstruturas()
             start = std::chrono::high_resolution_clock::now();
 
             for (int i = 0; i < B; i++) //buscar B registros aleatorios
-                AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID(), &comparacoesBuscaAVP);
+                AVP->buscaNo(AVP, regEstrutura[rand() % N + 0].getID(), &comparacoesBuscaAVP, 1);
 
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAVP = std::chrono::duration<float>(end - start).count();
@@ -371,17 +372,21 @@ void analiseEstruturas()
         std::cout << "] " << std::endl;
         // exit(0);
         //para Arvore B m = 20
+
         std::cout << "Arvore B (m = 20)\nTeste:[";
         for (int i = 0; i < 3; i++)
 
         {
+            // arvoreB *arvoreB = new arvoreB(20);
 
             start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
+            // for(int j = 0; j < N; j++)
+                // arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos());//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
+            // for(int j = 0; j < N; j++)
             //buscar B registros aleatorios
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAB20 = std::chrono::duration<float>(end - start).count();
@@ -402,6 +407,7 @@ void analiseEstruturas()
             mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
 
             std::cout << "///";
+            // delete arvoreB;
         }
 
         mediaTempoBuscaAB20 = tempoBuscaAB20 / 3;
@@ -417,8 +423,10 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
+            // ArvoreB *arvoreB = new ArvoreB(200);
             start = std::chrono::high_resolution_clock::now();
-            //inserir registros na estrutura
+            // for(int j = 0; j < N; j++)
+            //  arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB200 = std::chrono::duration<float>(end - start).count();
 
@@ -443,6 +451,7 @@ void analiseEstruturas()
             mediaComparacoesBuscaAB200 += comparacoesBuscaAB200;
 
             std::cout << "///";
+            // delete arvoreB;
         }
 
         mediaTempoBuscaAB200 = tempoBuscaAB200 / 3;
@@ -597,7 +606,6 @@ void menu()
 
     if (resp == 1)
     {
-
         analiseEstruturas();
         menu();
     }
@@ -637,47 +645,102 @@ void menu()
 void menuParteTres()
 {
     int resp;
-    cout << "Digite o valor da opcao que deseja acessar: \n [1] Arvore Vermelho Preto \n [2] Arvore B \n [3] Sair \n"
+    cout << "Digite a opcao que deseja acessar: \n [1] Arvore Vermelho Preto \n [2] Arvore B \n [3] Sair \n"
          << endl;
     cin >> resp;
+
+    //menu para gerar árvore vermelho e preto, além de seu relatório em txt
     if (resp == 1)
     {
         int resp2;
-        cout << "Informe o numero de reviews que serao importados para a arvore vermelho preto: \n"
-             << endl;
+        cout << "Informe o numero de reviews que a arvore vermelho preto deve importar: \n" << endl;
+        cout << "OBS: De 500 para baixo, sera exibido no console, acima disso so e acessado no relatorio txt" << endl;
         cin >> resp2;
+        int aux = 0;
+        float tempoExecucao;
 
-        // arvoreVP *AVP = new arvoreVP;
-        // AVP = testeArvoreVP(resp2);
+        // inicializa variáveis 
+        arvoreVP *arVP = new arvoreVP();
+        Registro *reg = new Registro[resp2];
+        std::chrono::high_resolution_clock::time_point start;
+        std::chrono::high_resolution_clock::time_point end;
+
+        leBinario(reg, resp2); //importa N registros aleatorios
+
+        //realiza contagem de tempo de execução para gerar a árvore
+        start = std::chrono::high_resolution_clock::now();
+        for( int i = 0; i <resp2; i++)
+        {
+            arVP->inserir(reg[i].getID(), reg[i].getPos(), &aux);
+        }
+        end = std::chrono::high_resolution_clock::now();
+        tempoExecucao = std::chrono::duration<float>(end - start).count();
+
+        // printa no console caso a árvore tenha menos de 500 reviews
+        if (resp2 <= 500)
+        {
+            arVP->prettyPrint();
+        }
 
         int resp3;
-        cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n"
-             << endl;
+        cout << "Agora pressione [1] para gerar um relatorio ou [2] para procurar uma id de avaliacao \n" << endl;
         cin >> resp3;
+
+        // gera relatório em txt com a árvore de tamanho n, digitada no console 
         if (resp3 == 1)
         {
-            // chama função que gera relatório
+            std::fstream saida;
+            saida.open("./data/relatorio_etapa3.txt", std::ios_base::out | std::ios_base::app);
+            if (saida.is_open())
+            {
+                saida << "------------- RELATORIO ETAPA 3 - ARVORE VERMELHO PRETO -------------" << std::endl;
+                saida << "Numero de reviews que usuario importou para a arvore: " << " " << resp2 << std::endl;
+                saida << "Numero de comparacoes realizadas durante as insercoes na arvore: " << " " << aux << std::endl;
+                saida << "Tempo gasto para gerar a arvore: " << " " << tempoExecucao << "s" << std::endl;
+                saida << "Numero de rotacoes realizadas pela arvore: " << " " << arVP->contaRotacoes() << std::endl;
+                saida << "A arvore gerada foi: " << std::endl;
+                arVP->geraTxt();
+                cout << "Relatorio ('relatorio_etapa3') txt salvo na pasta 'data' do projeto " << endl;
+            }
+            else
+            {
+                cout << "Nao foi possivel abrir o arquivo txt" << endl;
+            }
+            menuParteTres();
         }
+
+        // usuário informa ID que deseja procurar na árvore 
         else if (resp3 == 2)
         {
             string resp4;
             cout << "Informe agora o valor da ID que deseja procurar: \n"
                  << endl;
             cin >> resp4;
-            // AVP->buscaNo(AVP, resp4);
-            //menu();
+            arVP->buscaNo(arVP, resp4, &aux, 2);
+            cout << "\n";
+            menuParteTres();
         }
+
+        // trata uso errado na navegação do menu
         else
         {
             cout << "Favor informar uma opcao valida \n"
                  << endl;
             menuParteTres();
         }
+
+        delete arVP;
+        delete []reg;
     }
+
+    //menu para gerar árvore B, além de seu relatório em txt
     else if (resp == 2)
     {
+        int resp2;
+        cout << "Informe a quantidade de reviews que serao importados: " << endl;
+        cin >> resp2;
         int resp3;
-        cout << "Informe a ordem que a arvore B tera: \n"
+        cout << "Agora, informe a ordem que a arvore B tera: \n"
              << endl;
         cin >> resp3;
         // chama função para criar árvore B de ordem indicada pelo teclado
@@ -703,13 +766,14 @@ void menuParteTres()
             menuParteTres();
         }
     }
+
+
     else if (resp == 3)
     {
         menu();
     }
     else
     {
-        cout << "Favor informar uma opcao valida" << endl;
         menuParteTres();
     }
 }
