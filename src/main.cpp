@@ -750,6 +750,8 @@ void menuParteTres()
         if (resp4 == 1)
         {
             // chama função para gerar relatório da árvore B
+            cout << "arvore não implementada" << endl;
+            menuParteTres();
         }
         else if (resp4 == 2)
         {
@@ -757,6 +759,8 @@ void menuParteTres()
             cout << "Informe a ID do review que deseja buscar na arvore: \n"
                  << endl;
             cin >> resp5;
+            cout << "arvore não implementada" << endl;
+            menuParteTres();
             // chama função para fazer a busca da ID digitada
         }
         else
