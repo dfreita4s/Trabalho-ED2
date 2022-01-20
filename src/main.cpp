@@ -321,7 +321,7 @@ void analiseEstruturas()
         leBinario(regEstrutura, N); //importa N registros aleatorios
         //para AVP
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 50; i++)
         {
             arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();

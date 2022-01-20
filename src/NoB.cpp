@@ -2,10 +2,14 @@
 
 NoB::NoB(int m)
 {
-    T* chaves = new T[m];
-    NoB** filhos = new NoB*[m];
-    this->n = 0;
-    this->folha = true;
+    chaves = new T[m-1];
+    filhos = new NoB*[m];
+    t = m;
+    n = 0;
+    folha = true;
+
+    for(int i=0; i<m; i++)
+        filhos[i] = nullptr;
 }
 
 NoB::~NoB()
@@ -16,7 +20,7 @@ NoB::~NoB()
 
 int NoB::getNumChaves()
 {
-    return this->n;
+    return n;
 }
 
 std::string NoB::getID(T* chave, int pos)
@@ -31,31 +35,30 @@ int NoB::getPosicao(T* chave, int pos)
 
 bool NoB::deuOverflow()
 {
-    return this->n == 0;
+    return n == t;
 }
 
-bool NoB::eExterna()
+bool NoB::paginaExterna()
 {
-    if(this != nullptr)
-        return false;
-    return this->folha;
+    return folha;
 }
 
-void NoB::insereChave(T* chave)
+void NoB::insereChave(T* chave, int i)
 {
-    if(this->n == 0) // Nenhuma chave
+    // for(int j=i+1; j<(t-1); j++)
+    for(int j=(t-2); j>=i; j--)
     {
-        this->chaves[0] = chave[0];
-        this->n++;
-        return;
+        // Desloca chaves
+        chaves[j+1].id = chaves[j].id;
+        chaves[j+1].posicao = chaves[j].posicao;
+        // Desloca filhos
+        filhos[j+1] = filhos[j];
     }
-    
 
-    int i;
-    for(i=1; chave->id > this->chaves[i].id; i++ )
-        continue;
-
+    // chaves[i+1].id = chaves[i].id;
+    // chaves[i+1].posicao = chaves[i].posicao;
+    // Insere a chave
     chaves[i].id = chave->id;
-    chaves[i].posicao = chave->posicao;    
-
+    chaves[i].posicao = chave->posicao;
+    n++; // Incrementa total de chaves
 }

@@ -2,9 +2,11 @@
 
 class arvoreB
 {
+
 private:
-    NoB* raiz;
-    int nChaves;
+    NoB* raiz; // Raíz da Árvore B
+    int t; // Grau mínimo
+
 public:
     arvoreB(int);
     ~arvoreB();
@@ -12,5 +14,8 @@ public:
     void inserir(std::string, int);
     void inserirChave(T*, NoB*);
     void exibeArvore();
-    void split(NoB*);
+    void imprimeArvB();
+
+    void split(NoB*, int, NoB*, T*);
+    void procurar(NoB*, T*);
 };

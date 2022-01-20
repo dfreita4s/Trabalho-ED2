@@ -466,18 +466,20 @@ void arvoreVP::insere_caso4(NoVP *no)
 }
 
 void arvoreVP::novoRotacionaDir(NoVP *no)
-{
-    if(no->getNoPai() == nullptr)
-        return;
-        
+{      
     NoVP *aux = no->getNoEsq()->getNoDir();
     NoVP *aux2 = no->getNoEsq();
     // se avô era raiz
     if(no->getNoPai() == nullptr)
     {
+        //atualiza neto
+        no->getNoEsq()->getNoEsq()->setNoEsq(no->getNoEsq()->getNoEsq()->getNoEsq());
+        no->getNoEsq()->getNoEsq()->setNoDir(no->getNoEsq()->getNoEsq()->getNoDir());
+        no->getNoEsq()->getNoEsq()->setNoPai(no->getNoEsq());
+
         //atualiza pai
         no->getNoEsq()->setNoDir(no);
-        no->setNoPai(nullptr);
+        no->getNoEsq()->setNoPai(nullptr);
         raiz = no->getNoEsq();
 
         //atualiza avô
@@ -489,6 +491,11 @@ void arvoreVP::novoRotacionaDir(NoVP *no)
     // se avô não era raiz
     else
     {
+        //atualiza neto
+        no->getNoEsq()->getNoEsq()->setNoEsq(no->getNoEsq()->getNoEsq()->getNoEsq());
+        no->getNoEsq()->getNoEsq()->setNoDir(no->getNoEsq()->getNoEsq()->getNoDir());
+        no->getNoEsq()->getNoEsq()->setNoPai(no->getNoEsq());
+
         //atualiza pai
         no->getNoEsq()->setNoDir(no);
         no->getNoEsq()->setNoPai(no->getNoPai());
@@ -508,15 +515,17 @@ void arvoreVP::novoRotacionaDir(NoVP *no)
 }
 
 void arvoreVP::novoRotacionaEsq(NoVP *no)
-{
-    if(no->getNoPai() == nullptr)
-        return;
-    
+{ 
     NoVP *aux = no->getNoDir()->getNoEsq();
     NoVP *aux2 = no->getNoDir();
 
     if(no->getNoPai() == nullptr)
     {
+        // atualiza neto
+        no->getNoDir()->getNoDir()->setNoDir(no->getNoDir()->getNoDir()->getNoDir());
+        no->getNoDir()->getNoDir()->setNoEsq(no->getNoDir()->getNoDir()->getNoEsq());
+        no->getNoDir()->getNoDir()->setNoPai(no->getNoDir());
+
         // atualiza pai
         no->getNoDir()->setNoEsq(no);
         no->getNoDir()->setNoPai(nullptr);
@@ -529,6 +538,11 @@ void arvoreVP::novoRotacionaEsq(NoVP *no)
     }
     else
     {
+        //atualiza neto
+        no->getNoDir()->getNoDir()->setNoDir(no->getNoDir()->getNoDir()->getNoDir());
+        no->getNoDir()->getNoDir()->setNoEsq(no->getNoDir()->getNoDir()->getNoEsq());
+        no->getNoDir()->getNoDir()->setNoPai(no->getNoDir());
+
         //atualiza pai
         no->getNoDir()->setNoEsq(no);
         no->getNoDir()->setNoPai(no->getNoPai());
