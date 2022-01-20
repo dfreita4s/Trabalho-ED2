@@ -377,16 +377,16 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
-            ArvoreB *arvoreB = new ArvoreB(20);
+            // ArvoreB *arvoreB = new ArvoreB(20);
 
             start = std::chrono::high_resolution_clock::now();
-            for(int j = 0; j < N; j++)
-             arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
+            // for(int j = 0; j < N; j++)
+            //  arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
 
             start = std::chrono::high_resolution_clock::now();
-            for(int j = 0; j < N; j++)
+            // for(int j = 0; j < N; j++)
             //buscar B registros aleatorios
             end = std::chrono::high_resolution_clock::now();
             tempoBuscaAB20 = std::chrono::duration<float>(end - start).count();
@@ -407,7 +407,7 @@ void analiseEstruturas()
             mediaComparacoesBuscaAB20 += comparacoesBuscaAB20;
 
             std::cout << "///";
-            delete arvoreB;
+            // delete arvoreB;
         }
 
         mediaTempoBuscaAB20 = tempoBuscaAB20 / 3;
@@ -423,10 +423,10 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
-            ArvoreB *arvoreB = new ArvoreB(200);
+            // ArvoreB *arvoreB = new ArvoreB(200);
             start = std::chrono::high_resolution_clock::now();
-            for(int j = 0; j < N; j++)
-             arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
+            // for(int j = 0; j < N; j++)
+            //  arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB200 = std::chrono::duration<float>(end - start).count();
 
@@ -451,7 +451,7 @@ void analiseEstruturas()
             mediaComparacoesBuscaAB200 += comparacoesBuscaAB200;
 
             std::cout << "///";
-            delete arvoreB;
+            // delete arvoreB;
         }
 
         mediaTempoBuscaAB200 = tempoBuscaAB200 / 3;
