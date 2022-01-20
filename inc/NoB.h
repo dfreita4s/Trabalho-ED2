@@ -9,17 +9,15 @@ struct T
 
 class NoB
 {
-private:
-
+public:
     T* chaves; // Chaves
     NoB** filhos; // Nós filhos
+    int t; // Grau
     int n; // Total ocupados
     bool folha; // Se é folha
-    
-public:
-    
+
     // NoB(std::string, int);
-    NoB(int, bool);
+    NoB(int);
     ~NoB();
 
     void setChave(T*);
@@ -27,7 +25,7 @@ public:
     std::string getID(T*, int);
     int getPosicao(T*, int);
     bool deuOverflow();
-    bool eExterna();
-    void insereChave(T*);
+    bool paginaExterna();
+    void insereChave(T*, int);
     
 };

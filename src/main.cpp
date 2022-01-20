@@ -12,7 +12,7 @@
 #include "../inc/ordenacao.h"
 #include "../inc/tabelaHash.h"
 #include "../inc/arvoreVP.h"
-#include "../inc/ArvoreB.h"
+#include "../inc/arvoreB.h"
 
 #define NREGISTROS 3646475
 
@@ -322,7 +322,7 @@ void analiseEstruturas()
         leBinario(regEstrutura, N); //importa N registros aleatorios
         //para AVP
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 50; i++)
         {
             arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
@@ -377,11 +377,11 @@ void analiseEstruturas()
         for (int i = 0; i < 3; i++)
 
         {
-            // ArvoreB *arvoreB = new ArvoreB(20);
+            // arvoreB *arvoreB = new arvoreB(20);
 
             start = std::chrono::high_resolution_clock::now();
             // for(int j = 0; j < N; j++)
-            //  arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos(), &comparacoesInserirAB20);//inserir registros na estrutura
+                // arvoreB->inserir(regEstrutura[i].getID(), regEstrutura[i].getPos());//inserir registros na estrutura
             end = std::chrono::high_resolution_clock::now();
             tempoInserirAB20 = std::chrono::duration<float>(end - start).count();
 
