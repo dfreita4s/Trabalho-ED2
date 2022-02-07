@@ -623,6 +623,7 @@ void menu()
          *computar as metricas comparacoes e taxa de compressao(olhar a formula nos slides)
          *computar tambem as medias das metricas em um arquivo saida.txt(individuais e media)
          */
+        estatisticasDesempenho();
         menu();
     }
     else if (resp == 4)
@@ -638,6 +639,49 @@ void menu()
         cout << "Por favor digite uma resposta válida!" << endl;
         menu();
     }
+}
+
+void estatisticasDesempenho()
+{
+    int M = 3;
+    int valores[3] = {
+        10000,
+        100000,
+        1000000};
+
+    // teste para N = 10000
+    int comparacoesPrimeiroTeste = 0;
+    float mediaComparacoesPrimeiroTeste = 0.000f;
+    float taxaCompressaoPrimeiroTeste = 0.000f;
+    float mediaTaxaCompressaoPrimeiroTeste = 0.000f;
+
+    // teste para N = 100000
+    int comparacoesSegundoTeste = 0;
+    float mediaComparacoesSegundoTeste = 0.000f;
+    float taxaCompressaoSegundoTeste = 0.000f;
+    float mediaTaxaCompressaoSegundoTeste = 0.000f;
+
+    // teste para N = 1000000
+    int comparacoesTerceiroTeste = 0;
+    float mediaComparacoesTerceiroTeste = 0.000f;
+    float taxaCompressaoTerceiroTeste = 0.000f;
+    float mediaTaxaCompressaoTerceiroTeste = 0.000f;
+
+    Registro *registro_1 = new Registro[valores[0]];
+    Registro *registro_2 = new Registro[valores[1]];
+    Registro *registro_3 = new Registro[valores[2]];
+
+    leBinario(registro_1, valores[0]);
+    leBinario(registro_2, valores[1]);
+    leBinario(registro_3, valores[2]);
+
+    for (int i = 0; i < M; i++)
+    {
+    }
+
+    delete[] registro_1;
+    delete[] registro_2;
+    delete[] registro_3;
 }
 
 void menuParteTres()
