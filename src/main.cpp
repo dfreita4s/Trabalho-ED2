@@ -675,10 +675,62 @@ void estatisticasDesempenho()
     leBinario(registro_2, valores[1]);
     leBinario(registro_3, valores[2]);
 
-    for (int i = 0; i < M; i++)
+    std::fstream saida;
+    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
+    if (saida.is_open())
     {
-    }
 
+        saida << "========== Estatisticas de desempenho ==========\n";
+
+        for (int i = 0; i < M; i++)
+        {
+            // Teste para n = 10000
+            // aqui vai a funcao para comprimir o arquivo
+            saida << " Teste N = 10000\n";
+            saida << "  Comparacões: " << comparacoesPrimeiroTeste << std::endl;
+            saida << "  Taxa de compressão: " << taxaCompressaoPrimeiroTeste << std::endl
+                  << std::endl;
+            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste / 3;
+            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste / 3;
+
+            // Teste para n = 100000
+            // aqui vai a funcao para comprimir o arquivo
+            saida << " Teste N = 100000\n";
+            saida << "  Comparacões: " << comparacoesSegundoTeste << std::endl;
+            saida << "  Taxa de compressão: " << taxaCompressaoSegundoTeste << std::endl
+                  << std::endl;
+            mediaComparacoesSegundoTeste += comparacoesSegundoTeste / 3;
+            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste / 3;
+
+            // Teste para n = 1000000
+            // aqui vai a funcao para comprimir o arquivo
+            saida << " Teste N = 1000000\n";
+            saida << "  Comparacões: " << comparacoesTerceiroTeste << std::endl;
+            saida << "  Taxa de compressão: " << taxaCompressaoTerceiroTeste << std::endl
+                  << std::endl;
+            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste / 3;
+            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste / 3;
+
+            // Escrever no saida.txt
+        }
+
+        saida << "=======Estatisticas de desempenho=======" << std::endl;
+        saida << "== Para N = 10000 ==\n";
+        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste << std::endl;
+        saida << "== Para N = 100000 ==\n";
+        saida << "Media comparações: " << mediaComparacoesSegundoTeste << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste << std::endl;
+        saida << "== Para N = 1000000 ==\n";
+        saida << "Media comparações: " << mediaComparacoesTerceiroTeste << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste << std::endl;
+    }
+    else
+    {
+        std::cout << "Erro ao abrir arquivo!" << std::endl;
+        exit(0);
+    }
+    saida.close();
     delete[] registro_1;
     delete[] registro_2;
     delete[] registro_3;
