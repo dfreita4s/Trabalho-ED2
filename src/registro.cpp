@@ -79,3 +79,4 @@ int Registro::getN()
 {
     return this->N;
 }
+
