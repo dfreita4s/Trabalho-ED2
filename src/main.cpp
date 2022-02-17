@@ -14,6 +14,7 @@
 #include "../inc/tabelaHash.h"
 #include "../inc/arvoreVP.h"
 #include "../inc/arvoreB.h"
+#include "../inc/arvoreHuffman.h"
 
 #define NREGISTROS 3646475
 
@@ -922,7 +923,10 @@ int main(int argc, char const *argv[])
 
         delete listaReview;
     }
+    arvoreHuffman arv;
+    arv.recebeReview("AFSDFFDG");
 
+    arv.imprimeArvore();
     menu();
 }
 

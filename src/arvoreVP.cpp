@@ -2,8 +2,6 @@
 #include <fstream>
 #include "../inc/arvoreVP.h"
 
-
-
 arvoreVP::arvoreVP()
 {
     raiz = nullptr;

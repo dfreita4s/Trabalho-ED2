@@ -1,4 +1,4 @@
-#ifndef ARVOREVP_H
+//#ifndef ARVOREVP_H
 #define ARVOREVP_H
 
 #include "NoVP.h"
@@ -42,4 +42,4 @@ public:
     int contaRotacoes();
 };
 
-#endif
+//#endif
