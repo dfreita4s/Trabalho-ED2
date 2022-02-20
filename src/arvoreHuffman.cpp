@@ -151,7 +151,7 @@ void arvoreHuffman::constroiArvore(char review)
                 {
                     aux->getNoEsq()->setFrequencia();
                     aux->setFrequencia();
-                    while (aux->getNoPai() != raiz)
+                    while ((aux->getNoPai() != raiz) && (aux != raiz))
                     {
                         aux = aux->getNoPai();
                         aux->setFrequencia();
@@ -168,11 +168,36 @@ void arvoreHuffman::constroiArvore(char review)
 }
 
 
+NoHuffman* arvoreHuffman::buscaNo(char simbolo) {
+    
+    NoHuffman *p = raiz;
+    std::queue<NoHuffman *> que;
+    
+    que.push(p);
+    while(!que.empty()) {
+        p = que.front();
+        if(p->getSimbolo() == simbolo)
+            return p;
+        if(p->getNoDir() != nullptr)
+            que.push(p->getNoDir());
+        if(p->getNoEsq() != nullptr)
+            que.push(p->getNoEsq());
+        que.pop();
+    }
+    return escape;
+}
+
+bool arvoreHuffman::verificaSimbolo(char review) {
+    NoHuffman* p = buscaNo(review);
+    if (p == escape)
+        return false;
+    else
+        return true;
+}
 // verifica se no com um determinado símbolo está presente na árvore
-bool arvoreHuffman::verificaSimbolo(char review)
+/* bool arvoreHuffman::verificaSimbolo(char review)
 {
-    NoHuffman *aux = nullptr;
-    aux = escape;
+    NoHuffman *aux = escape;
     while (aux->getNoPai() != nullptr)
     {
         aux = aux->getNoPai();
@@ -186,7 +211,7 @@ bool arvoreHuffman::verificaSimbolo(char review)
         }
     }
     return false;
-}
+} */
 
 
 // ########## MANIPULAÇÃO DA LISTA DUPLAMENTE ENCADEADA (BIBLIOTECA) ##########

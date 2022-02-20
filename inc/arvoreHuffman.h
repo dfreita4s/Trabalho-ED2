@@ -78,4 +78,6 @@ public:
     void increFreqBib(NoHuffman*);
     //função para verificar se as propriedades da árvore de huffman estão sendo respeitadas
     void verificaPropriedade(NoHuffman *);
+
+    NoHuffman* buscaNo(char);
 };
