@@ -92,3 +92,8 @@ void NoHuffman::incrementaCodificacao(std::string cod)
     this->codificacao = this->codificacao + cod;
 }
 
+void NoHuffman::recebeFrequencia(int freq)
+{
+    this->frequencia = freq;
+}
+

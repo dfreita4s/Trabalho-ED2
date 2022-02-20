@@ -43,10 +43,9 @@ public:
     void setAtual(noDupEnc*);
     noDupEnc* getAtual();
 
-    //função para saber se um determinado nó já foi incluído na lista duplamente encadeada
-    void verificaLista(listaDupEnc);
     listaDupEnc();
     ~listaDupEnc();
+    void troca(noDupEnc*, noDupEnc*);
 };
 
 class arvoreHuffman
@@ -66,18 +65,28 @@ public:
     void addBiblioteca(NoHuffman*);
     //verifica se o caractere já não foi incluído antes, retornando sua codificação, retorna NaN quando não encontra
     std::string checaBiblioteca(char);
+    //incrementa no com repetição de símbolos
+    void incrementaBiblioteca(NoHuffman*);
     //aumenta frequencia de um símbolo que já está na árvore
     void incrementaFrequencia(char);
     //imprime a arvore de huffman
     void imprimeArvore();
+    //imprime nós que estão na lista duplamente encadeada
+    void imprimeBiblioteca();
     //verifica se no com símbolo está presente na árvore
     bool verificaSimbolo(char);
     //verifica se no com um determinado símbolo está presente na lista duplamente encadeada ("biblioteca")
     bool verificaLista(NoHuffman *);
     //soma frequencia de um no que já está na lista
     void increFreqBib(NoHuffman*);
+    //função para passar todos os nós da árvore/lista até a função verificaPropriedade
+    void passaNo(noDupEnc*);
     //função para verificar se as propriedades da árvore de huffman estão sendo respeitadas
-    void verificaPropriedade(NoHuffman *);
+    void verificaRotPri(noDupEnc *);
+    //função para rotacionar árvore quando a propriedade de huffman não é respeitada após incrementar a frequência de um símbolo que já estava na árvore
+    void rotacionaRep(noDupEnc*, noDupEnc*);
+    //função para rotacionar árvore quando a propriedade de huffman não é respeitada após adicionar um novo nó na árvore
+    void rotacionaPri(noDupEnc*, noDupEnc*);
 
-    NoHuffman* buscaNo(char);
+    void verificaRotRep(noDupEnc *);
 };
