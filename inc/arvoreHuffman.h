@@ -1,6 +1,6 @@
 #include "NoHuffman.h"
 
-struct noDupEnc
+class noDupEnc
 {
 
 private:
@@ -26,7 +26,7 @@ public:
     ~noDupEnc();   
 };
 
-struct listaDupEnc
+class listaDupEnc
 {
 
 private:
