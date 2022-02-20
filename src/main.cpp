@@ -805,7 +805,7 @@ int retiraPontos(std::string versao)
 
 int main(int argc, char const *argv[])
 {
-    if (!checaArqBin())
+    /* if (!checaArqBin())
     {
         // Diretório completo para funcionar o Debug
         string caminhoArquivo = "./data/tiktok_app_reviews.csv";
@@ -823,12 +823,13 @@ int main(int argc, char const *argv[])
         //listaReview->criaTabelaHash();
 
         delete listaReview;
-    }
-    arvoreHuffman arv;
-    arv.recebeReview("AFSDFFDG");
+    } */
 
+    arvoreHuffman arv;
+    arv.recebeReview("ABACATE");
     arv.imprimeArvore();
-    menu();
+
+    // menu();
 }
 
 void exportaHashingOrdenacao()

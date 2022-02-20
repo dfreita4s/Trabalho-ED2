@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <queue>
 #include "../inc/arvoreHuffman.h"
 
 
@@ -29,6 +30,7 @@ void arvoreHuffman::recebeReview(std::string reviewID)
         for (int i = 0; i < tam; i++)
         { 
             constroiArvore(review[i]);
+            verificaPropriedade(raiz);
         }
     }
     else
@@ -53,7 +55,7 @@ void arvoreHuffman::constroiArvore(char review)
         p->setNoPai(nullptr);
         raiz = p;
 
-        p->setSimbolo('0');
+        p->setSimbolo('*');
         p->setFrequencia();
         p->setTipoNo("lider");
         p->setCodificacao("");
@@ -81,7 +83,7 @@ void arvoreHuffman::constroiArvore(char review)
     {
         if (verificaSimbolo(review) == false)
         {
-            NoHuffman *p = new NoHuffman();
+            NoHuffman *p = nullptr;
             p = escape->getNoPai();
 
             NoHuffman *np = new NoHuffman();
@@ -102,9 +104,9 @@ void arvoreHuffman::constroiArvore(char review)
             np->setNoDir(i);
             np->setNoEsq(escape);
 
-            np->setSimbolo('0');
+            np->setSimbolo('*');
             np->setFrequencia();
-            NoHuffman *aux_np = new NoHuffman();
+            NoHuffman *aux_np = nullptr;
             aux_np = np->getNoPai();
             while(aux_np != raiz)
             {
@@ -130,7 +132,7 @@ void arvoreHuffman::constroiArvore(char review)
         //outra função precisa ser feita para checar se as propriedades de huffman se sustentam
         else
         {
-            NoHuffman *aux = new NoHuffman();
+            NoHuffman *aux = nullptr;
             aux = escape;
             while(aux->getNoPai() != nullptr)
             {
@@ -169,16 +171,16 @@ void arvoreHuffman::constroiArvore(char review)
 // verifica se no com um determinado símbolo está presente na árvore
 bool arvoreHuffman::verificaSimbolo(char review)
 {
-    NoHuffman *aux = new NoHuffman();
+    NoHuffman *aux = nullptr;
     aux = escape;
     while (aux->getNoPai() != nullptr)
     {
         aux = aux->getNoPai();
-        if ((aux->getNoDir()->getSimbolo() == review) && (aux->getNoDir()->getSimbolo() != '0'))
+        if ((aux->getNoDir()->getSimbolo() == review) && (aux->getNoDir()->getSimbolo() != '*'))
         {
             return true;
         }
-        else if ((aux->getNoEsq()->getSimbolo() == review) && (aux->getNoEsq()->getSimbolo() != '0'))
+        else if ((aux->getNoEsq()->getSimbolo() == review) && (aux->getNoEsq()->getSimbolo() != '*'))
         {
             return true;
         }
@@ -234,23 +236,86 @@ void arvoreHuffman::addBiblioteca(NoHuffman* no)
 
 void arvoreHuffman::verificaPropriedade(NoHuffman *noH)
 {
+    NoHuffman *p = noH;
+    NoHuffman *q = nullptr;
+    std::queue<NoHuffman *> que;
+    
+    que.push(p);
+    NoHuffman* lider = p;
+    while(!que.empty()) {
+        p = que.front();
+        if(p->getTipoNo() != "lider")
+            lider = p;
+        else if((p->getFrequencia() != lider->getFrequencia()))
+            lider = p;
+        // std::cout << p->getSimbolo() << "\t" << p->getFrequencia() << std::endl;
+        if(p->getNoDir() != nullptr && (p->getNoDir()->getSimbolo() != '#'))
+            que.push(p->getNoDir());
+        if(p->getNoEsq() != nullptr && (p->getNoEsq()->getSimbolo() != '#'))
+            que.push(p->getNoEsq());
+        que.pop();
+        
+        if(!que.empty()) 
+            q = que.front();
+        
+        // Verifica condição de irmandade
+        if(p->getFrequencia() < q->getFrequencia()) {
 
+            // std::cout << "Vai rotacionar\n";
+            // imprimeArvore();
+
+            NoHuffman *aux = lider->getNoPai();
+
+            // Realiza troca
+            if(lider == aux->getNoDir()) {
+                if(q == q->getNoPai()->getNoDir())
+                    q->getNoPai()->setNoDir(lider);
+                else if(q == q->getNoPai()->getNoEsq())
+                    q->getNoPai()->setNoEsq(lider);
+                aux->setNoDir(q);
+            } else if(lider == aux->getNoEsq()) {
+                if(q == q->getNoPai()->getNoDir())
+                    q->getNoPai()->setNoDir(lider);
+                else if(q == q->getNoPai()->getNoEsq())
+                    q->getNoPai()->setNoEsq(lider);
+                aux->setNoEsq(q);
+            }
+
+            // Atualiza pai
+            lider->setNoPai(q->getNoPai());
+            q->setNoPai(aux);
+
+            // Reinicia fila
+            while(!que.empty())
+                que.pop();
+            
+            // Coloca r
+            p = raiz;
+            que.push(p);
+        }
+    }
 }
 
 void arvoreHuffman::imprimeArvore()
 {
-    std::cout << "Simb: " << raiz->getNoDir()->getSimbolo() << std::endl;
-    std::cout << "Freq: " << raiz->getNoDir()->getFrequencia() << std::endl;
-    std::cout << "Cod: " << raiz->getNoDir()->getCodificacao() << std::endl;
-    NoHuffman *aux = new NoHuffman();
-    aux = raiz;
-    while(aux->getNoEsq() != escape)
-    {
-        std::cout << "Simb: " << aux->getNoEsq()->getNoDir()->getSimbolo() << std::endl;
-        std::cout << "Freq: " << aux->getNoEsq()->getNoDir()->getFrequencia() << std::endl;
-        std::cout << "Cod: " << aux->getNoEsq()->getCodificacao() << std::endl;
-        aux = aux->getNoEsq(); 
+    
+    // NoHuffman *auxD = noH->getNoDir();
+    // NoHuffman *auxE = noH;
+
+    NoHuffman *p = raiz;
+    std::queue<NoHuffman *> que;
+    
+    que.push(p);
+    while(!que.empty()) {
+        p = que.front();
+        std::cout << p->getSimbolo() << "\t" << p->getFrequencia() << std::endl;
+        if(p->getNoDir() != nullptr)
+            que.push(p->getNoDir());
+        if(p->getNoEsq() != nullptr)
+            que.push(p->getNoEsq());
+        que.pop();
     }
+    std::cout << "\n";
 }
 
 
