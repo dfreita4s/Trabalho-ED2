@@ -39,6 +39,8 @@ int retornaRegistro(int);
 std::string exibeRegistro(int);
 arvoreVP *testeArvoreVP(int);
 
+
+
 void leBinario(Registro *registro, int N)
 {
 
@@ -117,6 +119,101 @@ void copiaRegistro(Registro *registro, Registro *registro2, int N)
         registro[i].setVersion(registro2[i].getVersion());
         registro[i].setDate(registro2[i].getDate());
     }
+}
+
+void estatisticasDesempenho()
+{
+    int M = 3;
+    int valores[3] = {
+        10000,
+        100000,
+        1000000};
+
+    // teste para N = 10000
+    int comparacoesPrimeiroTeste = 0;
+    float mediaComparacoesPrimeiroTeste = 0.000f;
+    float taxaCompressaoPrimeiroTeste = 0.000f;
+    float mediaTaxaCompressaoPrimeiroTeste = 0.000f;
+
+    // teste para N = 100000
+    int comparacoesSegundoTeste = 0;
+    float mediaComparacoesSegundoTeste = 0.000f;
+    float taxaCompressaoSegundoTeste = 0.000f;
+    float mediaTaxaCompressaoSegundoTeste = 0.000f;
+
+    // teste para N = 1000000
+    int comparacoesTerceiroTeste = 0;
+    float mediaComparacoesTerceiroTeste = 0.000f;
+    float taxaCompressaoTerceiroTeste = 0.000f;
+    float mediaTaxaCompressaoTerceiroTeste = 0.000f;
+
+    Registro *registro_1 = new Registro[valores[0]];
+    Registro *registro_2 = new Registro[valores[1]];
+    Registro *registro_3 = new Registro[valores[2]];
+
+    leBinario(registro_1, valores[0]);
+    leBinario(registro_2, valores[1]);
+    leBinario(registro_3, valores[2]);
+
+    std::fstream saida;
+    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
+    if (saida.is_open())
+    {
+
+        saida << "========== Estatisticas de desempenho ==========\n";
+
+        for (int i = 0; i < M; i++)
+        {
+            // Teste para n = 10000
+            // aqui vai a funcao para comprimir o arquivo
+            saida << " Teste N = 10000\n";
+            saida << "  Comparacões: " << comparacoesPrimeiroTeste << std::endl;
+            saida << "  Taxa de compressão: " << taxaCompressaoPrimeiroTeste << std::endl
+                  << std::endl;
+            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste / 3;
+            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste / 3;
+
+            // Teste para n = 100000
+            // aqui vai a funcao para comprimir o arquivo
+            saida << " Teste N = 100000\n";
+            saida << "  Comparacões: " << comparacoesSegundoTeste << std::endl;
+            saida << "  Taxa de compressão: " << taxaCompressaoSegundoTeste << std::endl
+                  << std::endl;
+            mediaComparacoesSegundoTeste += comparacoesSegundoTeste / 3;
+            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste / 3;
+
+            // Teste para n = 1000000
+            // aqui vai a funcao para comprimir o arquivo
+            saida << " Teste N = 1000000\n";
+            saida << "  Comparacões: " << comparacoesTerceiroTeste << std::endl;
+            saida << "  Taxa de compressão: " << taxaCompressaoTerceiroTeste << std::endl
+                  << std::endl;
+            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste / 3;
+            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste / 3;
+
+            // Escrever no saida.txt
+        }
+
+        saida << "=======Estatisticas de desempenho=======" << std::endl;
+        saida << "== Para N = 10000 ==\n";
+        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste << std::endl;
+        saida << "== Para N = 100000 ==\n";
+        saida << "Media comparações: " << mediaComparacoesSegundoTeste << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste << std::endl;
+        saida << "== Para N = 1000000 ==\n";
+        saida << "Media comparações: " << mediaComparacoesTerceiroTeste << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste << std::endl;
+    }
+    else
+    {
+        std::cout << "Erro ao abrir arquivo!" << std::endl;
+        exit(0);
+    }
+    saida.close();
+    delete[] registro_1;
+    delete[] registro_2;
+    delete[] registro_3;
 }
 
 void ordenacao()
@@ -642,101 +739,6 @@ void menu()
     }
 }
 
-void estatisticasDesempenho()
-{
-    int M = 3;
-    int valores[3] = {
-        10000,
-        100000,
-        1000000};
-
-    // teste para N = 10000
-    int comparacoesPrimeiroTeste = 0;
-    float mediaComparacoesPrimeiroTeste = 0.000f;
-    float taxaCompressaoPrimeiroTeste = 0.000f;
-    float mediaTaxaCompressaoPrimeiroTeste = 0.000f;
-
-    // teste para N = 100000
-    int comparacoesSegundoTeste = 0;
-    float mediaComparacoesSegundoTeste = 0.000f;
-    float taxaCompressaoSegundoTeste = 0.000f;
-    float mediaTaxaCompressaoSegundoTeste = 0.000f;
-
-    // teste para N = 1000000
-    int comparacoesTerceiroTeste = 0;
-    float mediaComparacoesTerceiroTeste = 0.000f;
-    float taxaCompressaoTerceiroTeste = 0.000f;
-    float mediaTaxaCompressaoTerceiroTeste = 0.000f;
-
-    Registro *registro_1 = new Registro[valores[0]];
-    Registro *registro_2 = new Registro[valores[1]];
-    Registro *registro_3 = new Registro[valores[2]];
-
-    leBinario(registro_1, valores[0]);
-    leBinario(registro_2, valores[1]);
-    leBinario(registro_3, valores[2]);
-
-    std::fstream saida;
-    saida.open("./data/saida.txt", std::ios_base::out | std::ios_base::app);
-    if (saida.is_open())
-    {
-
-        saida << "========== Estatisticas de desempenho ==========\n";
-
-        for (int i = 0; i < M; i++)
-        {
-            // Teste para n = 10000
-            // aqui vai a funcao para comprimir o arquivo
-            saida << " Teste N = 10000\n";
-            saida << "  Comparacões: " << comparacoesPrimeiroTeste << std::endl;
-            saida << "  Taxa de compressão: " << taxaCompressaoPrimeiroTeste << std::endl
-                  << std::endl;
-            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste / 3;
-            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste / 3;
-
-            // Teste para n = 100000
-            // aqui vai a funcao para comprimir o arquivo
-            saida << " Teste N = 100000\n";
-            saida << "  Comparacões: " << comparacoesSegundoTeste << std::endl;
-            saida << "  Taxa de compressão: " << taxaCompressaoSegundoTeste << std::endl
-                  << std::endl;
-            mediaComparacoesSegundoTeste += comparacoesSegundoTeste / 3;
-            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste / 3;
-
-            // Teste para n = 1000000
-            // aqui vai a funcao para comprimir o arquivo
-            saida << " Teste N = 1000000\n";
-            saida << "  Comparacões: " << comparacoesTerceiroTeste << std::endl;
-            saida << "  Taxa de compressão: " << taxaCompressaoTerceiroTeste << std::endl
-                  << std::endl;
-            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste / 3;
-            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste / 3;
-
-            // Escrever no saida.txt
-        }
-
-        saida << "=======Estatisticas de desempenho=======" << std::endl;
-        saida << "== Para N = 10000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste << std::endl;
-        saida << "== Para N = 100000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesSegundoTeste << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste << std::endl;
-        saida << "== Para N = 1000000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesTerceiroTeste << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste << std::endl;
-    }
-    else
-    {
-        std::cout << "Erro ao abrir arquivo!" << std::endl;
-        exit(0);
-    }
-    saida.close();
-    delete[] registro_1;
-    delete[] registro_2;
-    delete[] registro_3;
-}
-
 void menuParteTres()
 {
     int resp;
@@ -902,34 +904,6 @@ int retiraPontos(std::string versao)
     }
 }
 
-int main(int argc, char const *argv[])
-{
-    if (!checaArqBin())
-    {
-        // Diretório completo para funcionar o Debug
-        string caminhoArquivo = "./data/tiktok_app_reviews.csv";
-        if (argc == 1)
-        {
-            caminhoArquivo = "./data/tiktok_app_reviews.csv";
-        }
-        else
-        {
-            caminhoArquivo = argv[1];
-        }
-        Lista *listaReview = new Lista(caminhoArquivo);
-        listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-        // listaReview->criarArquivoBinario(); // Criação do aquivo binário.
-        // listaReview->criaTabelaHash();
-
-        delete listaReview;
-    }
-    arvoreHuffman arv;
-    arv.recebeReview("AFSDFFDG");
-
-    arv.imprimeArvore();
-    menu();
-}
-
 void exportaHashingOrdenacao()
 {
     std::ofstream arquivoSaida;
@@ -1052,4 +1026,32 @@ std::string exibeRegistro(int posicao)
         std::cout << "Não foi possivel abrir o arquivo";
         return "";
     }
+}
+
+int main(int argc, char const *argv[])
+{
+    if (!checaArqBin())
+    {
+        // Diretório completo para funcionar o Debug
+        string caminhoArquivo = "./data/tiktok_app_reviews.csv";
+        if (argc == 1)
+        {
+            caminhoArquivo = "./data/tiktok_app_reviews.csv";
+        }
+        else
+        {
+            caminhoArquivo = argv[1];
+        }
+        Lista *listaReview = new Lista(caminhoArquivo);
+        listaReview->obterReviews(); // Leitura e armazenamento dos dados.
+        // listaReview->criarArquivoBinario(); // Criação do aquivo binário.
+        // listaReview->criaTabelaHash();
+
+        delete listaReview;
+    }
+    arvoreHuffman arv;
+    arv.recebeReview("aduiashgdjsakfhçsalkdjsaçfisajhdçlkjsaçfoahdçcj151561---23232==12321=[");
+
+    arv.imprimeArvore();
+    menu();
 }
