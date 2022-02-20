@@ -30,6 +30,7 @@ void arvoreHuffman::recebeReview(std::string reviewID)
         for (int i = 0; i < tam; i++)
         { 
             constroiArvore(review[i]);
+            this->tam_inicio = this->tam_inicio + 1;
         }
     }
     else
@@ -161,6 +162,7 @@ void arvoreHuffman::verificaRotRep(noDupEnc *atual)
     while (biblioteca.getAtual()->getAnt() != biblioteca.getInicio())
     {
         biblioteca.setAtual(biblioteca.getAtual()->getAnt());
+        //*(comparacao++);
         if ((biblioteca.getAtual()->getNoH()->getSimbolo() != '0') && (biblioteca.getAtual()->getNoH()->getFrequencia() < atual->getNoH()->getFrequencia()))
         {
             rotacionaRep(biblioteca.getAtual(), atual);
@@ -175,7 +177,7 @@ void arvoreHuffman::verificaRotPri(noDupEnc *atual)
     atual->getNoH()->setFrequencia();
     biblioteca.setAtual(biblioteca.getInicio()->getProx());
     while (biblioteca.getAtual() != atual)
-    {
+    {   //*(comparacao++);
         if ((biblioteca.getAtual()->getNoH()->getSimbolo() != '0') && (biblioteca.getAtual()->getNoH()->getFrequencia() < atual->getNoH()->getFrequencia()))
         {
             rotacionaPri(biblioteca.getAtual(), atual);
@@ -310,7 +312,7 @@ void arvoreHuffman::verificaRotacao(noDupEnc *pai_ant, noDupEnc *pos_bibli)
         verificaRotacao(pai_ant, pos_bibli->getProx());
     }
     else if (pos_bibli->getNoH()->getSimbolo() != '0')
-    {
+    {   //*(comparacao++);
         if(pos_bibli->getNoH()->getFrequencia() < pai_ant->getNoH()->getFrequencia())
         {
             rotacionaPri(pos_bibli, pai_ant);

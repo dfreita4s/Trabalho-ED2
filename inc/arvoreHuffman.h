@@ -55,10 +55,14 @@ private:
     NoHuffman *escape;
     listaDupEnc biblioteca;
     //noDupEnc *noDE;
+    int tam_inicio;
+    int tam_final;
 
 public:
     arvoreHuffman();
     ~arvoreHuffman();
+    int getTamIni(){return this->tam_inicio;};
+    int getTamFim(){return this->tam_final;};
     void constroiArvore(char);
     void recebeReview(std::string);
     //adiciona novo caractere na biblioteca (caso não tinha sido adicionada antes)

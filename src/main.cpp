@@ -550,42 +550,45 @@ void estatisticasDesempenho()
             arv.recebeReview(juntaReviews(registro_1, valores[0]));
             saida << " Teste N = 10000\n";
             saida << "  Comparacões: " << comparacoesPrimeiroTeste << std::endl;
+            taxaCompressaoPrimeiroTeste = (arv.getTamIni()- arv.getTamFim())/arv.getTamIni();
             saida << "  Taxa de compressão: " << taxaCompressaoPrimeiroTeste << std::endl
                   << std::endl;
-            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste / 3;
-            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste / 3;
+            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste; 
+            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste; 
 
             // Teste para n = 100000
             // aqui vai a funcao para comprimir o arquivo
             saida << " Teste N = 100000\n";
             saida << "  Comparacões: " << comparacoesSegundoTeste << std::endl;
+            taxaCompressaoSegundoTeste = (arv.getTamIni()- arv.getTamFim())/arv.getTamIni();
             saida << "  Taxa de compressão: " << taxaCompressaoSegundoTeste << std::endl
                   << std::endl;
-            mediaComparacoesSegundoTeste += comparacoesSegundoTeste / 3;
-            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste / 3;
+            mediaComparacoesSegundoTeste += comparacoesSegundoTeste; 
+            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste; 
 
             // Teste para n = 1000000
             // aqui vai a funcao para comprimir o arquivo
             saida << " Teste N = 1000000\n";
             saida << "  Comparacões: " << comparacoesTerceiroTeste << std::endl;
+            taxaCompressaoTerceiroTeste = (arv.getTamIni()- arv.getTamFim())/arv.getTamIni();
             saida << "  Taxa de compressão: " << taxaCompressaoTerceiroTeste << std::endl
                   << std::endl;
-            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste / 3;
-            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste / 3;
+            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste; 
+            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste; 
 
             // Escrever no saida.txt
         }
 
         saida << "=======Estatisticas de desempenho=======" << std::endl;
         saida << "== Para N = 10000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste << std::endl;
+        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste/3 << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste/3 << std::endl;
         saida << "== Para N = 100000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesSegundoTeste << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste << std::endl;
+        saida << "Media comparações: " << mediaComparacoesSegundoTeste/3 << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste/3 << std::endl;
         saida << "== Para N = 1000000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesTerceiroTeste << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste << std::endl;
+        saida << "Media comparações: " << mediaComparacoesTerceiroTeste/3 << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste/3 << std::endl;
     }
     else
     {
