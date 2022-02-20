@@ -32,4 +32,5 @@ public:
     void setCodificacao(std::string);
     std::string getCodificacao();
     void incrementaCodificacao(std::string);
+    void recebeFrequencia(int);
 };
