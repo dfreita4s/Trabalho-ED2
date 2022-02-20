@@ -904,6 +904,35 @@ int retiraPontos(std::string versao)
     }
 }
 
+int main(int argc, char const *argv[])
+{
+    /* if (!checaArqBin())
+    {
+        // Diretório completo para funcionar o Debug
+        string caminhoArquivo = "./data/tiktok_app_reviews.csv";
+        if (argc == 1)
+        {
+            caminhoArquivo = "./data/tiktok_app_reviews.csv";
+        }
+        else
+        {
+            caminhoArquivo = argv[1];
+        }
+        Lista *listaReview = new Lista(caminhoArquivo);
+        listaReview->obterReviews(); // Leitura e armazenamento dos dados.
+        //listaReview->criarArquivoBinario(); // Criação do aquivo binário.
+        //listaReview->criaTabelaHash();
+
+        delete listaReview;
+    } */
+
+    arvoreHuffman arv;
+    arv.recebeReview("ABACATEAB");
+    arv.imprimeArvore();
+
+    // menu();
+}
+
 void exportaHashingOrdenacao()
 {
     std::ofstream arquivoSaida;
@@ -1026,32 +1055,4 @@ std::string exibeRegistro(int posicao)
         std::cout << "Não foi possivel abrir o arquivo";
         return "";
     }
-}
-
-int main(int argc, char const *argv[])
-{
-    if (!checaArqBin())
-    {
-        // Diretório completo para funcionar o Debug
-        string caminhoArquivo = "./data/tiktok_app_reviews.csv";
-        if (argc == 1)
-        {
-            caminhoArquivo = "./data/tiktok_app_reviews.csv";
-        }
-        else
-        {
-            caminhoArquivo = argv[1];
-        }
-        Lista *listaReview = new Lista(caminhoArquivo);
-        listaReview->obterReviews(); // Leitura e armazenamento dos dados.
-        // listaReview->criarArquivoBinario(); // Criação do aquivo binário.
-        // listaReview->criaTabelaHash();
-
-        delete listaReview;
-    }
-    arvoreHuffman arv;
-    arv.recebeReview("aduiashgdjsakfhçsalkdjsaçfisajhdçlkjsaçfoahdçcj151561---23232==12321=[");
-
-    arv.imprimeArvore();
-    menu();
 }
