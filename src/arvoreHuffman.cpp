@@ -235,7 +235,42 @@ void arvoreHuffman::addBiblioteca(NoHuffman* no)
 
 void arvoreHuffman::rotacionaPri(noDupEnc *anterior, noDupEnc *atual)
 {
-    
+    std::cout << anterior->getNoH()->getSimbolo() << std::endl;
+    std::cout << atual->getNoH()->getSimbolo() << std::endl;
+
+    noDupEnc *aux_anterior = anterior;
+
+    //atualiza a biblioteca
+    biblioteca.troca(anterior, atual);
+
+    //atualizar anterior
+    anterior->getNoH()->setNoPai(atual->getNoH()->getNoPai());
+    if (atual->getNoH()->getNoPai()->getNoDir() == atual->getNoH())
+    {
+        atual->getNoH()->getNoPai()->setNoDir(anterior->getNoH());
+    }
+    else
+    {
+        atual->getNoH()->getNoPai()->setNoEsq(anterior->getNoH());
+    }
+    anterior->setNoH(atual->getNoH());
+
+    //atualiza atual
+    atual->getNoH()->setNoPai(aux_anterior->getNoH()->getNoPai());
+    if (aux_anterior->getNoH()->getNoPai()->getNoDir() == aux_anterior->getNoH())
+    {
+        aux_anterior->getNoH()->getNoPai()->setNoDir(atual->getNoH());
+    }
+    else
+    {
+        aux_anterior->getNoH()->getNoPai()->setNoEsq(atual->getNoH());
+    }
+    atual->setNoH(aux_anterior->getNoH());
+
+
+    std::cout << anterior->getNoH()->getSimbolo() << std::endl;
+    std::cout << atual->getNoH()->getSimbolo() << std::endl;
+
 }
 
 void arvoreHuffman::rotacionaRep(noDupEnc *anterior, noDupEnc *atual)
