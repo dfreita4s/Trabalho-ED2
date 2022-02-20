@@ -12,6 +12,8 @@ private:
 
 public:
 
+
+    
     void setNoH(NoHuffman*);
     void setAnt(noDupEnc*);
     void setProx(noDupEnc*);
@@ -95,4 +97,6 @@ public:
     void verificaRotacao(noDupEnc *, noDupEnc *);
 
     void verificaRotRep(noDupEnc *);
+    //traduzir o arquivo
+    void traduzir();
 };

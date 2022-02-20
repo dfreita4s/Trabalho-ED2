@@ -404,6 +404,23 @@ void arvoreHuffman::imprimeBiblioteca()
     */
 }
 
+
+
+void arvoreHuffman::traduzir(){ 
+    std::ifstream comprimido;
+    comprimido.open("../data/reviewsComp.bin");
+    char texto [tam_inicio];
+    if(comprimido.is_open()){
+        comprimido.read(texto, tam_inicio * sizeof (char));
+        NoHuffman aux;
+        while(aux.getNoDir() == nullptr || aux.getNoEsq() == nullptr){
+            
+        }
+    }
+    
+}
+
+
 // ########## FUNÇÕES DO STRUCT noDupEnc EM arvoreHuffman.h ##########
 
 noDupEnc::noDupEnc()
