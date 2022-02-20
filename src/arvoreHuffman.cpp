@@ -30,7 +30,6 @@ void arvoreHuffman::recebeReview(std::string reviewID)
         for (int i = 0; i < tam; i++)
         { 
             constroiArvore(review[i]);
-            // verificaPropriedade(raiz);
         }
     }
     else
@@ -55,7 +54,7 @@ void arvoreHuffman::constroiArvore(char review)
         p->setNoPai(nullptr);
         raiz = p;
 
-        p->setSimbolo('*');
+        p->setSimbolo('0');
         p->setFrequencia();
         p->setTipoNo("raiz");
         p->setCodificacao("");
@@ -83,7 +82,7 @@ void arvoreHuffman::constroiArvore(char review)
     {
         if (verificaSimbolo(review) == false)
         {
-            NoHuffman *p = nullptr;
+            NoHuffman *p = new NoHuffman();
             p = escape->getNoPai();
 
             NoHuffman *np = new NoHuffman();
@@ -101,7 +100,7 @@ void arvoreHuffman::constroiArvore(char review)
             np->setNoDir(i);
             np->setNoEsq(escape);
 
-            np->setSimbolo('*');
+            np->setSimbolo('0');
             np->setFrequencia();
             np->setTipoNo("n_lider");
             np->setCodificacao("0");
@@ -135,26 +134,8 @@ void arvoreHuffman::constroiArvore(char review)
     }
 }
 
-/*
-NoHuffman* arvoreHuffman::buscaNo(char simbolo) {
-    
-    NoHuffman *p = raiz;
-    std::queue<NoHuffman *> que;
-    
-    que.push(p);
-    while(!que.empty()) {
-        p = que.front();
-        if(p->getSimbolo() == simbolo)
-            return p;
-        if(p->getNoDir() != nullptr)
-            que.push(p->getNoDir());
-        if(p->getNoEsq() != nullptr)
-            que.push(p->getNoEsq());
-        que.pop();
-    }
-    return escape;
-}
-*/
+
+// verifica se no com um determinado símbolo está presente na árvore
 bool arvoreHuffman::verificaSimbolo(char review)
 {
     biblioteca.setAtual(biblioteca.getInicio());
@@ -168,20 +149,6 @@ bool arvoreHuffman::verificaSimbolo(char review)
     }
     return false;
 }
-// verifica se no com um determinado símbolo está presente na árvore
-/* bool arvoreHuffman::verificaSimbolo(char review)
-{
-    biblioteca.setAtual(biblioteca.getInicio());
-    while(biblioteca.getAtual()->getProx() != nullptr)
-    {
-        biblioteca.setAtual(biblioteca.getAtual()->getProx());
-        if ((biblioteca.getAtual()->getNoH()->getSimbolo() != '0') && (biblioteca.getAtual()->getNoH()->getSimbolo() == review))
-        {
-            return true;
-        }
-    }
-    return false;
-} */
 
 
 
@@ -268,7 +235,42 @@ void arvoreHuffman::addBiblioteca(NoHuffman* no)
 
 void arvoreHuffman::rotacionaPri(noDupEnc *anterior, noDupEnc *atual)
 {
-    
+    std::cout << anterior->getNoH()->getSimbolo() << std::endl;
+    std::cout << atual->getNoH()->getSimbolo() << std::endl;
+
+    noDupEnc *aux_anterior = anterior;
+
+    //atualiza a biblioteca
+    biblioteca.troca(anterior, atual);
+
+    //atualizar anterior
+    anterior->getNoH()->setNoPai(atual->getNoH()->getNoPai());
+    if (atual->getNoH()->getNoPai()->getNoDir() == atual->getNoH())
+    {
+        atual->getNoH()->getNoPai()->setNoDir(anterior->getNoH());
+    }
+    else
+    {
+        atual->getNoH()->getNoPai()->setNoEsq(anterior->getNoH());
+    }
+    anterior->setNoH(atual->getNoH());
+
+    //atualiza atual
+    atual->getNoH()->setNoPai(aux_anterior->getNoH()->getNoPai());
+    if (aux_anterior->getNoH()->getNoPai()->getNoDir() == aux_anterior->getNoH())
+    {
+        aux_anterior->getNoH()->getNoPai()->setNoDir(atual->getNoH());
+    }
+    else
+    {
+        aux_anterior->getNoH()->getNoPai()->setNoEsq(atual->getNoH());
+    }
+    atual->setNoH(aux_anterior->getNoH());
+
+
+    std::cout << anterior->getNoH()->getSimbolo() << std::endl;
+    std::cout << atual->getNoH()->getSimbolo() << std::endl;
+
 }
 
 void arvoreHuffman::rotacionaRep(noDupEnc *anterior, noDupEnc *atual)
@@ -353,7 +355,6 @@ void arvoreHuffman::imprimeArvore()
         //std::cout << "Cod: " << aux->getNoEsq()->getNoDir()->getCodificacao() << std::endl;
         aux = aux->getNoEsq(); 
     }
-    std::cout << "\n";
 }
 
 

@@ -3,7 +3,7 @@
 
 NoHuffman::NoHuffman()
 {
-    this->simbolo = '#';
+    this->simbolo = '0';
     this->frequencia = 0;
     this->tipoNo = "n_lider";
     this->codificacao = "";
