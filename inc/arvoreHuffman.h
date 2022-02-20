@@ -87,6 +87,8 @@ public:
     void rotacionaRep(noDupEnc*, noDupEnc*);
     //função para rotacionar árvore quando a propriedade de huffman não é respeitada após adicionar um novo nó na árvore
     void rotacionaPri(noDupEnc*, noDupEnc*);
+    //função para checar se será necessário rotacionar árvore após incrementar frequencia
+    void verificaRotacao(noDupEnc *, noDupEnc *);
 
     void verificaRotRep(noDupEnc *);
 };
