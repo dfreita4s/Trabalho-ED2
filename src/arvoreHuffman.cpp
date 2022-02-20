@@ -188,57 +188,12 @@ void arvoreHuffman::verificaRotPri(noDupEnc *atual)
     }
 }
 
-
-// função com o objetivo de adicionar novos símbolos na lista duplamente encadeada (biblioteca)
-void arvoreHuffman::addBiblioteca(NoHuffman* no)
-{
-    noDupEnc *aux = new noDupEnc();
-    aux->setNoH(no);
-
-    if(biblioteca.getInicio() == nullptr)
-    {
-        biblioteca.setInicio(aux);
-        biblioteca.setFim(aux);
-        biblioteca.getFim()->geraCodificacao(no);
-    }
-    else if (biblioteca.getInicio() == biblioteca.getFim())
-    {
-        biblioteca.setFim(aux);
-        biblioteca.getFim()->setAnt(biblioteca.getInicio());
-        biblioteca.getInicio()->setProx(biblioteca.getFim());
-        biblioteca.getFim()->geraCodificacao(no);
-    }
-    else
-    {
-        biblioteca.setAtual(biblioteca.getInicio());
-        while (biblioteca.getAtual() != biblioteca.getFim())
-        {
-            biblioteca.setAtual(biblioteca.getAtual()->getProx());
-        }
-        biblioteca.getFim()->setProx(aux);
-        biblioteca.setFim(aux);
-        biblioteca.getFim()->setAnt(biblioteca.getAtual());
-        biblioteca.getFim()->geraCodificacao(no);
-        if(no->getSimbolo() != '0')
-        {
-            if (no->getNoPai()->getNoPai() == raiz)
-            {
-                no->getNoPai()->getNoPai()->setFrequencia();
-            }
-            else
-            {
-                verificaRotPri(biblioteca.getAtual()->getAnt()->getAnt());
-            }
-        }
-    }
-}
-
 void arvoreHuffman::rotacionaPri(noDupEnc *anterior, noDupEnc *atual)
 {
-    std::cout << anterior->getNoH()->getSimbolo() << std::endl;
-    std::cout << atual->getNoH()->getSimbolo() << std::endl;
+    NoHuffman *anterior_aux = new NoHuffman();
+    anterior_aux = anterior->getNoH();
 
-    noDupEnc *aux_anterior = anterior;
+    //std::cout << anterior_aux->getSimbolo() << " " << anterior_aux->getFrequencia() << " " << anterior_aux->getNoPai()->getSimbolo() << std::endl;
 
     //atualiza a biblioteca
     biblioteca.troca(anterior, atual);
@@ -256,21 +211,27 @@ void arvoreHuffman::rotacionaPri(noDupEnc *anterior, noDupEnc *atual)
     anterior->setNoH(atual->getNoH());
 
     //atualiza atual
-    atual->getNoH()->setNoPai(aux_anterior->getNoH()->getNoPai());
-    if (aux_anterior->getNoH()->getNoPai()->getNoDir() == aux_anterior->getNoH())
+    atual->getNoH()->setNoPai(anterior_aux->getNoPai());
+    if (anterior_aux->getNoPai()->getNoDir() == anterior_aux)
     {
-        aux_anterior->getNoH()->getNoPai()->setNoDir(atual->getNoH());
+        anterior_aux->getNoPai()->setNoDir(atual->getNoH());
     }
     else
     {
-        aux_anterior->getNoH()->getNoPai()->setNoEsq(atual->getNoH());
+        anterior_aux->getNoPai()->setNoEsq(atual->getNoH());
     }
-    atual->setNoH(aux_anterior->getNoH());
+    atual->setNoH(anterior_aux);
 
+    anterior->getNoH()->getNoPai()->setFrequencia();
 
-    std::cout << anterior->getNoH()->getSimbolo() << std::endl;
-    std::cout << atual->getNoH()->getSimbolo() << std::endl;
-
+    if (anterior->getNoH()->getNoPai()->getNoDir() == anterior->getNoH())
+    {
+        verificaRotacao(anterior->getAnt(), biblioteca.getInicio());
+    }
+    else
+    {
+        verificaRotacao(anterior->getAnt()->getAnt(), biblioteca.getInicio());
+    }
 }
 
 void arvoreHuffman::rotacionaRep(noDupEnc *anterior, noDupEnc *atual)
@@ -310,63 +271,135 @@ void arvoreHuffman::rotacionaRep(noDupEnc *anterior, noDupEnc *atual)
     atual->setNoH(aux_anterior);
 
     anterior->getNoH()->getNoPai()->setFrequencia();
-    raiz->setFrequencia();
+
+    if (anterior->getNoH()->getNoPai()->getNoDir() == anterior->getNoH())
+    {
+        verificaRotacao(anterior->getAnt(), biblioteca.getInicio());
+    }
+    else
+    {
+        verificaRotacao(anterior->getAnt()->getAnt(), biblioteca.getInicio());
+    }
+
+}
+
+void arvoreHuffman::verificaRotacao(noDupEnc *pai_ant, noDupEnc *pos_bibli)
+{
+    if (pos_bibli == pai_ant)
+    {
+        if (pai_ant->getNoH() == raiz)
+        {
+            // finaliza
+        }
+        else
+        {
+            if (pai_ant->getNoH()->getNoPai()->getNoDir() == pai_ant->getNoH())
+            {
+                pai_ant->getNoH()->getNoPai()->setFrequencia();
+                verificaRotacao(pai_ant->getAnt(), biblioteca.getInicio());
+            }
+            else
+            {
+                pai_ant->getNoH()->getNoPai()->setFrequencia();
+                verificaRotacao(pai_ant->getAnt()->getAnt(), biblioteca.getInicio());
+            }
+        }
+    }
+    else if (pos_bibli == biblioteca.getInicio())
+    {
+        verificaRotacao(pai_ant, pos_bibli->getProx());
+    }
+    else if (pos_bibli->getNoH()->getSimbolo() != '0')
+    {
+        if(pos_bibli->getNoH()->getFrequencia() < pai_ant->getNoH()->getFrequencia())
+        {
+            rotacionaPri(pos_bibli, pai_ant);
+        }
+        else
+        {
+            verificaRotacao(pai_ant, pos_bibli->getProx());
+        }
+    }
+    else
+    {
+        verificaRotacao(pai_ant, pos_bibli->getProx());
+    }
 }
 
 // a função de rotacionar precisará fazer a troca do nó líder pelo seu irmão na árvore, e além disso deverá trocar a posição referente aos dois nós na lista duplamente encadeada
 // a função de rotacionar deverá também chamar novamente o verificar propriedade para saber se outras rotações serão necessárias
 
-/*
-void arvoreHuffman::imprimeArvore()
+// função com o objetivo de adicionar novos símbolos na lista duplamente encadeada (biblioteca)
+void arvoreHuffman::addBiblioteca(NoHuffman* no)
 {
-    
-    // NoHuffman *auxD = noH->getNoDir();
-    // NoHuffman *auxE = noH;
+    noDupEnc *aux = new noDupEnc();
+    aux->setNoH(no);
 
-    NoHuffman *p = raiz;
-    std::queue<NoHuffman *> que;
-    
-    que.push(p);
-    while(!que.empty()) {
-        p = que.front();
-        std::cout << p->getSimbolo() << "\t" << p->getFrequencia() << std::endl;
-        if(p->getNoDir() != nullptr)
-            que.push(p->getNoDir());
-        if(p->getNoEsq() != nullptr)
-            que.push(p->getNoEsq());
-        que.pop();
+    if(biblioteca.getInicio() == nullptr)
+    {
+        biblioteca.setInicio(aux);
+        biblioteca.setFim(aux);
+        biblioteca.getFim()->geraCodificacao(no);
     }
-    std::cout << "\n";
+    else if (biblioteca.getInicio() == biblioteca.getFim())
+    {
+        biblioteca.setFim(aux);
+        biblioteca.getFim()->setAnt(biblioteca.getInicio());
+        biblioteca.getInicio()->setProx(biblioteca.getFim());
+        biblioteca.getFim()->geraCodificacao(no);
+    }
+    else
+    {
+        biblioteca.setAtual(biblioteca.getInicio());
+        while (biblioteca.getAtual() != biblioteca.getFim())
+        {
+            biblioteca.setAtual(biblioteca.getAtual()->getProx());
+        }
+        biblioteca.getFim()->setProx(aux);
+        biblioteca.setFim(aux);
+        biblioteca.getFim()->setAnt(biblioteca.getAtual());
+        biblioteca.getFim()->geraCodificacao(no);
+        if(no->getSimbolo() != '0')
+        {
+            if (no->getNoPai()->getNoPai() == raiz)
+            {
+                no->getNoPai()->getNoPai()->setFrequencia();
+            }
+            else
+            {
+                verificaRotPri(biblioteca.getFim()->getAnt()->getAnt());
+            }
+        }
+    }
 }
-*/
 
 
 void arvoreHuffman::imprimeArvore()
 {
     std::cout << "Simb: " << raiz->getNoDir()->getSimbolo() << std::endl;
     std::cout << "Freq: " << raiz->getNoDir()->getFrequencia() << std::endl;
-    //std::cout << "Cod: " << raiz->getNoDir()->getCodificacao() << std::endl;
-    NoHuffman *aux = new NoHuffman();
-    aux = raiz;
-    while(aux->getNoEsq() != escape)
-    {
-        std::cout << "Simb: " << aux->getNoEsq()->getNoDir()->getSimbolo() << std::endl;
-        std::cout << "Freq: " << aux->getNoEsq()->getNoDir()->getFrequencia() << std::endl;
-        //std::cout << "Cod: " << aux->getNoEsq()->getNoDir()->getCodificacao() << std::endl;
-        aux = aux->getNoEsq(); 
-    }
 }
 
 
 void arvoreHuffman::imprimeBiblioteca()
 {
-    biblioteca.setAtual(biblioteca.getInicio());
-    while (biblioteca.getAtual()->getProx() != nullptr)
+    std::cout << "Simb: " << biblioteca.getInicio()->getNoH()->getSimbolo() << std::endl;
+    std::cout << "Freq: " << biblioteca.getInicio()->getNoH()->getFrequencia() << std::endl;
+    std::cout << "Simb: " << biblioteca.getInicio()->getProx()->getNoH()->getSimbolo() << std::endl; 
+    std::cout << "Freq: " << biblioteca.getInicio()->getProx()->getNoH()->getFrequencia() << std::endl;
+    std::cout << "Simb: " << biblioteca.getInicio()->getProx()->getProx()->getNoH()->getSimbolo() << std::endl;
+    std::cout << "Freq: " << biblioteca.getInicio()->getProx()->getProx()->getNoH()->getFrequencia() << std::endl;
+    std::cout << "Simb: " << biblioteca.getInicio()->getProx()->getProx()->getProx()->getNoH()->getSimbolo() << std::endl;
+    std::cout << "Freq: " << biblioteca.getInicio()->getProx()->getProx()->getProx()->getNoH()->getFrequencia() << std::endl;
+
+    /*
+    while (biblioteca.getAtual() != biblioteca.getFim())
     {
-        std::cout << biblioteca.getAtual()->getNoH()->getSimbolo() << std::endl;
+        std::cout << "Simb: " << biblioteca.getAtual()->getNoH()->getSimbolo() << std::endl;
+        std::cout << "Freq: " << biblioteca.getAtual()->getNoH()->getFrequencia() << std::endl;
         biblioteca.setAtual(biblioteca.getAtual()->getProx());
     }
-    std::cout << biblioteca.getAtual()->getNoH()->getSimbolo() << std::endl;
+    */
 }
 
 // ########## FUNÇÕES DO STRUCT noDupEnc EM arvoreHuffman.h ##########
@@ -491,13 +524,15 @@ noDupEnc* listaDupEnc::getAtual()
     return atual;
 }
 
+
+
 void listaDupEnc::troca(noDupEnc *anterior, noDupEnc *atual)
 {
     //noDupEnc *aux_anterior = anterior;
     noDupEnc *aux_atual = atual;
 
-    //std::cout << anterior->getNoH()->getSimbolo() << std::endl;
-    //std::cout << atual->getNoH()->getSimbolo() << std::endl;
+    //std::cout << anterior << std::endl;
+    //std::cout << atual << std::endl;
 
     atual->setAnt(anterior->getAnt());
     atual->setProx(anterior->getProx());
@@ -508,7 +543,37 @@ void listaDupEnc::troca(noDupEnc *anterior, noDupEnc *atual)
     atual = anterior;
     anterior = aux_atual;
 
+    //std::cout << anterior << std::endl;
+    //std::cout << atual << std::endl;
+}
+
+
+/*
+void listaDupEnc::troca(noDupEnc *anterior, noDupEnc *atual)
+{
+    //noDupEnc *aux_anterior = anterior;
+    noDupEnc *aux_atual = atual;
+
+    //std::cout << anterior->getNoH()->getSimbolo() << std::endl;
+    //std::cout << atual->getNoH()->getSimbolo() << std::endl;
+
+    aux_atual = atual;
+    // aux_atual->setAnt(anterior->getAnt());
+    // aux_atual->setProx(anterior->getProx());
+
+    atual = anterior;
+    // anterior->setAnt(atual->getAnt());
+    // anterior->setProx(atual->getProx());
+    anterior = aux_atual;
+
+    // atual->setAnt(aux_atual->getAnt());
+    // atual->setProx(aux_atual->getProx());
+    // atual = anterior;
+    // anterior = aux_atual;
+
     //std::cout << anterior->getNoH()->getSimbolo() << std::endl;
     //std::cout << atual->getNoH()->getSimbolo() << std::endl;
 }
+*/
+
 
