@@ -711,7 +711,10 @@ void menu()
     {
         std::cout << "Defina o numero de registros aleatórios para comprimir: ";
         std::cin >> resp;
-        // aqui vai a funçao para comprimir o aqruivo
+        Registro *registro = new Registro[resp];
+        leBinario(registro, resp);
+        arvoreHuffman arv;
+        arv.recebeReview(juntaReviews(registro, resp));
         menu();
     }
     else if (resp == 2)
