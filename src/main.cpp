@@ -825,10 +825,10 @@ int main(int argc, char const *argv[])
         delete listaReview;
     }
     arvoreHuffman arv;
-    arv.recebeReview("ABB");
+    arv.recebeReview("ABBB");
 
-    arv.imprimeBiblioteca();
-    //arv.imprimeArvore();
+
+    arv.imprimeArvore();
     menu();
 }
 
