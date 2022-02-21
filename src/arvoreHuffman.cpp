@@ -195,8 +195,6 @@ void arvoreHuffman::rotacionaPri(noDupEnc *anterior, noDupEnc *atual)
     NoHuffman *anterior_aux = new NoHuffman();
     anterior_aux = anterior->getNoH();
 
-    //std::cout << anterior_aux->getSimbolo() << " " << anterior_aux->getFrequencia() << " " << anterior_aux->getNoPai()->getSimbolo() << std::endl;
-
     //atualiza a biblioteca
     biblioteca.troca(anterior, atual);
 
@@ -328,9 +326,6 @@ void arvoreHuffman::verificaRotacao(noDupEnc *pai_ant, noDupEnc *pos_bibli)
     }
 }
 
-// a função de rotacionar precisará fazer a troca do nó líder pelo seu irmão na árvore, e além disso deverá trocar a posição referente aos dois nós na lista duplamente encadeada
-// a função de rotacionar deverá também chamar novamente o verificar propriedade para saber se outras rotações serão necessárias
-
 // função com o objetivo de adicionar novos símbolos na lista duplamente encadeada (biblioteca)
 void arvoreHuffman::addBiblioteca(NoHuffman* no)
 {
@@ -378,30 +373,20 @@ void arvoreHuffman::addBiblioteca(NoHuffman* no)
 
 void arvoreHuffman::imprimeArvore()
 {
-    std::cout << "Simb: " << raiz->getNoDir()->getSimbolo() << std::endl;
-    std::cout << "Freq: " << raiz->getNoDir()->getFrequencia() << std::endl;
-}
+    NoHuffman *p = raiz;
+    std::queue<NoHuffman *> que;
 
-
-void arvoreHuffman::imprimeBiblioteca()
-{
-    std::cout << "Simb: " << biblioteca.getInicio()->getNoH()->getSimbolo() << std::endl;
-    std::cout << "Freq: " << biblioteca.getInicio()->getNoH()->getFrequencia() << std::endl;
-    std::cout << "Simb: " << biblioteca.getInicio()->getProx()->getNoH()->getSimbolo() << std::endl; 
-    std::cout << "Freq: " << biblioteca.getInicio()->getProx()->getNoH()->getFrequencia() << std::endl;
-    std::cout << "Simb: " << biblioteca.getInicio()->getProx()->getProx()->getNoH()->getSimbolo() << std::endl;
-    std::cout << "Freq: " << biblioteca.getInicio()->getProx()->getProx()->getNoH()->getFrequencia() << std::endl;
-    std::cout << "Simb: " << biblioteca.getInicio()->getProx()->getProx()->getProx()->getNoH()->getSimbolo() << std::endl;
-    std::cout << "Freq: " << biblioteca.getInicio()->getProx()->getProx()->getProx()->getNoH()->getFrequencia() << std::endl;
-
-    /*
-    while (biblioteca.getAtual() != biblioteca.getFim())
-    {
-        std::cout << "Simb: " << biblioteca.getAtual()->getNoH()->getSimbolo() << std::endl;
-        std::cout << "Freq: " << biblioteca.getAtual()->getNoH()->getFrequencia() << std::endl;
-        biblioteca.setAtual(biblioteca.getAtual()->getProx());
+    que.push(p);
+    while(!que.empty()) {
+        p = que.front();
+        std::cout << p->getSimbolo() << "\t" << p->getFrequencia() << std::endl;
+        if(p->getNoDir() != nullptr)
+            que.push(p->getNoDir());
+        if(p->getNoEsq() != nullptr)
+            que.push(p->getNoEsq());
+        que.pop();
     }
-    */
+    std::cout << "\n";
 }
 
 
@@ -547,52 +532,11 @@ noDupEnc* listaDupEnc::getAtual()
 
 void listaDupEnc::troca(noDupEnc *anterior, noDupEnc *atual)
 {
-    //noDupEnc *aux_anterior = anterior;
     noDupEnc *aux_atual = atual;
-
-    //std::cout << anterior << std::endl;
-    //std::cout << atual << std::endl;
-
-    atual->setAnt(anterior->getAnt());
-    atual->setProx(anterior->getProx());
-
-    anterior->setAnt(atual->getAnt());
-    anterior->setProx(atual->getProx());
 
     atual = anterior;
     anterior = aux_atual;
-
-    //std::cout << anterior << std::endl;
-    //std::cout << atual << std::endl;
 }
 
-
-/*
-void listaDupEnc::troca(noDupEnc *anterior, noDupEnc *atual)
-{
-    //noDupEnc *aux_anterior = anterior;
-    noDupEnc *aux_atual = atual;
-
-    //std::cout << anterior->getNoH()->getSimbolo() << std::endl;
-    //std::cout << atual->getNoH()->getSimbolo() << std::endl;
-
-    aux_atual = atual;
-    // aux_atual->setAnt(anterior->getAnt());
-    // aux_atual->setProx(anterior->getProx());
-
-    atual = anterior;
-    // anterior->setAnt(atual->getAnt());
-    // anterior->setProx(atual->getProx());
-    anterior = aux_atual;
-
-    // atual->setAnt(aux_atual->getAnt());
-    // atual->setProx(aux_atual->getProx());
-    // atual = anterior;
-    // anterior = aux_atual;
-
-    //std::cout << anterior->getNoH()->getSimbolo() << std::endl;
-    //std::cout << atual->getNoH()->getSimbolo() << std::endl;
-}
-*/
 
 
