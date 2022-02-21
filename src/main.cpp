@@ -738,10 +738,6 @@ void menu()
     }
     else if (resp == 4)
     {
-        menuParteTres();
-    }
-    else if (resp == 5)
-    {
         exit(0);
     }
     else
