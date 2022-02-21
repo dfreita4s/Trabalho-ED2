@@ -706,24 +706,23 @@ bool checaArqBin()
 void menu()
 {
 
-    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Comprimir N reviews e salva-los\n[2] Descomprimir o arquivo salvo\n[3] Sequencia de compressões\n[5] Sair \nFunção: ";
+    cout << "Menu:\nDigite o valor da função para acessa-la\n[1] Comprimir N reviews e salva-los\n[2] Descomprimir o arquivo salvo\n[3] Sequencia de compressões\n[4] Sair \nFunção: ";
     int resp = 0;
     cin >> resp;
-
+    arvoreHuffman arv;
     if (resp == 1) // comprimir N registros aleatórios definidos pelo usuário
     {
         std::cout << "Defina o numero de registros aleatórios para comprimir: ";
         std::cin >> resp;
         Registro *registro = new Registro[resp];
         leBinario(registro, resp);
-        arvoreHuffman arv;
         arv.recebeReview(juntaReviews(registro, resp));
         menu();
     }
     else if (resp == 2)
     {
         // aqui vai a funcao para descompactar o arquivo e salva-lo em um arquivo binario
-        // verificar a existencia do arquivo dentro da funcao para descompactar
+        arv.traduzir(); //nao completa
         menu();
     }
     else if (resp == 3)
