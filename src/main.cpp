@@ -827,7 +827,7 @@ int main(int argc, char const *argv[])
 
     arvoreHuffman arv;
     // arv.recebeReview("bookkeeper");
-    arv.recebeReview("ABACATEAB");
+    arv.recebeReview("ABBB");
     arv.imprimeArvore();
 
     // menu();

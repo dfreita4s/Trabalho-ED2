@@ -407,6 +407,9 @@ void arvoreHuffman::verificaPropriedade(NoHuffman *noH)
         // Verifica condição de irmandade
         if(p->getFrequencia() < q->getFrequencia()) {
 
+            if(p == raiz)
+                return;
+
             NoHuffman *aux = lider->getNoPai();
 
             // Realiza troca
