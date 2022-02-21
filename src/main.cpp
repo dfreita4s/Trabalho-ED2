@@ -550,45 +550,45 @@ void estatisticasDesempenho()
             arv.recebeReview(juntaReviews(registro_1, valores[0]));
             saida << " Teste N = 10000\n";
             saida << "  Comparacões: " << comparacoesPrimeiroTeste << std::endl;
-            taxaCompressaoPrimeiroTeste = (arv.getTamIni()- arv.getTamFim())/arv.getTamIni();
+            taxaCompressaoPrimeiroTeste = (arv.getTamIni() - arv.getTamFim()) / arv.getTamIni();
             saida << "  Taxa de compressão: " << taxaCompressaoPrimeiroTeste << std::endl
                   << std::endl;
-            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste; 
-            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste; 
+            mediaComparacoesPrimeiroTeste += comparacoesPrimeiroTeste;
+            mediaTaxaCompressaoPrimeiroTeste += taxaCompressaoPrimeiroTeste;
 
             // Teste para n = 100000
             // aqui vai a funcao para comprimir o arquivo
             saida << " Teste N = 100000\n";
             saida << "  Comparacões: " << comparacoesSegundoTeste << std::endl;
-            taxaCompressaoSegundoTeste = (arv.getTamIni()- arv.getTamFim())/arv.getTamIni();
+            taxaCompressaoSegundoTeste = (arv.getTamIni() - arv.getTamFim()) / arv.getTamIni();
             saida << "  Taxa de compressão: " << taxaCompressaoSegundoTeste << std::endl
                   << std::endl;
-            mediaComparacoesSegundoTeste += comparacoesSegundoTeste; 
-            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste; 
+            mediaComparacoesSegundoTeste += comparacoesSegundoTeste;
+            mediaTaxaCompressaoSegundoTeste += comparacoesSegundoTeste;
 
             // Teste para n = 1000000
             // aqui vai a funcao para comprimir o arquivo
             saida << " Teste N = 1000000\n";
             saida << "  Comparacões: " << comparacoesTerceiroTeste << std::endl;
-            taxaCompressaoTerceiroTeste = (arv.getTamIni()- arv.getTamFim())/arv.getTamIni();
+            taxaCompressaoTerceiroTeste = (arv.getTamIni() - arv.getTamFim()) / arv.getTamIni();
             saida << "  Taxa de compressão: " << taxaCompressaoTerceiroTeste << std::endl
                   << std::endl;
-            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste; 
-            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste; 
+            mediaComparacoesTerceiroTeste += comparacoesTerceiroTeste;
+            mediaTaxaCompressaoTerceiroTeste += comparacoesTerceiroTeste;
 
             // Escrever no saida.txt
         }
 
         saida << "=======Estatisticas de desempenho=======" << std::endl;
         saida << "== Para N = 10000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste/3 << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste/3 << std::endl;
+        saida << "Media comparações: " << mediaComparacoesPrimeiroTeste / 3 << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoPrimeiroTeste / 3 << std::endl;
         saida << "== Para N = 100000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesSegundoTeste/3 << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste/3 << std::endl;
+        saida << "Media comparações: " << mediaComparacoesSegundoTeste / 3 << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoSegundoTeste / 3 << std::endl;
         saida << "== Para N = 1000000 ==\n";
-        saida << "Media comparações: " << mediaComparacoesTerceiroTeste/3 << std::endl;
-        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste/3 << std::endl;
+        saida << "Media comparações: " << mediaComparacoesTerceiroTeste / 3 << std::endl;
+        saida << "Media taxa de compressão" << mediaTaxaCompressaoTerceiroTeste / 3 << std::endl;
     }
     else
     {
@@ -722,7 +722,7 @@ void menu()
     else if (resp == 2)
     {
         // aqui vai a funcao para descompactar o arquivo e salva-lo em um arquivo binario
-        arv.traduzir(); //nao completa
+        arv.traduzir(); // nao completa
         menu();
     }
     else if (resp == 3)
@@ -934,7 +934,6 @@ int main(int argc, char const *argv[])
     }
     arvoreHuffman arv;
     arv.recebeReview("ABBB");
-
 
     arv.imprimeArvore();
     menu();
