@@ -406,7 +406,7 @@ void arvoreHuffman::imprimeBiblioteca()
 
 
 
-void arvoreHuffman::traduzir(){ 
+void arvoreHuffman::traduzir(){ //funçao para traduzir o arquivo binario compactado
     std::ifstream comprimido;
     comprimido.open("../data/reviewsComp.bin");
     char texto [tam_inicio];
