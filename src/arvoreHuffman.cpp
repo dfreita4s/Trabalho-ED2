@@ -411,7 +411,7 @@ void arvoreHuffman::traduzir(){
     comprimido.open("../data/reviewsComp.bin");
     char texto [tam_inicio];
     if(comprimido.is_open()){
-        comprimido.read(texto, tam_inicio * sizeof (char));
+        comprimido.read(texto, sizeof (char));
         NoHuffman aux;
         while(aux.getNoDir() == nullptr || aux.getNoEsq() == nullptr){
             
