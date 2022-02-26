@@ -322,7 +322,7 @@ void analiseEstruturas()
         leBinario(regEstrutura, N); //importa N registros aleatorios
         //para AVP
         std::cout << "Arvore Vermelho-Preto\nTeste:[";
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 3; i++)
         {
             arvoreVP *AVP = new arvoreVP();
             start = std::chrono::high_resolution_clock::now();
@@ -410,11 +410,11 @@ void analiseEstruturas()
             // delete arvoreB;
         }
 
-        mediaTempoBuscaAB20 = tempoBuscaAB20 / 3;
-        mediaTempoInserirAB20 = tempoInserirAB20 / 3;
+        mediaTempoBuscaAB20 =   mediaTempoBuscaAB20 / 3;
+        mediaTempoInserirAB20 = mediaTempoInserirAB20 / 3;
 
-        mediaComparacoesBuscaAB20 = comparacoesBuscaAB20 / 3;
-        mediaComparacoesInserirAB20 = comparacoesInserirAB20 / 3;
+        mediaComparacoesBuscaAB20 = mediaComparacoesBuscaAB20 / 3;
+        mediaComparacoesInserirAB20 = mediaComparacoesInserirAB20 / 3;
 
         std::cout << "]" << std::endl;
 
@@ -468,7 +468,7 @@ void analiseEstruturas()
               << std::endl;
         saida << "Media tempo inserção: " << mediaTempoInserirAVP << std::endl;
         saida << "Media comparacoes inserção: " << mediaComparacoesInserirAVP << std::endl;
-        saida << "Media tempo busca: " << mediaTempoExecAVP << std::endl;
+        saida << "Media tempo busca: " << mediaTempoBuscaAVP << std::endl;
         saida << "Media comparacoes busca: " << mediaComparacoesBuscaAVP << std::endl
               << std::endl;
 
